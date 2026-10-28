@@ -1,0 +1,23 @@
+{
+ "person": {
+  "switches_by_sequence": {
+   "uav0000086_00000_v": 67,
+   "uav0000117_02622_v": 40,
+   "uav0000137_00458_v": 33,
+   "uav0000339_00001_v": 23,
+   "uav0000305_00000_v": 3,
+   "uav0000182_00000_v": 2
+  },
+  "small_objects_considered": 25
+ },
+ "vehicle": {
+  "switches_by_sequence": {
+   "uav0000182_00000_v": 24,
+   "uav0000137_00458_v": 22,
+   "uav0000305_00000_v": 16,
+   "uav0000117_02622_v": 4,
+   "uav0000339_00001_v": 2
+  },
+  "small_objects_considered": 41
+ }
+}

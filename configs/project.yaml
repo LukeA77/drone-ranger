@@ -1,0 +1,21 @@
+# Project-level settings. Every value records its source.
+repo_name:
+  value: aerial-track-and-range
+  placeholder: REPO_NAME
+  source: "2026-10-18"
+package_name:
+  value: aerialrange
+  placeholder: REPO_NAME
+  source: "2026-10-18"
+licence:
+  value: AGPL-3.0-only
+  placeholder: LICENCE
+  source: "Chosen 2026-10-18 (AGPL-3.0-only, D-005, D-615)"
+python_version:
+  value: "3.12"
+  placeholder: PYTHON_VERSION
+  source: "Installed interpreter (3.12.10); provisional until train/edge deps are checked (docs/decisions.md D-001)"
+seed:
+  value: 0
+  placeholder: null
+  source: "Arbitrary fixed seed for determinism; value has no effect on correctness"

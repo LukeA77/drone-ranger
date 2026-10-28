@@ -1,0 +1,104 @@
+{
+ "run": "B2_yolo26n_960_tuned_botsort_cmc",
+ "split": "test-dev",
+ "groups": {
+  "person": {
+   "overall": {
+    "mota": 0.2638693707510896,
+    "idf1": 0.4354840200800614,
+    "idp": 0.6185736234586545,
+    "idr": 0.33602505296647955,
+    "precision": 0.7475804651284947,
+    "recall": 0.40610487719623634,
+    "num_switches": 717.0,
+    "num_fragmentations": 2975.0,
+    "mostly_tracked": 204.0,
+    "mostly_lost": 419.0,
+    "num_objects": 140183.0,
+    "num_false_positives": 19222.0,
+    "num_misses": 83254.0
+   },
+   "by_box_height": {
+    "0-16": {
+     "gt_object_frames": 5400,
+     "recall": 0.022037037037037036,
+     "switches_per_1000_matched": 16.80672268907563
+    },
+    "16-32": {
+     "gt_object_frames": 43790,
+     "recall": 0.15599451929664307,
+     "switches_per_1000_matched": 17.859756990191773
+    },
+    "32-64": {
+     "gt_object_frames": 52978,
+     "recall": 0.41071765638566954,
+     "switches_per_1000_matched": 15.533802104876143
+    },
+    "64-128": {
+     "gt_object_frames": 30159,
+     "recall": 0.6998905799263901,
+     "switches_per_1000_matched": 10.659465605457646
+    },
+    "128-inf": {
+     "gt_object_frames": 7856,
+     "recall": 0.905295315682281,
+     "switches_per_1000_matched": 4.21822272215973
+    }
+   },
+   "density_vs_idf1_spearman": 0.3558823529411765,
+   "density_vs_mota_spearman": 0.5323529411764706,
+   "camera_shift_vs_idf1_spearman": -0.4205882352941176,
+   "camera_shift_vs_mota_spearman": -0.34411764705882353,
+   "n_sequences": 16
+  },
+  "vehicle": {
+   "overall": {
+    "mota": 0.6346260519517568,
+    "idf1": 0.7602167220385518,
+    "idp": 0.7797700383269455,
+    "idr": 0.7416200453270362,
+    "precision": 0.8349775037493751,
+    "recall": 0.7941265036372569,
+    "num_switches": 322.0,
+    "num_fragmentations": 1612.0,
+    "mostly_tracked": 644.0,
+    "mostly_lost": 82.0,
+    "num_objects": 126194.0,
+    "num_false_positives": 19806.0,
+    "num_misses": 25980.0
+   },
+   "by_box_height": {
+    "0-16": {
+     "gt_object_frames": 3886,
+     "recall": 0.4665465774575399,
+     "switches_per_1000_matched": 2.7578599007170435
+    },
+    "16-32": {
+     "gt_object_frames": 39123,
+     "recall": 0.677938808373591,
+     "switches_per_1000_matched": 4.863703200995363
+    },
+    "32-64": {
+     "gt_object_frames": 52769,
+     "recall": 0.8508025545301219,
+     "switches_per_1000_matched": 2.650570206699929
+    },
+    "64-128": {
+     "gt_object_frames": 23700,
+     "recall": 0.8862025316455696,
+     "switches_per_1000_matched": 1.9044898347855068
+    },
+    "128-inf": {
+     "gt_object_frames": 6716,
+     "recall": 0.8902620607504467,
+     "switches_per_1000_matched": 4.85030941629035
+    }
+   },
+   "density_vs_idf1_spearman": 0.5941176470588235,
+   "density_vs_mota_spearman": 0.5323529411764706,
+   "camera_shift_vs_idf1_spearman": 0.3529411764705882,
+   "camera_shift_vs_mota_spearman": 0.3764705882352941,
+   "n_sequences": 16
+  }
+ }
+}

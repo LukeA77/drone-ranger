@@ -1,0 +1,87 @@
+{
+ "generated_utc": "2026-10-21T22:47:01+00:00",
+ "run": "B2_yolo26n_960",
+ "tag": "p5_onnx960_bot2",
+ "weights": "B2_yolo26n_960_rect.onnx",
+ "imgsz": 960,
+ "tracker": {
+  "config": "botsort_cmc.yaml",
+  "overrides": {
+   "track_high_thresh": 0.05,
+   "new_track_thresh": 0.55
+  }
+ },
+ "frames": "MOT val uav0000086_00000_v (1344x756), in order; cycled per repeat",
+ "not_timed": "ranging and Kalman filter (not yet integrated into the pipeline); overlay drawing",
+ "smoke": false,
+ "machine": {
+  "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+  "logical_cores": 16,
+  "os": "Windows-11-10.0.26200-SP0",
+  "torch_threads": 8,
+  "torch": "2.14.1+cpu",
+  "ultralytics": "8.4.182",
+  "opencv": "5.0.0"
+ },
+ "other_processes": "Overnight, laptop plugged in, user applications closed (2026-10-21); only this benchmark running",
+ "stages": {
+  "read": {
+   "median_ms": 9.904749997076578,
+   "mean_ms": 9.909825665818062,
+   "p95_ms": 10.409390009590425,
+   "p99_ms": 11.003495993791148,
+   "max_ms": 12.807899998733774
+  },
+  "detect": {
+   "median_ms": 71.42940000630915,
+   "mean_ms": 72.78552822251287,
+   "p95_ms": 80.08225000230595,
+   "p99_ms": 100.25979400670622,
+   "max_ms": 142.46539998566732
+  },
+  "track": {
+   "median_ms": 33.13989999878686,
+   "mean_ms": 33.20494222273636,
+   "p95_ms": 36.09041500312742,
+   "p99_ms": 37.79145001579309,
+   "max_ms": 80.92459998442791
+  },
+  "end_to_end": {
+   "median_ms": 114.68374999822117,
+   "mean_ms": 115.90029611106729,
+   "p95_ms": 125.57335500168847,
+   "p99_ms": 147.23879600001965,
+   "max_ms": 186.39389998861589
+  }
+ },
+ "n_samples": 900,
+ "throughput_fps": 8.628105652479952,
+ "end_to_end_median_by_repeat_ms": [
+  114.61430000781547,
+  114.51530001068022,
+  115.11800001608208
+ ],
+ "peak_rss_mb": 470.765625,
+ "protocol": {
+  "n_warmup": 20,
+  "n_timed": 300,
+  "n_repeats": 3
+ },
+ "detect_library_split_median_ms": {
+  "preprocess": 9.205750000546686,
+  "inference": 57.75479998555966,
+  "postprocess": 3.2888999849092215
+ },
+ "budget": {
+  "30_fps": {
+   "budget_ms": 33.333333333333336,
+   "meets_at_median": false,
+   "meets_at_p99": false
+  },
+  "10_fps": {
+   "budget_ms": 100.0,
+   "meets_at_median": false,
+   "meets_at_p99": false
+  }
+ }
+}

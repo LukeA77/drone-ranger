@@ -1,0 +1,17 @@
+{
+ "generated_utc": "2026-10-19T17:00:23+00:00",
+ "weights": "weights/yolo26n.pt",
+ "onnx": "yolo26n_640.onnx",
+ "imgsz": 640,
+ "n_frames": 50,
+ "ultralytics": "8.4.182",
+ "onnxruntime": "1.31.0",
+ "max_box_diff_px": 21.19708251953125,
+ "max_score_diff": 0.18306872248649597,
+ "agreement_original_side": 0.9791183294663574,
+ "agreement_onnx_side": 0.9134199134199135,
+ "detections_original": 431,
+ "detections_onnx": 462,
+ "parity_tol": null,
+ "within_tol": null
+}

@@ -1,0 +1,50 @@
+{
+ "tracking_hero": {
+  "source": "cache/video/showcase/01_tracking.mp4",
+  "start_s": 0.2,
+  "seconds": 7.0,
+  "width": 900,
+  "fps": 12,
+  "size_mb": 6.15
+ },
+ "ranging_real_late": {
+  "source": "cache/video/showcase/03_ranging_oblique.mp4",
+  "start_s": 13.0,
+  "seconds": 8.0,
+  "width": 900,
+  "fps": 10,
+  "size_mb": 2.49
+ },
+ "tracking": {
+  "source": "cache/video/showcase/01_tracking.mp4",
+  "start_s": 17.3,
+  "seconds": 6.0,
+  "width": 900,
+  "fps": 12,
+  "size_mb": 1.96
+ },
+ "before_after": {
+  "source": "cache/video/showcase/02_before_after.mp4",
+  "start_s": 0.0,
+  "seconds": 6.0,
+  "width": 900,
+  "fps": 12,
+  "size_mb": 2.35
+ },
+ "range_flag": {
+  "source": "cache/video/showcase/05_range_flag.mp4",
+  "start_s": 6.0,
+  "seconds": 7.0,
+  "width": 540,
+  "fps": 12,
+  "size_mb": 4.1
+ },
+ "ranging_overhead": {
+  "source": "cache/video/showcase/04_ranging_overhead.mp4",
+  "start_s": 1.0,
+  "seconds": 7.0,
+  "width": 800,
+  "fps": 10,
+  "size_mb": 1.46
+ }
+}

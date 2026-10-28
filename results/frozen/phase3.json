@@ -1,0 +1,15 @@
+{
+ "frozen_utc": "2026-10-21T13:43:39+00:00",
+ "phase": "phase3",
+ "git_commit": "98c6841",
+ "uncommitted_changes_to_frozen_files": [
+  "?? configs/trackers/botsort_cmc_tuned_B2_yolo26n_960.yaml"
+ ],
+ "files": {
+  "configs/detector.yaml": "b9b345d3ef6d426af718c65c952d1b754cb90620933d98f0e56c15bd2a690334",
+  "configs/tracker.yaml": "597a35971c2cd7dd8f4874857e500972740fd2c299221c2b65d291a66ecd5899",
+  "configs/trackers/botsort_cmc.yaml": "8cd88930d3be5557be0777f384eecff0a36a7011850fe613fc0a68178bfd5b01",
+  "cache/train/B2_yolo26n_960/weights/best.pt": "92f0b1662e86d7c56d9c6b5021abbac416962146d8fd518ea275e57d202297a2",
+  "configs/trackers/botsort_cmc_tuned_B2_yolo26n_960.yaml": "2fc425bb34f8e5fb20531a257a737a17e4498e3d78c1783736f2baac7812fc10"
+ }
+}

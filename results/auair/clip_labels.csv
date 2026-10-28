@@ -1,0 +1,49 @@
+clip,frames,view,tilt_min_deg,tilt_max_deg,curvature,label_as_written
+0,511,down,90.0,90.0,no,down
+1,32,down,90.0,90.0,no,down
+2,191,down,90.0,90.0,no,down
+3,14,down,90.0,90.0,no,down
+4,79,down,90.0,90.0,no,down
+5,695,down,90.0,90.0,no,down
+6,234,down,90.0,90.0,no,down
+7,306,down,90.0,90.0,no,down
+8,265,down,90.0,90.0,no,down
+9,265,down,90.0,90.0,no,down
+10,147,oblique,30.0,30.0,no,oblique ~30
+11,81,oblique,30.0,30.0,no,oblique ~30
+12,1386,oblique,40.0,40.0,no,oblique ~40
+13,246,oblique,45.0,45.0,no,oblique ~45
+14,729,oblique,45.0,45.0,no,oblique ~45
+15,1927,oblique,45.0,45.0,no,obique ~45
+16,306,oblique,45.0,45.0,no,oblique ~45
+17,912,oblique,45.0,45.0,no,oblique ~45
+18,180,oblique,60.0,60.0,no,oblique ~60
+19,6660,oblique,60.0,60.0,no,oblique ~60
+20,771,oblique,60.0,60.0,no,oblique ~60
+21,2552,oblique,60.0,60.0,no,oblique ~60
+22,1264,oblique,60.0,60.0,no,oblique ~60
+23,865,mixed,10.0,85.0,no,mixed 10-85
+24,38,down,90.0,90.0,no,down
+25,403,oblique,75.0,75.0,no,oblique ~75
+26,203,oblique,60.0,60.0,no,oblique ~60
+27,33,oblique,45.0,45.0,no,oblique ~45
+28,1475,mixed,30.0,90.0,no,mixed 30-90
+29,22,down,90.0,90.0,no,down
+30,190,down,90.0,90.0,no,down
+31,1275,mixed,15.0,45.0,no,mixed 15-45
+32,380,oblique,15.0,15.0,no,oblique ~15
+33,74,oblique,25.0,25.0,no,oblique ~25
+34,269,mixed,10.0,85.0,no,mixed 10-85
+35,318,mixed,10.0,30.0,no,mixed 10-30
+36,22,oblique,15.0,15.0,no,oblique ~15
+37,517,mixed,10.0,90.0,no,mixed 10-90
+38,597,mixed,10.0,45.0,no,mixed 10-45
+39,2122,mixed,20.0,90.0,no,mixed 20-90
+40,59,down,90.0,90.0,no,down
+41,22,down,90.0,90.0,no,down
+42,30,down,90.0,90.0,no,down
+43,9,down,90.0,90.0,no,down
+44,65,down,90.0,90.0,no,down
+45,1283,oblique,60.0,60.0,no,oblique ~60
+46,2785,mixed,0.0,90.0,no,mixed 0-90
+47,14,oblique,5.0,5.0,no,oblique ~5

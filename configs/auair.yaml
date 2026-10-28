@@ -1,0 +1,17 @@
+# AU-AIR settings (Phase 4).
+frame_interval_ms:
+  value: 200
+  placeholder: null
+  source: "Measured: consecutive frame indices are 200 ms apart in time.ms in all 12 files (results/auair/schema.json, D-501), i.e. 5 fps"
+clip_gap_ms:
+  value: 6000
+  placeholder: CLIP_GAP_MS
+  source: "Derived (D-502): BoT-SORT track_buffer (30 frames, library default, configs/trackers/botsort_cmc.yaml) x frame_interval_ms. A longer gap is one the tracker cannot bridge, so it starts a new clip"
+calib_recordings:
+  value: ["20190829091111", "20190905142119"]
+  placeholder: AUAIR_CALIB_CLIPS
+  source: "D-506 (2026-10-21), chosen before any held-out result: split by recording so frames of one flight cannot leak across. These two recordings (clips 0-9 and 28-31) hold every clip used so far by the focal-length and altimeter-zero probes (0, 5, 7, 8, 9, 30). All other clips are held out for repeatability."
+focal_px:
+  value: 1259
+  placeholder: FOCAL_PX_AUAIR
+  source: "D-509: GPS motion against image motion on straight-down calibration clips, drift-corrected height (scripts/auair_scale.py, results/auair/camera_scale.json). 95 % clip-bootstrap interval 1155-1308 px; horizontal field of view about 75 deg. Car-size check: implied car length 4.61 m [4.37, 5.06]"

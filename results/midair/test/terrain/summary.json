@@ -1,0 +1,61 @@
+{
+ "meta": {
+  "generated_utc": "2026-10-21T22:39:06+00:00",
+  "split": "test",
+  "trajectories": [
+   "trajectory_0001",
+   "trajectory_0005",
+   "trajectory_0009",
+   "trajectory_0014",
+   "trajectory_0015",
+   "trajectory_0017",
+   "trajectory_0022",
+   "trajectory_0024",
+   "trajectory_0027"
+  ],
+  "n_boot": 1000,
+  "seed": 0,
+  "err_threshold_frac": 0.1
+ },
+ "data": {
+  "flat_true_height": {
+   "valid_fraction": 0.814295879864614,
+   "abs_rel_err_median": 0.1490379630463381,
+   "abs_rel_err_median_ci": [
+    0.12079185089108967,
+    0.1887544471207686
+   ],
+   "abs_rel_err_p90": 0.6678260474839944,
+   "abs_rel_err_p90_ci": [
+    0.5415517014403394,
+    0.7783860438521588
+   ]
+  },
+  "flat_altimeter": {
+   "valid_fraction": 0.5584882771369378,
+   "abs_rel_err_median": 3.152121328483864,
+   "abs_rel_err_median_ci": [
+    0.8304049368124293,
+    5.595715792022464
+   ],
+   "abs_rel_err_p90": 12.907116010367163,
+   "abs_rel_err_p90_ci": [
+    6.455458613589116,
+    18.86941569739412
+   ]
+  },
+  "terrain_motion": {
+   "valid_fraction": 0.9136060834425227,
+   "abs_rel_err_median": 0.030703405271881954,
+   "abs_rel_err_median_ci": [
+    0.01991733324699898,
+    0.04962501602348677
+   ],
+   "abs_rel_err_p90": 0.5328483579560204,
+   "abs_rel_err_p90_ci": [
+    0.3025991882928781,
+    0.8766490032483929
+   ]
+  }
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "finished_utc": "2026-10-19T17:10:52+00:00",
+ "wall_seconds_this_session": 621.2710762023926,
+ "ultralytics": "8.4.182",
+ "base_weights": "yolo26n.pt",
+ "imgsz": 640,
+ "overrides_vs_library_defaults": {
+  "epochs": 1,
+  "fraction": 0.1
+ },
+ "resumed": false,
+ "device": "cpu"
+}

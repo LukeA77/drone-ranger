@@ -1,0 +1,32 @@
+{
+ "meta": {
+  "generated_utc": "2026-10-21T22:39:06+00:00",
+  "split": "test",
+  "trajectories": [
+   "trajectory_0001",
+   "trajectory_0005",
+   "trajectory_0009",
+   "trajectory_0014",
+   "trajectory_0015",
+   "trajectory_0017",
+   "trajectory_0022",
+   "trajectory_0024",
+   "trajectory_0027"
+  ],
+  "n_boot": 1000,
+  "seed": 0,
+  "err_threshold_frac": 0.1
+ },
+ "data": {
+  "auroc": 0.6815721337803182,
+  "precision": 0.448094343921621,
+  "recall": 0.5619402323312938,
+  "flagged_fraction": 0.36581257993590754,
+  "coefficients": {
+   "rel_sigma": 0.3440577758360493,
+   "roughness_over_range": 0.9660428098139838,
+   "support_over_range": 0.5292375434891132,
+   "log_n_points": -0.06549896563173305
+  }
+ }
+}

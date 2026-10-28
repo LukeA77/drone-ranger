@@ -1,0 +1,20 @@
+# Tracker settings (Phase 3).
+tracker_grid:
+  value:
+    tracker: botsort_cmc and bytetrack (configs/trackers/)
+    track_high_thresh: [0.05, 0.15, 0.25, 0.35, 0.45, 0.55]
+    new_track_thresh: [0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85]
+    constraint: new_track_thresh >= track_high_thresh
+    track_low_thresh: 0.1 (library default, also the detection score floor)
+    selection_rule: max mean IDF1 over person and vehicle, then mean MOTA
+  placeholder: TRACKER_GRID
+  source: "Main grid (D-319) plus edge extension for B2 n 960 and s 640 (D-320), MOT val only. Results: results/visdrone/val/grid_*.json, summary grid_summary.json"
+tuned:
+  value:
+    # Tuned BoT-SORT with camera-motion compensation (configs/trackers/botsort_cmc.yaml), per
+    # detector; other tracker settings stay at library defaults.
+    B2_yolo26n_960: {track_high_thresh: 0.05, new_track_thresh: 0.55}
+    B2_yolo26s_640: {track_high_thresh: 0.25, new_track_thresh: 0.65}
+    B2_yolo26n_640: {track_high_thresh: 0.45, new_track_thresh: 0.45}
+  placeholder: null
+  source: "Selected on MOT val by the D-319 rule (results/visdrone/val/grid_summary.json, D-321). For n 960, every track_high_thresh below the 0.1 floor behaves identically, so the 0.05 edge is not a truncated search."

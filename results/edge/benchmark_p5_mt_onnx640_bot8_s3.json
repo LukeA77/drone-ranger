@@ -1,0 +1,84 @@
+{
+ "generated_utc": "2026-10-22T09:38:01+00:00",
+ "tag": "p5_mt_onnx640_bot8_s3",
+ "mode": "threaded: read+detect thread, track on main thread",
+ "weights": "B2_yolo26n_960w_640_rect.onnx",
+ "imgsz": 640,
+ "tracker": {
+  "config": "botsort_cmc.yaml",
+  "overrides": {
+   "track_high_thresh": 0.05,
+   "new_track_thresh": 0.55,
+   "gmc_downscale": 8
+  }
+ },
+ "det_stride": 3,
+ "queue": 2,
+ "protocol": {
+  "n_warmup": 20,
+  "n_timed": 300,
+  "n_repeats": 3
+ },
+ "frames": "MOT val uav0000086_00000_v, in order, cycled",
+ "machine": {
+  "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+  "os": "Windows-11-10.0.26200-SP0",
+  "torch_threads": 8,
+  "ultralytics": "8.4.182"
+ },
+ "other_processes": "Morning 2026-10-22: applications closed except the code editor, plugged in; background load measured per run",
+ "background_measured": {
+  "other_processes_cpu_percent_of_one_core": 64.4,
+  "busiest": [
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 16.7
+   },
+   {
+    "name": "dwm.exe",
+    "cpu_percent": 6.8
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 6.5
+   },
+   {
+    "name": "System",
+    "cpu_percent": 5.1
+   },
+   {
+    "name": "EpicGamesLauncher.exe",
+    "cpu_percent": 4.1
+   }
+  ],
+  "window_s": 3.0
+ },
+ "latency": {
+  "median_ms": 37.08084998652339,
+  "p95_ms": 69.54659001057735,
+  "p99_ms": 73.21350600250298,
+  "max_ms": 97.86999999778345
+ },
+ "throughput_fps": 42.62191494418816,
+ "throughput_by_repeat": [
+  42.56164888139279,
+  42.62191494418816,
+  42.672993042148384
+ ],
+ "peak_rss_mb": 415.296875,
+ "not_timed": "ranging and Kalman filter (timed separately, D-612); overlay drawing",
+ "budget": {
+  "30_fps": {
+   "budget_ms": 33.333333333333336,
+   "throughput_keeps_up": true,
+   "latency_median_within": false,
+   "latency_p99_within": false
+  },
+  "10_fps": {
+   "budget_ms": 100.0,
+   "throughput_keeps_up": true,
+   "latency_median_within": true,
+   "latency_p99_within": true
+  }
+ }
+}

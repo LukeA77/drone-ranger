@@ -1,0 +1,13 @@
+series,x,y,lo,hi
+Terrain from motion,0.02,0.03052046981353463,,
+Terrain from motion,0.05,0.043326866751155574,,
+Terrain from motion,0.1,0.06305191854887376,,
+Terrain from motion,0.2,0.11709637887388555,,
+Terrain from motion,0.5,0.3623944700988926,,
+Terrain from motion,1.0,0.6804473834985627,,
+"Flat ground, true height",0.02,0.14163674209459096,,
+"Flat ground, true height",0.05,0.14147252433982477,,
+"Flat ground, true height",0.1,0.14192206536343588,,
+"Flat ground, true height",0.2,0.14123086380508337,,
+"Flat ground, true height",0.5,0.1416965231373512,,
+"Flat ground, true height",1.0,0.1465651733152677,,

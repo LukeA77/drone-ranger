@@ -1,0 +1,74 @@
+# Dataset locations and Mid-Air selection. Paths are relative to the repo root unless absolute.
+# Environment variable AERIALRANGE_DATA_ROOT overrides data_root.
+data_root:
+  value: Data
+  placeholder: DATA_ROOT
+  source: "Folder found at <repo>/Data on 2026-10-18; the default location"
+visdrone_mot_subdir:
+  value: VisDrone-MOT
+  placeholder: DATA_ROOT
+  source: "Data folder layout, 2026-10-19"
+visdrone_det_subdir:
+  value: VisDrone-DET
+  placeholder: DATA_ROOT
+  source: "Data folder layout, 2026-10-19"
+midair_subdir:
+  value: midair
+  placeholder: DATA_ROOT
+  source: "Folder found in data_root on 2026-10-18"
+auair_subdir:
+  value: AU-AIR
+  placeholder: DATA_ROOT
+  source: "Found 2026-10-20; copied to <data_root>/AU-AIR 2026-10-20 (robocopy, 32,824 files, 2.283 GB, 0 failed: cache/logs/auair_copy.log)"
+mot17_repo_path:
+  value: "https://github.com/LukeA77/MOT_Tracking@455e7025be7fce26d4d5839b894a11f663f09129"
+  placeholder: MOT17_REPO_PATH
+  source: "Metrics copied to results/mot17_reference/metrics.json with the commit"
+mot17_weights_path:
+  value: null
+  placeholder: MOT17_WEIGHTS_PATH
+  source: null
+midair_climate:
+  value: Kite_training/sunny
+  placeholder: MIDAIR_CLIMATE
+  source: "Downloaded 2026-10-18 (one climate is enough)"
+n_traj_midair:
+  value: null
+  placeholder: N_TRAJ_MIDAIR
+  source: null
+midair_split:
+  value: {development: 0.5, calibration: 0.2, test: 0.3}
+  placeholder: MIDAIR_SPLIT
+  source: "Chosen 2026-10-19; by trajectory, seeded (docs/decisions.md D-208)"
+pix_per_frame:
+  value: 500
+  placeholder: PIX_PER_FRAME
+  source: "2026-10-19: development value; revisited once bins are populated (D-209)"
+frame_stride:
+  value: 25
+  placeholder: FRAME_STRIDE
+  source: "2026-10-19: one frame per second, since 25 Hz frames are strongly correlated (D-209)"
+edge_margin_px:
+  value: 3
+  placeholder: EDGE_MARGIN_PX
+  source: "2026-10-19: clears anti-aliased edge pixels with margin; sensitivity to be shown (D-209)"
+min_samples_per_bin:
+  value: 100
+  placeholder: MIN_SAMPLES_PER_BIN
+  source: "2026-10-19: at 100 samples a 90th percentile rests on 10 samples above it; applied to every binned result (D-213)"
+depth_edge_rel:
+  value: 0.1
+  placeholder: DEPTH_EDGE_REL
+  source: "New placeholder. Measured on development frames 2026-10-19: neighbour depth-jump histogram flattens into its discontinuity tail near 0.1; above the 99th percentile of ground-ground jumps, 0.053 (D-209)"
+normal_patch_px:
+  value: 9
+  placeholder: NORMAL_PATCH_PX
+  source: "New placeholder. 2026-10-19: per-pixel normal scatter is about 3 degrees (D-206); 9x9 normals pixels averages it down; sensitivity to be shown (D-209)"
+min_groups_per_bin:
+  value: 3
+  placeholder: MIN_GROUPS_PER_BIN
+  source: "New placeholder. 2026-10-19: intervals resample whole trajectories, so a bin from fewer than 3 trajectories has no meaningful interval (D-213)"
+visdrone_eval_groups:
+  value: {person: [1, 2], vehicle: [4, 5, 6, 9]}
+  placeholder: null
+  source: "Evaluation groups: person = pedestrian, people; vehicle = car, van, truck, bus; others (11) excluded; ignored regions (0) used to drop predictions"

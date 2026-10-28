@@ -1,0 +1,115 @@
+{
+ "generated_utc": "2026-10-22T09:34:40+00:00",
+ "run": "B2_yolo26n_960",
+ "tag": "p5_onnx640_bot8_s2",
+ "weights": "B2_yolo26n_960w_640_rect.onnx",
+ "imgsz": 640,
+ "tracker": {
+  "config": "botsort_cmc.yaml",
+  "overrides": {
+   "track_high_thresh": 0.05,
+   "new_track_thresh": 0.55,
+   "gmc_downscale": 8
+  }
+ },
+ "det_stride": 2,
+ "frames": "MOT val uav0000086_00000_v (1344x756), in order; cycled per repeat",
+ "not_timed": "ranging and Kalman filter (not yet integrated into the pipeline); overlay drawing",
+ "smoke": false,
+ "machine": {
+  "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+  "logical_cores": 16,
+  "os": "Windows-11-10.0.26200-SP0",
+  "torch_threads": 8,
+  "torch": "2.14.1+cpu",
+  "ultralytics": "8.4.182",
+  "opencv": "5.0.0"
+ },
+ "other_processes": "Morning 2026-10-22: applications closed except the code editor, plugged in; background load measured per run",
+ "background_measured": {
+  "other_processes_cpu_percent_of_one_core": 88.4,
+  "busiest": [
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 15.9
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 7.4
+   },
+   {
+    "name": "EOSOverlayRenderer-Win64-Shipping.exe",
+    "cpu_percent": 6.7
+   },
+   {
+    "name": "dwm.exe",
+    "cpu_percent": 6.4
+   },
+   {
+    "name": "System",
+    "cpu_percent": 4.7
+   }
+  ],
+  "window_s": 3.0
+ },
+ "stages": {
+  "read": {
+   "median_ms": 9.720499991090037,
+   "mean_ms": 9.65772555562176,
+   "p95_ms": 10.006279997469392,
+   "p99_ms": 10.374965004157273,
+   "max_ms": 14.727600006153807
+  },
+  "detect": {
+   "median_ms": 16.674699989380315,
+   "mean_ms": 17.978787777925998,
+   "p95_ms": 37.05262500297977,
+   "p99_ms": 39.23747599066701,
+   "max_ms": 57.30399998719804
+  },
+  "track": {
+   "median_ms": 14.912449987605214,
+   "mean_ms": 16.4971137781524,
+   "p95_ms": 22.025970013055485,
+   "p99_ms": 22.702200008789077,
+   "max_ms": 45.34140002215281
+  },
+  "end_to_end": {
+   "median_ms": 43.44174999278039,
+   "mean_ms": 44.13362711170016,
+   "p95_ms": 67.99101499927929,
+   "p99_ms": 71.28588898835005,
+   "max_ms": 89.86070004175417
+  }
+ },
+ "n_samples": 900,
+ "throughput_fps": 22.65845944338648,
+ "end_to_end_median_by_repeat_ms": [
+  42.157649964792654,
+  41.82160001073498,
+  43.445699993753806
+ ],
+ "peak_rss_mb": 410.25,
+ "protocol": {
+  "n_warmup": 20,
+  "n_timed": 300,
+  "n_repeats": 3
+ },
+ "detect_library_split_median_ms": {
+  "preprocess": 3.954699990572408,
+  "inference": 27.463299993542023,
+  "postprocess": 2.368500005104579
+ },
+ "budget": {
+  "30_fps": {
+   "budget_ms": 33.333333333333336,
+   "meets_at_median": false,
+   "meets_at_p99": false
+  },
+  "10_fps": {
+   "budget_ms": 100.0,
+   "meets_at_median": true,
+   "meets_at_p99": true
+  }
+ }
+}

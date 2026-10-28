@@ -1,0 +1,16 @@
+{
+ "frames": 32823,
+ "instances": 132031,
+ "recordings": 8,
+ "clips": 48,
+ "clip_gap_ms": 6000,
+ "paper": {
+  "frames": 32823,
+  "instances": 132034,
+  "classes": 8
+ },
+ "differences": {
+  "frames": 0,
+  "instances": -3
+ }
+}

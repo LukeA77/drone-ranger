@@ -1,0 +1,44 @@
+# Uncertainty model.
+sigma_pix_model:
+  value: {"person": {"kappa_u": 0.1075, "kappa_v": 0.0790}, "vehicle": {"kappa_u": 0.0385, "kappa_v": 0.0532}}
+  placeholder: SIGMA_PIX_MODEL
+  source: "Measured 2026-10-21: results/visdrone/val/pixel_noise_B2_yolo26n_960.json, chosen detector B2 YOLO26n 960 (D-605) against MOT-val ground truth, IoU >= 0.5, bottom-centre contact point, robust sigma of error / box size. Updated after the Phase 2 test run (D-603), which does not read it; the n 640 values were 0.1093 / 0.086 and 0.0392 / 0.052"
+sensor_noise:
+  value: null
+  placeholder: SENSOR_NOISE
+  source: null
+n_mc:
+  value: 1000
+  placeholder: N_MC
+  source: "Stability check 2026-10-19: per-sample MC range sigma changes by a median 1.8 % (95th percentile 6.1 %) between 1000 and 2000 draws, consistent with 1/sqrt(2n) (D-215)"
+n_boot:
+  value: 1000
+  placeholder: N_BOOT
+  source: "Stability check 2026-10-19 (results/midair/development/stability.json): interval endpoints move by at most 1 % of the interval width between 1000 and 2000 resamples (D-215)"
+rel_unc_threshold:
+  value: null
+  placeholder: REL_UNC_THRESHOLD
+  source: null
+err_threshold_frac:
+  value: 0.1
+  placeholder: ERR_THRESHOLD_FRAC
+  source: "2026-10-19: a range estimate more than 10 % wrong counts as a large error. A stated choice that can be changed; the full PR curves for 5, 10, 20 and 50 % are always reported (D-311)"
+nonlinear_ratio_tol:
+  value: null
+  placeholder: NONLINEAR_RATIO_TOL
+  source: "When MC/first-order range sigma ratio counts as material disagreement. Set in Phase 2 from the Mid-Air curves."
+midair_noise_sweep:
+  value:
+    low: {pixel_px: 0.5, height_m: 0.1, attitude_deg: 0.1, tilt_deg: 0.1, focal_frac: 0.0025}
+    mid: {pixel_px: 2.0, height_m: 0.5, attitude_deg: 0.5, tilt_deg: 0.5, focal_frac: 0.01}
+    high: {pixel_px: 5.0, height_m: 2.0, attitude_deg: 2.0, tilt_deg: 2.0, focal_frac: 0.04}
+  placeholder: SENSOR_NOISE
+  source: "Sweep design, 2026-10-19 (sweep and report, not tune). Spans sub-degree to multi-degree attitude error and decimetre to metre height error. These are NOT headline values: headline sensor noise comes from AU-AIR hover segments and is justified in docs/decisions.md D-212."
+err_threshold_sweep:
+  value: [0.05, 0.1, 0.2, 0.5]
+  placeholder: ERR_THRESHOLD_FRAC
+  source: "Sweep design, 2026-10-19 (sweep, report the full precision-recall curve, then fix one operating point on the calibration split). The single {{ERR_THRESHOLD_FRAC}} is chosen in scripts/midair_calibrate.py on the calibration split."
+flag_l2:
+  value: 0.01
+  placeholder: FLAG_L2
+  source: "Set before any fit, 2026-10-19: mild ridge penalty on standardised features, so a handful of coefficients stay stable; not tuned (D-404)"

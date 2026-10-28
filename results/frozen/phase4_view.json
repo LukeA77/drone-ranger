@@ -1,0 +1,38 @@
+{
+ "frozen_utc": "2026-10-21T21:40:05+00:00",
+ "phase": "phase4_view",
+ "git_commit": "98c6841",
+ "uncommitted_changes_to_frozen_files": [
+  "M configs/auair.yaml",
+  "?? configs/trackers/botsort_cmc_tuned_B2_yolo26n_960.yaml",
+  "?? results/auair/camera_scale.json",
+  "?? results/auair/repeatability_calibration.json",
+  "?? results/auair/stationary_B2_yolo26n_960.json",
+  "?? results/auair/stationary_truth.json",
+  "?? results/auair/tilt_summary.json",
+  "?? results/visdrone/val/pixel_noise_B2_yolo26n_960.json",
+  "?? scripts/auair_repeatability_view.py",
+  "?? scripts/auair_stationary.py",
+  "?? scripts/auair_tilt.py",
+  "?? src/aerialrange/evaluate/auair_world.py",
+  "?? src/aerialrange/evaluate/stationary.py",
+  "?? src/aerialrange/evaluate/tilt_motion.py"
+ ],
+ "files": {
+  "configs/auair.yaml": "7b403920b994a8e9d7ae3251531172afddd9729bdf7aafb8c0a9591ff4e07907",
+  "configs/trackers/botsort_cmc_tuned_B2_yolo26n_960.yaml": "2fc425bb34f8e5fb20531a257a737a17e4498e3d78c1783736f2baac7812fc10",
+  "results/auair/clip_labels.csv": "960866bd4564ef568a16318374d7c24895fcb299e305dbd9856f183ec5c4f612",
+  "results/auair/camera_scale.json": "9a5f55bc0007a726cc06388e991a92ab9ba41f0982d73dc1a0555ab1d88569cb",
+  "results/auair/repeatability_calibration.json": "8932352389c3b045bfb66d2c19e48ad986e670999b5b2a706786d14041ac47d5",
+  "results/auair/tilt_summary.json": "3b2ec249fedd11e9cacc015a6cbcd1ae55598520bd29b65e1a70a06cf544ebd6",
+  "results/auair/stationary_B2_yolo26n_960.json": "a24b1d6fcc7a64219c74893f070cab5d86552b82cb7ad63f976b284a5775996f",
+  "results/auair/stationary_truth.json": "43d5eac5b826d88a0864820383e23fefade20b88bd628da6ff30775630be8764",
+  "results/visdrone/val/pixel_noise_B2_yolo26n_960.json": "38533a8863dc96ba61e09df18e28bcda4f885f565bae9361b86c544016280369",
+  "scripts/auair_repeatability_view.py": "8f4132ebe0ddf9e3b4996101052ac528e46cee4f2777155fdefd6736d6fcf740",
+  "scripts/auair_tilt.py": "5f550899159554230d87c6ed83fcefebd304fffd0b8af87dde3e7acee62f2fd4",
+  "scripts/auair_stationary.py": "1a31a0ea7894625ce8ad252c2731059760f6a6a8e9ec38589f72533d0d6ad61c",
+  "src/aerialrange/evaluate/auair_world.py": "b6313424423dc70f5076376cf236a427e01ecf1caf1500cc67a1c765184a424f",
+  "src/aerialrange/evaluate/tilt_motion.py": "2825ac6e28f955b9191bff4fde3110648b8b111563f31e98ae81d9dcba9e6ffb",
+  "src/aerialrange/evaluate/stationary.py": "6c97f498efced0c8fc5a29cf80b24ce29dfe9ab29a78ae5c1e9abcbd64b49a9c"
+ }
+}

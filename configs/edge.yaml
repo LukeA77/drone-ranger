@@ -1,0 +1,33 @@
+# Edge latency budget.
+target_fps:
+  value: 30
+  placeholder: TARGET_FPS
+  source: "2026-10-20: aim for full video rate on the laptop CPU, end to end (D-322). 10 fps is also reported as a reference operating point (reference_fps)"
+reference_fps:
+  value: 10
+  placeholder: null
+  source: "2026-10-20 (D-322): reported beside the target; twice AU-AIR's measured 5 fps (results/auair/schema.json)"
+latency_budget_ms:
+  value: null
+  placeholder: LATENCY_BUDGET_MS
+  source: "Derived: 1000 / target_fps (computed by the loader, never set by hand)"
+n_timed_frames:
+  value: 300
+  placeholder: N_TIMED_FRAMES
+  source: "Chosen for stable percentiles (D-601): 3 repeats x 300 = 900 samples, so the 99th percentile rests on 9 samples; 300 consecutive frames stay within one 464-frame val sequence"
+n_warmup:
+  value: 20
+  placeholder: N_WARMUP
+  source: "Chosen (D-601): covers model and tracker initialisation and first-call allocation; the per-repeat medians in each benchmark file show whether timing had settled"
+n_repeats:
+  value: 3
+  placeholder: N_REPEATS
+  source: "Chosen (D-601): run-to-run drift (for example thermal) is visible in end_to_end_median_by_repeat_ms"
+threads_set:
+  value: [library default]
+  placeholder: THREADS_SET
+  source: "D-601: PyTorch default intra-op threads (recorded per run as machine.torch_threads). Thread counts are varied later in the Pareto study"
+parity_tol:
+  value: 0.5
+  placeholder: PARITY_TOL
+  source: "D-604: largest allowed box-coordinate difference (px) between original and ONNX for matched detections. Half a pixel is far below the measured box noise (about 4-11 % of box size, results/visdrone/val/pixel_noise.json), so it cannot change a match; detection agreement must also be 100 %"

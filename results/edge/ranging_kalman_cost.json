@@ -1,0 +1,62 @@
+{
+ "decision": "D-612",
+ "note": "Ranging (vectorised ray-ground intersection) plus Kalman predict/update/speed per frame, synthetic boxes; D-601 sizes (20 warm-up, 300 timed); VS Code open",
+ "background_measured": {
+  "other_processes_cpu_percent_of_one_core": 80.3,
+  "busiest": [
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 18.0
+   },
+   {
+    "name": "Code.exe",
+    "cpu_percent": 16.8
+   },
+   {
+    "name": "dwm.exe",
+    "cpu_percent": 8.1
+   },
+   {
+    "name": "Code.exe",
+    "cpu_percent": 5.9
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 5.0
+   }
+  ],
+  "window_s": 2.0
+ },
+ "by_tracks": {
+  "10": {
+   "per_object": {
+    "median_ms": 2.3246000055223703,
+    "p99_ms": 3.099087990412954
+   },
+   "batched": {
+    "median_ms": 0.4155000060563907,
+    "p99_ms": 0.6850220047635955
+   }
+  },
+  "60": {
+   "per_object": {
+    "median_ms": 14.085450005950406,
+    "p99_ms": 15.228806972154407
+   },
+   "batched": {
+    "median_ms": 0.6099000020185485,
+    "p99_ms": 0.8663480155519205
+   }
+  },
+  "200": {
+   "per_object": {
+    "median_ms": 46.470750006847084,
+    "p99_ms": 56.58400000102117
+   },
+   "batched": {
+    "median_ms": 1.1275500000920147,
+    "p99_ms": 1.3975170106277792
+   }
+  }
+ }
+}

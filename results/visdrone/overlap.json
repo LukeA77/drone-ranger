@@ -1,0 +1,178 @@
+{
+  "n_det_images": 7019,
+  "n_mot_frames_hashed": 6771,
+  "frame_stride": 5,
+  "max_hamming": 4,
+  "naming": {
+    "det_example": "0000002_00005_d_0000014",
+    "mot_example_sequence": "uav0000009_03358_v",
+    "det_uses_d_suffix": true,
+    "mot_uses_v_suffix": true,
+    "shared_name_stems": 0
+  },
+  "pairs_within_threshold": 610,
+  "close_pairs_same_video": 157,
+  "close_pairs_different_video": 453,
+  "det_images_by_source_video_mot_split": {
+    "train": {
+      "none": 5966,
+      "train": 448,
+      "val": 45,
+      "test-dev": 12
+    },
+    "val": {
+      "none": 421,
+      "train": 106,
+      "val": 10,
+      "test-dev": 11
+    }
+  },
+  "det_images_sharing_a_video_with_mot_val_or_testdev": {
+    "train": {
+      "video_ids": [
+        137,
+        182,
+        201,
+        297,
+        305,
+        339
+      ],
+      "n_images": 57
+    },
+    "val": {
+      "video_ids": [
+        86,
+        117,
+        249
+      ],
+      "n_images": 21
+    }
+  },
+  "min_hamming_histogram": {
+    "0": 155,
+    "1": 82,
+    "2": 96,
+    "3": 125,
+    "4": 152,
+    "5": 180,
+    "6": 270,
+    "7": 392,
+    "8": 482,
+    "9": 571,
+    "10": 588,
+    "11": 655,
+    "12": 662,
+    "13": 608,
+    "14": 520,
+    "15": 476,
+    "16": 369,
+    "17": 267,
+    "18": 185,
+    "19": 103,
+    "20": 57,
+    "21": 19,
+    "22": 5
+  },
+  "closest_pairs": [
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\9999999_00592_d_0000268.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-test-dev\\sequences\\uav0000188_00000_v\\0000001.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\0000071_03522_d_0000006.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000071_03240_v\\0000141.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-val\\images\\0000276_02001_d_0000517.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000239_12336_v\\0000046.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\0000201_00182_d_0000172.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-test-dev\\sequences\\uav0000201_00000_v\\0000091.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\0000201_00000_d_0000171.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-test-dev\\sequences\\uav0000201_00000_v\\0000001.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\0000222_03900_d_0000012.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000222_03150_v\\0000391.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\0000076_01012_d_0000004.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000076_00720_v\\0000146.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\0000239_04503_d_0000013.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000239_03720_v\\0000391.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\0000339_00393_d_0000163.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-val\\sequences\\uav0000339_00001_v\\0000211.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\0000339_00197_d_0000162.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-val\\sequences\\uav0000339_00001_v\\0000076.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\9999999_00546_d_0000245.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000239_12336_v\\0000046.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\0000339_00001_d_0000161.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-val\\sequences\\uav0000339_00001_v\\0000001.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\9999937_00000_d_0000164.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000239_12336_v\\0000046.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\9999937_00000_d_0000163.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000239_12336_v\\0000046.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\9999937_00000_d_0000150.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000239_12336_v\\0000046.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\9999998_00210_d_0000167.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000239_12336_v\\0000046.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\9999994_00000_d_0000024.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000273_00001_v\\0000001.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\0000076_01444_d_0000005.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000076_00720_v\\0000361.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-train\\images\\0000239_04052_d_0000012.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-train\\sequences\\uav0000239_03720_v\\0000166.jpg",
+      "hamming": 0
+    },
+    {
+      "det": "VisDrone-DET\\VisDrone2019-DET-val\\images\\0000249_00001_d_0000001.jpg",
+      "mot": "VisDrone-MOT\\VisDrone2019-MOT-test-dev\\sequences\\uav0000249_00001_v\\0000001.jpg",
+      "hamming": 0
+    }
+  ]
+}

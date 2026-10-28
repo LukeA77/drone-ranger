@@ -1,0 +1,22 @@
+{
+ "decision": "D-518",
+ "run": "B2_yolo26n_960",
+ "kalman_q": 7.0,
+ "summary": {
+  "person": {
+   "tracks": 29,
+   "median_kmh": 3.4137193653274203,
+   "p90_kmh": 7.8145754267076235,
+   "share_above_70_kmh": 0.0,
+   "share_below_2_kmh": 0.3103448275862069
+  },
+  "vehicle": {
+   "tracks": 1106,
+   "median_kmh": 26.832320776722497,
+   "p90_kmh": 72.87045284383872,
+   "share_above_70_kmh": 0.1057866184448463,
+   "share_below_2_kmh": 0.0162748643761302
+  }
+ },
+ "note": "Plausibility only: no ground-truth speeds."
+}

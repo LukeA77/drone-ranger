@@ -1,0 +1,115 @@
+{
+ "generated_utc": "2026-10-22T09:37:21+00:00",
+ "run": "B2_yolo26n_960",
+ "tag": "p5_onnx640_bot8_s3",
+ "weights": "B2_yolo26n_960w_640_rect.onnx",
+ "imgsz": 640,
+ "tracker": {
+  "config": "botsort_cmc.yaml",
+  "overrides": {
+   "track_high_thresh": 0.05,
+   "new_track_thresh": 0.55,
+   "gmc_downscale": 8
+  }
+ },
+ "det_stride": 3,
+ "frames": "MOT val uav0000086_00000_v (1344x756), in order; cycled per repeat",
+ "not_timed": "ranging and Kalman filter (not yet integrated into the pipeline); overlay drawing",
+ "smoke": false,
+ "machine": {
+  "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+  "logical_cores": 16,
+  "os": "Windows-11-10.0.26200-SP0",
+  "torch_threads": 8,
+  "torch": "2.14.1+cpu",
+  "ultralytics": "8.4.182",
+  "opencv": "5.0.0"
+ },
+ "other_processes": "Morning 2026-10-22: applications closed except the code editor, plugged in; background load measured per run",
+ "background_measured": {
+  "other_processes_cpu_percent_of_one_core": 123.1,
+  "busiest": [
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 18.8
+   },
+   {
+    "name": "EOSOverlayRenderer-Win64-Shipping.exe",
+    "cpu_percent": 10.9
+   },
+   {
+    "name": "jetbrains-toolbox.exe",
+    "cpu_percent": 8.5
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 5.5
+   },
+   {
+    "name": "dwm.exe",
+    "cpu_percent": 5.1
+   }
+  ],
+  "window_s": 3.0
+ },
+ "stages": {
+  "read": {
+   "median_ms": 9.73189999058377,
+   "mean_ms": 9.679510555741015,
+   "p95_ms": 10.047804994974285,
+   "p99_ms": 10.255328002385795,
+   "max_ms": 29.86469998722896
+  },
+  "detect": {
+   "median_ms": 0.008499977411702275,
+   "mean_ms": 11.96775133323778,
+   "p95_ms": 36.311335023492575,
+   "p99_ms": 41.71701300918357,
+   "max_ms": 55.94560000463389
+  },
+  "track": {
+   "median_ms": 13.360199998714961,
+   "mean_ms": 15.226406222726736,
+   "p95_ms": 21.30057499743998,
+   "p99_ms": 22.76146399846766,
+   "max_ms": 39.86570000415668
+  },
+  "end_to_end": {
+   "median_ms": 23.11910002026707,
+   "mean_ms": 36.873668111705534,
+   "p95_ms": 67.16303498396883,
+   "p99_ms": 71.11579101911046,
+   "max_ms": 104.81930000241846
+  }
+ },
+ "n_samples": 900,
+ "throughput_fps": 27.11962360160611,
+ "end_to_end_median_by_repeat_ms": [
+  23.069450006005354,
+  23.14550001756288,
+  23.169849984697066
+ ],
+ "peak_rss_mb": 411.0390625,
+ "protocol": {
+  "n_warmup": 20,
+  "n_timed": 300,
+  "n_repeats": 3
+ },
+ "detect_library_split_median_ms": {
+  "preprocess": 3.9976999978534877,
+  "inference": 27.1665999898687,
+  "postprocess": 2.343300002394244
+ },
+ "budget": {
+  "30_fps": {
+   "budget_ms": 33.333333333333336,
+   "meets_at_median": true,
+   "meets_at_p99": false
+  },
+  "10_fps": {
+   "budget_ms": 100.0,
+   "meets_at_median": true,
+   "meets_at_p99": true
+  }
+ }
+}

@@ -1,0 +1,15 @@
+{
+ "run": "B2_yolo26n_960",
+ "model": "yolo26n.pt",
+ "imgsz": 960,
+ "ultralytics": "8.4.182",
+ "torch": "2.11.0+cu128",
+ "gpu": "Tesla T4",
+ "wall_seconds": 9777.908165454865,
+ "overrides_vs_library_defaults": {
+  "epochs": 50,
+  "patience": 10,
+  "cache": "ram"
+ },
+ "platform": "kaggle"
+}

@@ -1,0 +1,16 @@
+{
+ "frozen_utc": "2026-10-21T12:18:58+00:00",
+ "phase": "phase2",
+ "git_commit": "98c6841",
+ "uncommitted_changes_to_frozen_files": [
+  "?? results/midair/calibration_fit.json"
+ ],
+ "files": {
+  "configs/data.yaml": "20951e377c38b830aa0f07ee7dc832ccf21dc6bf8d5e020c66025aeb747e09a5",
+  "configs/geometry.yaml": "f3474f4118189d3aaea521693dc9b23aa0e319e27d7a8c258710c4d13ff45025",
+  "configs/uncertainty.yaml": "130f10459345cd2ed02fc0d9d9861a758c2d9f2e909992474ffe747f60f454ed",
+  "results/splits.json": "cbc0974535692c506d9a9f1c6e7bb643cb9adf794039dea8e85bd3f2e29b28df",
+  "results/midair/calibration_fit.json": "2c127bfe777a433c7625740a9d90b0b1bf029cdba919cec2e7bb9f69e39c161e",
+  "results/midair/terrain_calibration_fit.json": "fff33fd1b3a2aaa9aef367e67213e6ceeff61d1a124e0202aceae2d94019e954"
+ }
+}

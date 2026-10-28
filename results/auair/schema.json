@@ -1,0 +1,357 @@
+{
+ "generated_utc": "2026-10-20T15:29:18+00:00",
+ "source": "Data/AU-AIR/annotations.json",
+ "top_level_keys": [
+  "annotations",
+  "categories",
+  "info",
+  "licenses"
+ ],
+ "info": {
+  "description": "AUAIR 2019 Dataset",
+  "url": "https://bozcani.github.io/AU-AIR-dataset.html",
+  "version": "1.0",
+  "year": "2019",
+  "contributor": "Ilker Bozcan",
+  "date_created": "2019/10/01"
+ },
+ "licenses_in_file": [
+  {
+   "url": "http://creativecommons.org/licenses/by-nc-sa/2.0/",
+   "id": 1,
+   "name": "Attribution-NonCommercial-ShareAlike License"
+  },
+  {
+   "url": "http://creativecommons.org/licenses/by-nc/2.0/",
+   "id": 2,
+   "name": "Attribution-NonCommercial License"
+  }
+ ],
+ "categories": [
+  "Human",
+  "Car",
+  "Truck",
+  "Van",
+  "Motorbike",
+  "Bicycle",
+  "Bus",
+  "Trailer"
+ ],
+ "frame_keys": [
+  "altitude",
+  "angle_phi",
+  "angle_psi",
+  "angle_theta",
+  "bbox",
+  "image_height",
+  "image_name",
+  "image_width:",
+  "latitude",
+  "linear_x",
+  "linear_y",
+  "linear_z",
+  "longtitude",
+  "platform",
+  "time"
+ ],
+ "fields": {
+  "altitude": {
+   "types": {
+    "float": 32823
+   },
+   "n": 32823,
+   "min": 2806.4,
+   "p1": 6626.22,
+   "median": 20352.0,
+   "p99": 29957.512,
+   "max": 30625.0
+  },
+  "angle_phi": {
+   "types": {
+    "float": 32823
+   },
+   "n": 32823,
+   "min": -0.5396342188119888,
+   "p1": -0.2104368402212858,
+   "median": -0.0618129912763834,
+   "p99": 0.2177965660745447,
+   "max": 0.5776944756507874
+  },
+  "angle_psi": {
+   "types": {
+    "float": 32823
+   },
+   "n": 32823,
+   "min": -3.133327078819275,
+   "p1": -2.924577350616455,
+   "median": 0.38410925269126894,
+   "p99": 2.9070786051750184,
+   "max": 3.1372000694274904
+  },
+  "angle_theta": {
+   "types": {
+    "float": 32823
+   },
+   "n": 32823,
+   "min": -0.42477542757987974,
+   "p1": -0.1326284677311778,
+   "median": 0.09374422207474709,
+   "p99": 0.23700077555396312,
+   "max": 0.45216810405254365
+  },
+  "image_height": {
+   "types": {
+    "float": 32823
+   },
+   "n": 32823,
+   "min": 1080.0,
+   "p1": 1080.0,
+   "median": 1080.0,
+   "p99": 1080.0,
+   "max": 1080.0
+  },
+  "image_name": {
+   "types": {
+    "str": 32823
+   },
+   "n": 32823
+  },
+  "image_width:": {
+   "types": {
+    "float": 32823
+   },
+   "n": 32823,
+   "min": 1920.0,
+   "p1": 1920.0,
+   "median": 1920.0,
+   "p99": 1920.0,
+   "max": 1920.0
+  },
+  "latitude": {
+   "types": {
+    "float": 32823
+   },
+   "n": 32823,
+   "min": 56.20613854151442,
+   "p1": 56.206145856651496,
+   "median": 56.20626513140804,
+   "p99": 56.20709167981707,
+   "max": 56.207134665586054
+  },
+  "linear_x": {
+   "types": {
+    "float": 32823
+   },
+   "n": 32823,
+   "min": -3.877551007270813,
+   "p1": -0.7143592779636383,
+   "median": 0.005693613179028034,
+   "p99": 0.8302347319126108,
+   "max": 3.308374309539795
+  },
+  "linear_y": {
+   "types": {
+    "float": 32823
+   },
+   "n": 32823,
+   "min": -3.9298539638519285,
+   "p1": -0.9849192218780515,
+   "median": 7.706517353653908e-05,
+   "p99": 0.8442380332946744,
+   "max": 3.0888574838638307
+  },
+  "linear_z": {
+   "types": {
+    "float": 32823
+   },
+   "n": 32823,
+   "min": -4.41450777053833,
+   "p1": -1.6305375947952268,
+   "median": -4.19914722442627e-06,
+   "p99": 1.634869156122207,
+   "max": 2.2168394327163696
+  },
+  "longtitude": {
+   "types": {
+    "float": 32823
+   },
+   "n": 32823,
+   "min": 10.187764785463191,
+   "p1": 10.187818621823135,
+   "median": 10.18858816978659,
+   "p99": 10.190899467663204,
+   "max": 10.19098865264084
+  },
+  "platform": {
+   "types": {
+    "str": 32823
+   },
+   "n": 32823
+  },
+  "time": {
+   "day": {
+    "types": {
+     "int": 32823
+    },
+    "n": 32823,
+    "min": 5.0,
+    "p1": 5.0,
+    "median": 5.0,
+    "p99": 29.0,
+    "max": 29.0
+   },
+   "hour": {
+    "types": {
+     "int": 32823
+    },
+    "n": 32823,
+    "min": 9.0,
+    "p1": 9.0,
+    "median": 11.0,
+    "p99": 15.0,
+    "max": 15.0
+   },
+   "min": {
+    "types": {
+     "int": 32823
+    },
+    "n": 32823,
+    "min": 7.0,
+    "p1": 7.0,
+    "median": 21.0,
+    "p99": 35.0,
+    "max": 35.0
+   },
+   "month": {
+    "types": {
+     "int": 32823
+    },
+    "n": 32823,
+    "min": 8.0,
+    "p1": 8.0,
+    "median": 9.0,
+    "p99": 9.0,
+    "max": 9.0
+   },
+   "ms": {
+    "types": {
+     "float": 32823
+    },
+    "n": 32823,
+    "min": 16200.0,
+    "p1": 32644.000000000007,
+    "median": 564000.0,
+    "p99": 1490155.9999999998,
+    "max": 1565200.0
+   },
+   "sec": {
+    "types": {
+     "int": 32823
+    },
+    "n": 32823,
+    "min": 5.0,
+    "p1": 5.0,
+    "median": 22.0,
+    "p99": 50.0,
+    "max": 50.0
+   },
+   "year": {
+    "types": {
+     "int": 32823
+    },
+    "n": 32823,
+    "min": 2019.0,
+    "p1": 2019.0,
+    "median": 2019.0,
+    "p99": 2019.0,
+    "max": 2019.0
+   }
+  },
+  "bbox": {
+   "class": {
+    "types": {
+     "int": 132031
+    },
+    "n": 132031,
+    "min": 0.0,
+    "p1": 0.0,
+    "median": 1.0,
+    "p99": 7.0,
+    "max": 7.0
+   },
+   "height": {
+    "types": {
+     "int": 132031
+    },
+    "n": 132031,
+    "min": 0.0,
+    "p1": 11.0,
+    "median": 68.0,
+    "p99": 333.0,
+    "max": 1074.0
+   },
+   "left": {
+    "types": {
+     "int": 132031
+    },
+    "n": 132031,
+    "min": 0.0,
+    "p1": 0.0,
+    "median": 922.0,
+    "p99": 1843.0,
+    "max": 1920.0
+   },
+   "top": {
+    "types": {
+     "int": 132031
+    },
+    "n": 132031,
+    "min": 0.0,
+    "p1": 0.0,
+    "median": 321.0,
+    "p99": 913.0,
+    "max": 1080.0
+   },
+   "width": {
+    "types": {
+     "int": 132031
+    },
+    "n": 132031,
+    "min": 0.0,
+    "p1": 15.0,
+    "median": 97.0,
+    "p99": 516.0,
+    "max": 1920.0
+   }
+  }
+ },
+ "totals": {
+  "frames": 32823,
+  "instances": 132031,
+  "classes": 8,
+  "per_class": {
+   "Car": 102619,
+   "Human": 5158,
+   "Truck": 9545,
+   "Van": 9995,
+   "Bicycle": 1128,
+   "Trailer": 2538,
+   "Motorbike": 319,
+   "Bus": 729
+  },
+  "paper": {
+   "frames": 32823,
+   "instances": 132034,
+   "classes": 8
+  }
+ },
+ "frame_spacing": {
+  "note": "Consecutive frames sorted by time stamp; gaps of 1 s or more excluded",
+  "n_gaps_used": 32815,
+  "n_zero_or_negative": 0,
+  "n_gaps_ge_1s": 7,
+  "median_s": 0.00020000000222353265,
+  "p10_s": 0.00019999999494757503,
+  "p90_s": 0.00020000000222353265
+ }
+}

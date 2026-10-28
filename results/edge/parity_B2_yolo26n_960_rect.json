@@ -1,0 +1,21 @@
+{
+ "generated_utc": "2026-10-21T20:28:17+00:00",
+ "weights": "cache/train/B2_yolo26n_960/weights/best.pt",
+ "onnx": "B2_yolo26n_960_rect.onnx",
+ "imgsz": 960,
+ "onnx_input_hw": [
+  544,
+  960
+ ],
+ "n_frames": 50,
+ "ultralytics": "8.4.182",
+ "onnxruntime": "1.31.0",
+ "max_box_diff_px": 0.00048828125,
+ "max_score_diff": 4.172325134277344e-06,
+ "agreement_original_side": 1.0,
+ "agreement_onnx_side": 1.0,
+ "detections_original": 1982,
+ "detections_onnx": 1982,
+ "parity_tol": 0.5,
+ "within_tol": true
+}

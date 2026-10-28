@@ -1,0 +1,34 @@
+{
+  "mot": {
+    "train": {
+      "sequences": 56,
+      "person": 328701,
+      "vehicle": 592392,
+      "ignored_regions": 62369
+    },
+    "val": {
+      "sequences": 7,
+      "person": 50312,
+      "vehicle": 40286,
+      "ignored_regions": 3994
+    },
+    "test-dev": {
+      "sequences": 17,
+      "person": 140183,
+      "vehicle": 126194,
+      "ignored_regions": 23472
+    }
+  },
+  "det": {
+    "train": {
+      "images": 6414,
+      "boxes": 338285,
+      "excluded_images_shared_video_with_mot_eval": 57
+    },
+    "val": {
+      "images": 527,
+      "boxes": 37135,
+      "excluded_images_shared_video_with_mot_eval": 21
+    }
+  }
+}

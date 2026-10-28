@@ -1,0 +1,80 @@
+{
+ "generated_utc": "2026-10-21T15:18:27+00:00",
+ "decision": "D-508",
+ "calibration_recordings": [
+  "20190829091111",
+  "20190905142119"
+ ],
+ "straight_down_clips_used": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  29,
+  30
+ ],
+ "thresholds": {
+  "min_climb_m": 1.5,
+  "min_move_m": 2.0,
+  "gps_velocity_ratio": 1.25,
+  "half_size": 0.5
+ },
+ "altimeter_drift": {
+  "20190829091111": {
+   "a_m": -0.7946641393563452,
+   "b_m_per_min": -0.4305295895733449,
+   "n_windows": 105,
+   "clips": [
+    0,
+    5,
+    6,
+    9
+   ],
+   "model": "linear drift",
+   "residual_robust_sigma_m": 1.8162565273368318
+  },
+  "20190905142119": {
+   "a_m": 5.643889624525633,
+   "b_m_per_min": 0.0,
+   "n_windows": 16,
+   "clips": [
+    30
+   ],
+   "model": "constant (one clip)",
+   "residual_robust_sigma_m": 7.424569154216391
+  }
+ },
+ "focal_px": {
+  "median": 1258.803179913637,
+  "ci95_clip_bootstrap": [
+   1155.0041632472946,
+   1307.8735172183215
+  ],
+  "n_windows": 52,
+  "by_clip_median": {
+   "5": 1313.9119502848355,
+   "6": 1242.1047547234273,
+   "7": 1332.3688827109836,
+   "8": 1178.4133156999794,
+   "30": 1050.092169658139
+  },
+  "horizontal_fov_deg": 74.6603988771544
+ },
+ "car_check": {
+  "n_boxes": 3394,
+  "f_times_L_median_px_m": 5803.195491525787,
+  "implied_car_length_m": 4.610089634444622,
+  "ci95_clip_bootstrap": [
+   4.370003459920251,
+   5.055120172342004
+  ],
+  "note": "Axis-aligned boxes: the long side of a car at an angle overstates its length, so this is an upper-leaning estimate. Compare with a published mean car length."
+ },
+ "n_boot": 2000
+}

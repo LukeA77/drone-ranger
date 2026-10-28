@@ -1,0 +1,43 @@
+{
+ "source": {
+  "repository": "https://github.com/LukeA77/MOT_Tracking",
+  "commit": "455e7025be7fce26d4d5839b894a11f663f09129",
+  "file": "outputs/metrics.json",
+  "fetched": "2026-10-19",
+  "note": "The author's earlier MOT17 project, copied verbatim for the domain-gap comparison. Different benchmark: comparisons carry that caveat."
+ },
+ "metrics": {
+  "detection": {
+   "map50": 0.6062230604393528,
+   "map50_95": 0.3307634308155782
+  },
+  "speed": [
+   {
+    "avg_ms_per_frame": 86.39824085555321,
+    "device": "cpu",
+    "fps": 11.574309732438556,
+    "runtime": "pytorch"
+   },
+   {
+    "avg_ms_per_frame": 47.04972198888855,
+    "device": "cpu",
+    "fps": 21.25411070943552,
+    "runtime": "onnxruntime"
+   }
+  ],
+  "tracking": {
+   "botsort": {
+    "hota": null,
+    "idf1": 0.4721353885954511,
+    "mota": 0.5215023474178404,
+    "num_switches": 71
+   },
+   "bytetrack": {
+    "hota": null,
+    "idf1": 0.4720094919641894,
+    "mota": 0.5220657276995305,
+    "num_switches": 70
+   }
+  }
+ }
+}

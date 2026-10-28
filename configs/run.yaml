@@ -1,0 +1,29 @@
+# End-to-end pipeline settings (`aerialrange run`). Each value cites its source.
+detector:
+  value: {kind: yolo, weights: weights/B2_yolo26n_960w_640_rect.onnx, imgsz: 640, score_floor: 0.1}
+  placeholder: null
+  source: "Fastest Pareto-frontier setting (D-611): B2 YOLO26n trained at 960, run at 640 through ONNX (parity D-604). Score floor 0.1 as in tracking (D-319). kind: boxes reads boxes from a CSV instead (synthetic demo)"
+tracker:
+  value: {config: configs/trackers/botsort_cmc_tuned_B2_yolo26n_960.yaml, gmc_downscale: 8, det_stride: 2}
+  placeholder: null
+  source: "Tuned BoT-SORT (D-321), camera-motion compensation at 1/8 (D-609), detection on every 2nd frame (D-610, D-611: 33 fps sustained with overlap)"
+camera:
+  value: {focal_px: 1259, cx: 960, cy: 540}
+  placeholder: null
+  source: "AU-AIR camera model (D-509); principal point assumed at the image centre (docs/auair_camera_model.md). Another camera needs its own values"
+range_sigma_rel_by_depression:
+  value: {edges_deg: [0, 10, 20, 40, 60, 91], rel: [0.217, 0.099, 0.125, 0.074, 0.038]}
+  placeholder: null
+  source: "Range sigma = rel x slant range by line-of-sight depression band: the all-flight relative repeatability of stationary vehicles on the AU-AIR calibration recordings (results/auair/repeatability_view_calibration_B2_yolo26n_960.json, D-517). Empirical, not a propagated model; held-out values were similar (7.6 % overall)"
+reliable_max_rel_sigma:
+  value: 0.10
+  placeholder: REL_UNC_THRESHOLD
+  source: "A range is 'uncertain' when sigma / range exceeds 10 %, the large-error threshold (err_threshold_frac, D-314); 'invalid' when no ground point exists (no tilt, at or above the horizon)"
+kalman:
+  value: {q: 7.0, meas_rel_sigma: [0.0082, 0.0039, 0.0022, 0.0019, 0.0035], max_unseen_frames: 30}
+  placeholder: null
+  source: "q = KALMAN_Q (D-518, configs/geometry.yaml); measurement sigma relative to range by the same depression bands: frame-to-frame jitter of parked objects on calibration recordings (D-518); a filter is dropped after 30 frames unseen, the tracker's track_buffer"
+overlay:
+  value: {rings_m: [10, 25, 50, 100], font_scale: 0.6}
+  placeholder: null
+  source: "Display only: faint ground distance rings around the point below the drone"

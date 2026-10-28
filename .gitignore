@@ -1,0 +1,37 @@
+# Data and model weights are never committed
+/Data/
+/data/
+*.zip
+*.hdf5
+*.h5
+*.pt
+*.pth
+*.onnx
+*.engine
+weights/
+runs/
+
+# Mid-Air download list contains a personal download token
+download_config.txt
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Editors and OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Per-sample evaluation caches (large, regenerable)
+cache/

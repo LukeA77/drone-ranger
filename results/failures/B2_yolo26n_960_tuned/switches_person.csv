@@ -1,0 +1,13 @@
+sequence,frame,gt_id,track_id,box_h_px,occlusion,truncation,camera_shift_px,cause
+uav0000086_00000_v,32,16,17.0,81.0,0,0,0.6,no tag applies
+uav0000086_00000_v,55,11,33.0,79.0,1,0,1.6,partial occlusion
+uav0000086_00000_v,67,16,33.0,92.0,0,0,1.8,no tag applies
+uav0000086_00000_v,73,1,10.0,52.0,1,0,0.7,partial occlusion
+uav0000086_00000_v,73,28,22.0,77.0,0,0,0.7,no tag applies
+uav0000086_00000_v,77,11,34.0,87.0,1,0,1.0,partial occlusion
+uav0000086_00000_v,91,13,36.0,70.0,1,0,0.3,partial occlusion
+uav0000086_00000_v,119,1,42.0,49.0,1,0,1.1,partial occlusion
+uav0000086_00000_v,134,15,36.0,79.0,1,0,0.8,partial occlusion
+uav0000086_00000_v,140,13,5.0,91.0,0,0,0.2,no tag applies
+uav0000086_00000_v,140,17,7.0,66.0,1,0,0.2,partial occlusion
+uav0000086_00000_v,145,13,4.0,94.0,0,0,1.1,no tag applies

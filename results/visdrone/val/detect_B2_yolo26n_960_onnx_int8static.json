@@ -1,0 +1,103 @@
+{
+ "generated_utc": "2026-10-21T20:37:20+00:00",
+ "run": "B2_yolo26n_960_onnx_int8static",
+ "split": "val",
+ "weights": "weights/B2_yolo26n_960_rect_int8static.onnx",
+ "class_map": "visdrone10",
+ "imgsz": 960,
+ "tiled": false,
+ "include_full": false,
+ "tile": null,
+ "overlap": null,
+ "frame_stride": 10,
+ "n_images": 288,
+ "iou_match": 0.5,
+ "max_det": 1000,
+ "ultralytics": "8.4.182",
+ "seconds_per_image_wall": 0.12350917882051565,
+ "timing_note": "Wall time, not the latency benchmark protocol (D-601).",
+ "results": {
+  "person": {
+   "ap50": {
+    "ap": 0.0,
+    "n_gt": 5096,
+    "n_det": 0,
+    "max_recall": 0.0
+   },
+   "ap50_95": 0.0,
+   "by_height": {
+    "0-16": {
+     "ap": 0.0,
+     "n_gt": 19,
+     "n_det": 0,
+     "max_recall": 0.0
+    },
+    "16-32": {
+     "ap": 0.0,
+     "n_gt": 392,
+     "n_det": 0,
+     "max_recall": 0.0
+    },
+    "32-64": {
+     "ap": 0.0,
+     "n_gt": 2082,
+     "n_det": 0,
+     "max_recall": 0.0
+    },
+    "64-128": {
+     "ap": 0.0,
+     "n_gt": 2366,
+     "n_det": 0,
+     "max_recall": 0.0
+    },
+    "128-inf": {
+     "ap": 0.0,
+     "n_gt": 237,
+     "n_det": 0,
+     "max_recall": 0.0
+    }
+   }
+  },
+  "vehicle": {
+   "ap50": {
+    "ap": 0.0,
+    "n_gt": 4081,
+    "n_det": 0,
+    "max_recall": 0.0
+   },
+   "ap50_95": 0.0,
+   "by_height": {
+    "0-16": {
+     "ap": 0.0,
+     "n_gt": 1,
+     "n_det": 0,
+     "max_recall": 0.0
+    },
+    "16-32": {
+     "ap": 0.0,
+     "n_gt": 775,
+     "n_det": 0,
+     "max_recall": 0.0
+    },
+    "32-64": {
+     "ap": 0.0,
+     "n_gt": 1674,
+     "n_det": 0,
+     "max_recall": 0.0
+    },
+    "64-128": {
+     "ap": 0.0,
+     "n_gt": 1159,
+     "n_det": 0,
+     "max_recall": 0.0
+    },
+    "128-inf": {
+     "ap": 0.0,
+     "n_gt": 472,
+     "n_det": 0,
+     "max_recall": 0.0
+    }
+   }
+  }
+ }
+}

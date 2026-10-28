@@ -1,0 +1,118 @@
+{
+ "clips": {
+  "01_tracking": {
+   "file": "cache/video/showcase/01_tracking.mp4",
+   "seconds": 33.44,
+   "size_mb": 18.14,
+   "size": [
+    1920,
+    1080
+   ],
+   "encoding": "two-pass 4306 kbps",
+   "within_size_limit": true,
+   "run": "B2_yolo26n_960_tuned_botsort_cmc",
+   "split": "test-dev",
+   "clips": [
+    [
+     "uav0000297_02761_v",
+     1,
+     200
+    ],
+    [
+     "uav0000073_00600_v",
+     1,
+     200
+    ],
+    [
+     "uav0000120_04775_v",
+     1,
+     200
+    ],
+    [
+     "uav0000077_00720_v",
+     1,
+     200
+    ]
+   ]
+  },
+  "02_before_after": {
+   "file": "cache/video/showcase/02_before_after.mp4",
+   "seconds": 17.16,
+   "size_mb": 12.89,
+   "size": [
+    1920,
+    1080
+   ],
+   "encoding": "crf 21",
+   "within_size_limit": true,
+   "left": "B0_yolo26n_640_botsort_cmc",
+   "right": "B2_yolo26n_960_tuned",
+   "clips": [
+    [
+     "uav0000305_00000_v",
+     1,
+     184
+    ],
+    [
+     "uav0000137_00458_v",
+     1,
+     233
+    ]
+   ]
+  },
+  "03_ranging_oblique": {
+   "file": "cache/video/showcase/03_ranging_oblique.mp4",
+   "seconds": 23.8,
+   "size_mb": 15.18,
+   "size": [
+    1920,
+    1080
+   ],
+   "encoding": "crf 21",
+   "within_size_limit": true,
+   "clip": 20,
+   "run": "cache/runs/auair_clip20_acc",
+   "frames": [
+    40,
+    158
+   ]
+  },
+  "04_ranging_overhead": {
+   "file": "cache/video/showcase/04_ranging_overhead.mp4",
+   "seconds": 13.0,
+   "size_mb": 6.11,
+   "size": [
+    1920,
+    1080
+   ],
+   "encoding": "crf 21",
+   "within_size_limit": true,
+   "clip": 44,
+   "run": "cache/runs/auair_clip44_acc",
+   "frames": [
+    1,
+    65
+   ]
+  },
+  "05_range_flag": {
+   "file": "cache/video/showcase/05_range_flag.mp4",
+   "seconds": 30.0,
+   "size_mb": 18.08,
+   "size": [
+    1080,
+    1080
+   ],
+   "encoding": "two-pass 4800 kbps",
+   "within_size_limit": true,
+   "trajectory": "trajectory_0026",
+   "split": "development",
+   "frames": [
+    713,
+    1462
+   ],
+   "points_per_second": 40
+  }
+ },
+ "generated_utc": "2026-10-27T19:21:34+00:00",
+ "max_video_mb": 20.0
+}

@@ -1,0 +1,13 @@
+sequence,gt_id,frames,median_h_px,miss_share,shown_frame,occlusion,truncation,camera_shift_px,cause
+uav0000268_05773_v,38,115,30.0,1.0,599,1,0,0.1,small (30 px); partial occlusion
+uav0000268_05773_v,35,164,24.0,1.0,355,2,1,1.1,small (21 px); heavy occlusion; truncated at frame edge
+uav0000268_05773_v,31,252,25.0,1.0,278,1,0,1.0,small (25 px); partial occlusion
+uav0000268_05773_v,30,185,30.0,1.0,453,1,1,2.4,small (30 px); partial occlusion; truncated at frame edge
+uav0000268_05773_v,27,125,27.0,1.0,251,1,0,1.6,small (27 px); partial occlusion
+uav0000268_05773_v,23,157,29.0,1.0,328,1,1,0.3,small (29 px); partial occlusion; truncated at frame edge
+uav0000268_05773_v,14,105,29.0,1.0,926,2,0,2.5,small (29 px); heavy occlusion
+uav0000268_05773_v,13,86,30.0,1.0,280,1,1,3.9,small (30 px); partial occlusion; truncated at frame edge
+uav0000268_05773_v,9,978,31.0,1.0,490,0,0,1.7,small (31 px)
+uav0000268_05773_v,8,978,29.0,1.0,490,1,0,1.7,small (29 px); partial occlusion
+uav0000268_05773_v,1,108,27.0,1.0,55,2,0,0.8,small (27 px); heavy occlusion
+uav0000182_00000_v,40,95,22.0,1.0,48,0,0,7.1,small (22 px)

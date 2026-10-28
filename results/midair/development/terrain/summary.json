@@ -1,0 +1,67 @@
+{
+ "meta": {
+  "generated_utc": "2026-10-20T01:15:27+00:00",
+  "split": "development",
+  "trajectories": [
+   "trajectory_0002",
+   "trajectory_0003",
+   "trajectory_0004",
+   "trajectory_0006",
+   "trajectory_0008",
+   "trajectory_0010",
+   "trajectory_0011",
+   "trajectory_0016",
+   "trajectory_0018",
+   "trajectory_0021",
+   "trajectory_0023",
+   "trajectory_0025",
+   "trajectory_0026",
+   "trajectory_0028",
+   "trajectory_0029"
+  ],
+  "n_boot": 1000,
+  "seed": 0,
+  "err_threshold_frac": 0.1
+ },
+ "data": {
+  "flat_true_height": {
+   "valid_fraction": 0.8767453018274003,
+   "abs_rel_err_median": 0.16070770878384052,
+   "abs_rel_err_median_ci": [
+    0.12247939992613405,
+    0.1963127869972711
+   ],
+   "abs_rel_err_p90": 0.7275666719461129,
+   "abs_rel_err_p90_ci": [
+    0.607590255795213,
+    0.8092605884356316
+   ]
+  },
+  "flat_altimeter": {
+   "valid_fraction": 0.47597505113932914,
+   "abs_rel_err_median": 2.5317644860345863,
+   "abs_rel_err_median_ci": [
+    0.8502133697799742,
+    6.298630572096558
+   ],
+   "abs_rel_err_p90": 19.247050821283473,
+   "abs_rel_err_p90_ci": [
+    9.937164757239874,
+    23.666257456650875
+   ]
+  },
+  "terrain_motion": {
+   "valid_fraction": 0.9410511847142843,
+   "abs_rel_err_median": 0.024947973910692887,
+   "abs_rel_err_median_ci": [
+    0.020662554169018507,
+    0.030004542432860302
+   ],
+   "abs_rel_err_p90": 0.4165691393910303,
+   "abs_rel_err_p90_ci": [
+    0.3158423225643895,
+    0.5198087358667572
+   ]
+  }
+ }
+}

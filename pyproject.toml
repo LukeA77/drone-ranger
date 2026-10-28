@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aerialrange"
+version = "0.0.1"
+description = "Aerial multi-object tracking with ground-plane ranging, uncertainty and a CPU latency budget."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
+dependencies = [
+    "numpy",
+    "scipy",
+    "pyyaml",
+    "typer",
+    "h5py",
+    "pillow",
+    "matplotlib",
+    "pandas",
+    "motmetrics",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "ruff"]
+train = ["torch", "torchvision", "ultralytics", "opencv-python-headless", "lap"]  # AGPL-3.0, which is why this project is AGPL-3.0
+edge = ["onnx", "onnxruntime", "onnxslim"]
+
+[project.scripts]
+aerialrange = "aerialrange.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "ANN"]
+# N802/N803/N806: allow R_wb, K and similar frame-named variables.
+# ANN401: config values are dynamically typed YAML.
+ignore = ["N802", "N803", "N806", "ANN401"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

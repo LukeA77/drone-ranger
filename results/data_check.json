@@ -1,0 +1,149 @@
+{
+  "data_root": "<repo>\\Data",
+  "all_ok": false,
+  "results": [
+    {
+      "name": "VisDrone2019-MOT-train",
+      "status": "ok",
+      "details": {
+        "source": "<repo>\\Data\\VisDrone-MOT\\VisDrone2019-MOT-train",
+        "format": "folder",
+        "sequences": 56,
+        "annotation_files": 56,
+        "frames": 24201,
+        "boxes": 1169359,
+        "ignored_region_rows": 62369,
+        "categories_seen": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "problems": []
+    },
+    {
+      "name": "VisDrone2019-MOT-val",
+      "status": "ok",
+      "details": {
+        "source": "<repo>\\Data\\VisDrone-MOT\\VisDrone2019-MOT-val",
+        "format": "folder",
+        "sequences": 7,
+        "annotation_files": 7,
+        "frames": 2846,
+        "boxes": 118127,
+        "ignored_region_rows": 3994,
+        "categories_seen": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "problems": []
+    },
+    {
+      "name": "VisDrone2019-MOT-test-dev",
+      "status": "ok",
+      "details": {
+        "source": "<repo>\\Data\\VisDrone-MOT\\VisDrone2019-MOT-test-dev",
+        "format": "folder",
+        "sequences": 17,
+        "annotation_files": 17,
+        "frames": 6635,
+        "boxes": 333700,
+        "ignored_region_rows": 23472,
+        "categories_seen": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "problems": []
+    },
+    {
+      "name": "VisDrone2019-DET-train",
+      "status": "ok",
+      "details": {
+        "source": "<repo>\\Data\\VisDrone-DET\\VisDrone2019-DET-train",
+        "format": "folder",
+        "images": 6471,
+        "annotation_files": 6471,
+        "boxes": 353550
+      },
+      "problems": []
+    },
+    {
+      "name": "VisDrone2019-DET-val",
+      "status": "ok",
+      "details": {
+        "source": "<repo>\\Data\\VisDrone-DET\\VisDrone2019-DET-val",
+        "format": "folder",
+        "images": 548,
+        "annotation_files": 548,
+        "boxes": 40169
+      },
+      "problems": []
+    },
+    {
+      "name": "midair/Kite_training/sunny",
+      "status": "partial",
+      "details": {
+        "folder": "<repo>\\Data\\midair\\Kite_training\\sunny",
+        "trajectories_in_hdf5": 30,
+        "sensor_records": "hdf5",
+        "depth": {
+          "trajectories_expected": 30,
+          "present": 12,
+          "frames": 26542
+        },
+        "normals": {
+          "trajectories_expected": 30,
+          "present": 12,
+          "frames": 26542
+        },
+        "segmentation": {
+          "trajectories_expected": 30,
+          "present": 12,
+          "frames": 26542
+        }
+      },
+      "problems": [
+        "54 of 90 trajectory folders missing"
+      ]
+    },
+    {
+      "name": "auair",
+      "status": "missing",
+      "details": {
+        "note": "data.auair_subdir is null (not downloaded)"
+      },
+      "problems": []
+    }
+  ]
+}

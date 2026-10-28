@@ -1,0 +1,35 @@
+# Detector settings (Phase 3).
+detector_family:
+  value: YOLO26
+  placeholder: DETECTOR_FAMILY
+  source: "2026-10-19: newest family documented in the installed library (ultralytics 8.4.182, cfg/models/26), which also offers a P2 small-object variant (D-307)"
+detector_sizes:
+  value: [n, s]
+  placeholder: DETECTOR_SIZES
+  source: "2026-10-19: the CPU real-time goal (Pillar C) rules out larger sizes; the probe on this CPU was 183 ms/frame for n at 640 under load (D-307)"
+input_sizes:
+  value: [640, 960, 1280]
+  placeholder: INPUT_SIZES
+  source: "2026-10-19: library default, midpoint, and near native VisDrone width (1344 px in MOT val) for small objects (D-307)"
+train_hyperparams:
+  value: null
+  placeholder: TRAIN_HYPERPARAMS
+  source: null
+iou_match:
+  value: 0.5
+  placeholder: IOU_MATCH
+  source: "MOTChallenge evaluation convention, IoU >= 0.5 (Milan et al., 2016, MOT16 benchmark); citation to be verified before the brief (D-301)"
+class_maps:
+  value:
+    coco: {0: person, 2: vehicle, 5: vehicle, 7: vehicle}
+    visdrone10: {0: person, 1: person, 3: vehicle, 4: vehicle, 5: vehicle, 8: vehicle}
+  placeholder: null
+  source: "Detector class id to evaluation group (D-302). coco: person; car, bus, truck (COCO has no van). visdrone10: YOLO ids of VisDrone categories 1, 2 -> person and 4, 5, 6, 9 -> vehicle (D-303)."
+max_det:
+  value: 1000
+  placeholder: null
+  source: "Measured: VisDrone DET images hold up to 902 objects (train) and 317 (val), from the Kaggle training log 2026-10-19; the library default of 300 would cap recall in crowded frames. Set above the maximum (D-316)"
+tiling:
+  value: {tile: 640, overlap: 0.2, include_full: true}
+  placeholder: TILE_SIZE
+  source: "Chosen on VisDrone MOT val 2026-10-20 (D-317): best overall and small-object AP50 among tile 480/640 x overlap 0.2/0.3, with and without a full-frame pass (results/visdrone/val/detect_B3_*.json). Wall time about 1.6 s/image against 0.12 s without tiling; the latency cost is measured properly in Phase 5"

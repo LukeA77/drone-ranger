@@ -1,0 +1,84 @@
+{
+ "generated_utc": "2026-10-22T09:35:26+00:00",
+ "tag": "p5_mt_onnx640_bot8_s2",
+ "mode": "threaded: read+detect thread, track on main thread",
+ "weights": "B2_yolo26n_960w_640_rect.onnx",
+ "imgsz": 640,
+ "tracker": {
+  "config": "botsort_cmc.yaml",
+  "overrides": {
+   "track_high_thresh": 0.05,
+   "new_track_thresh": 0.55,
+   "gmc_downscale": 8
+  }
+ },
+ "det_stride": 2,
+ "queue": 2,
+ "protocol": {
+  "n_warmup": 20,
+  "n_timed": 300,
+  "n_repeats": 3
+ },
+ "frames": "MOT val uav0000086_00000_v, in order, cycled",
+ "machine": {
+  "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+  "os": "Windows-11-10.0.26200-SP0",
+  "torch_threads": 8,
+  "ultralytics": "8.4.182"
+ },
+ "other_processes": "Morning 2026-10-22: applications closed except the code editor, plugged in; background load measured per run",
+ "background_measured": {
+  "other_processes_cpu_percent_of_one_core": 86.4,
+  "busiest": [
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 19.9
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 11.2
+   },
+   {
+    "name": "dwm.exe",
+    "cpu_percent": 8.5
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 5.7
+   },
+   {
+    "name": "System",
+    "cpu_percent": 4.1
+   }
+  ],
+  "window_s": 3.0
+ },
+ "latency": {
+  "median_ms": 47.3338000010699,
+  "p95_ms": 70.55901999847265,
+  "p99_ms": 77.46538100152975,
+  "max_ms": 123.82060001255013
+ },
+ "throughput_fps": 33.3837509577687,
+ "throughput_by_repeat": [
+  33.3837509577687,
+  33.65955689687406,
+  33.18853287065745
+ ],
+ "peak_rss_mb": 412.078125,
+ "not_timed": "ranging and Kalman filter (timed separately, D-612); overlay drawing",
+ "budget": {
+  "30_fps": {
+   "budget_ms": 33.333333333333336,
+   "throughput_keeps_up": true,
+   "latency_median_within": false,
+   "latency_p99_within": false
+  },
+  "10_fps": {
+   "budget_ms": 100.0,
+   "throughput_keeps_up": true,
+   "latency_median_within": true,
+   "latency_p99_within": true
+  }
+ }
+}
