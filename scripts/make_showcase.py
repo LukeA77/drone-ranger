@@ -1,6 +1,6 @@
 """Showcase clips with no words (2026-10-23, D-618): footage with the system's output
-drawn on it, and nothing else (no titles, captions, legends or credits on screen; The author writes
-the story and the dataset credits in the post).
+drawn on it, and nothing else (no titles, captions, legends or credits on screen; I write the
+story and the dataset credits in the post).
 
 Usage: python scripts/make_showcase.py [--only 1 3]
 

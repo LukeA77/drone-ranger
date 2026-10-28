@@ -1,4 +1,4 @@
-"""AU-AIR contact sheets and clip notes for the author's tilt labels.
+"""AU-AIR contact sheets and clip notes, for labelling each clip's camera tilt by hand.
 
 Usage: python scripts/contact_sheets.py
 

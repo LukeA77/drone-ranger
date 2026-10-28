@@ -1,7 +1,8 @@
 """Every file a published document links to or names must exist in the repository.
 
 Covers markdown links and back-quoted repository paths in README.md and docs/*.md. Paths under
-folders that are never committed (cache/, Data/, weights/), URLs, placeholders such as
+folders that are never committed (cache/, Data/, weights/), URLs, GitHub pages such as
+../../releases, placeholders such as
 <frames-or-video> and glob patterns are skipped.
 """
 
@@ -13,12 +14,20 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 TOP = ("src/", "scripts/", "results/", "docs/", "configs/", "tests/", "gpu/")
 SKIP = ("cache/", "Data/", "weights/")
+GITHUB_PAGES = ("../../releases", "../../issues", "../../actions")  # repository pages, not files
 DOCS = [
     ROOT / "README.md",
     *sorted((ROOT / "docs").glob("*.md")),
     *sorted((ROOT / "docs/src").glob("*.md")),
 ]
-PRIVATE = {"cover_note.md", "voice_sample.md"}  # local-only drafts, never published
+
+
+def _ignored(path: Path) -> bool:
+    """True for files git ignores (local working files that are never published)."""
+    import subprocess
+
+    r = subprocess.run(["git", "check-ignore", "-q", str(path)], cwd=ROOT, capture_output=True)
+    return r.returncode == 0
 
 
 def referenced_paths(text: str) -> set[str]:
@@ -28,14 +37,19 @@ def referenced_paths(text: str) -> set[str]:
     out = set()
     for p in links + ticks:
         p = p.split("#")[0].rstrip(".,;:")
-        if not p or "://" in p or any(c in p for c in "<>*{}$|") or p.startswith(SKIP):
+        if (
+            not p
+            or "://" in p
+            or any(c in p for c in "<>*{}$|")
+            or p.startswith(SKIP + GITHUB_PAGES)
+        ):
             continue
         if p.startswith(TOP) or (p in links and "/" in p):
             out.add(p)
     return out
 
 
-@pytest.mark.parametrize("doc", [d for d in DOCS if d.name not in PRIVATE], ids=lambda d: d.name)
+@pytest.mark.parametrize("doc", [d for d in DOCS if not _ignored(d)], ids=lambda d: d.name)
 def test_referenced_files_exist(doc: Path) -> None:
     base = ROOT if doc.parent in (ROOT, ROOT / "docs" / "src") else doc.parent
     missing = []

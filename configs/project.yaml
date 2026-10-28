@@ -1,8 +1,8 @@
 # Project-level settings. Every value records its source.
 repo_name:
-  value: aerial-track-and-range
+  value: drone-ranger
   placeholder: REPO_NAME
-  source: "2026-10-18"
+  source: "Renamed 2026-10-28 from aerial-track-and-range: shorter, easier to say and remember"
 package_name:
   value: aerialrange
   placeholder: REPO_NAME

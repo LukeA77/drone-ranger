@@ -59,7 +59,7 @@ Commands run from the repository root with the project virtual environment. On W
 
 ## AU-AIR (Phase 4)
 
-1. `python scripts/inspect_auair.py`; `python scripts/auair_frames.py`; `python scripts/contact_sheets.py` (the author labels `docs/auair_clip_notes.md`); `python scripts/auair_labels.py`.
+1. `python scripts/inspect_auair.py`; `python scripts/auair_frames.py`; `python scripts/contact_sheets.py` (I label `docs/auair_clip_notes.md` by hand); `python scripts/auair_labels.py`.
 2. Detector and tracker on all clips: `python scripts/auair_track.py --run B2_yolo26n_960 --weights cache/train/B2_yolo26n_960/weights/best.pt --imgsz 960`.
 3. Camera model on calibration recordings: `python scripts/auair_scale.py`.
 4. Stationary segments: `python scripts/auair_stationary.py --run B2_yolo26n_960` and `--run truth --noise-from B2_yolo26n_960`.

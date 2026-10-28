@@ -4,7 +4,7 @@
   "commit": "455e7025be7fce26d4d5839b894a11f663f09129",
   "file": "outputs/metrics.json",
   "fetched": "2026-10-19",
-  "note": "The author's earlier MOT17 project, copied verbatim for the domain-gap comparison. Different benchmark: comparisons carry that caveat."
+  "note": "My earlier MOT17 project, copied verbatim for the domain-gap comparison. Different benchmark: comparisons carry that caveat."
  },
  "metrics": {
   "detection": {
