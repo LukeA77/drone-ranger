@@ -36,14 +36,6 @@ Thumbs.db
 # Per-sample evaluation caches (large, regenerable)
 cache/
 
-# Local working files (planning notes and drafts; never published)
+# Local working files (never published)
 CLAUDE.md
-build.md
-PROGRESS.md
-BLOCKED.md
-SESSION_SUMMARY.md
-TASKS.md
-docs/voice_sample.md
-docs/cover_note.md
-docs/src/cover_note.md
-configs/zz_*.yaml
+local/
