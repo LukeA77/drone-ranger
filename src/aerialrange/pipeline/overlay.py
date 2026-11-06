@@ -59,6 +59,18 @@ def draw_rings(
     cv2.addWeighted(overlay, 0.45, img, 0.55, 0, dst=img)
 
 
+def _heading_arrow(img: NDArray, u: int, v: int, r: dict, pose: CameraPose, col: tuple) -> None:
+    """Arrow from the box centre along the ground heading, rotated into the image by the
+    camera's yaw (image up is the camera's forward direction on the ground)."""
+    hd = r.get("heading_deg")
+    if hd is None or not np.isfinite(hd):
+        return
+    a = np.radians(hd) - pose.yaw_rad  # heading relative to the camera's forward direction
+    length = 28
+    tip = (int(round(u + length * np.sin(a))), int(round(v - length * np.cos(a))))
+    cv2.arrowedLine(img, (u, v), tip, col, 2, cv2.LINE_AA, tipLength=0.35)
+
+
 def draw_frame(
     img: NDArray,
     frame: int,
@@ -86,7 +98,14 @@ def draw_frame(
                 f"#{r['track_id']} {r['range_m']:.0f} ± {r['range_sigma_m']:.0f} m "
                 f"{r['relative_azimuth_deg']:+.0f}°"
             )
-        _text(img, label.replace("°", " deg").replace("±", "+/-"), (x, max(12, y - 5)), scale * 0.8)
+            if "speed_shown" in r:  # version 2: speed only when the filter is confident
+                if r["speed_shown"]:
+                    label += f" · {r['speed_ms'] * 3.6:.0f} ± {r['speed_sigma_ms'] * 3.6:.0f} km/h"
+                    _heading_arrow(img, x + w // 2, y + h // 2, r, pose, col)
+                else:
+                    label += " · speed: settling"
+        label = label.replace("°", " deg").replace("±", "+/-").replace("·", "|")
+        _text(img, label, (x, max(12, y - 5)), scale * 0.8)
     # legend: colour plus words, top-left
     y0 = 30
     for name, col in STATUS.items():

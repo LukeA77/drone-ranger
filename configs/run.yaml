@@ -27,3 +27,7 @@ overlay:
   value: {rings_m: [10, 25, 50, 100], font_scale: 0.6}
   placeholder: null
   source: "Display only: faint ground distance rings around the point below the drone"
+speed_display:
+  value: {sigma_max_ms: null, min_age: null, nis_window: 10, nis_conf: 0.95}
+  placeholder: SPEED_SIGMA_MAX
+  source: "sigma_max_ms and min_age (updates) fitted on SynDrone development towns 2026-11-06: no setting meets the target (90 % of shown speeds within 0.5 m/s) with the version 1 filter, so both stay null and no speed is displayed; refit after Phase 9.2/9.3 (D-710, results/syndrone/development/speed_display_fit_v1_accurate.json). nis_window 10 updates and a two-sided 95 % chi-square band: the standard time-averaged NIS test (Bar-Shalom, Li and Kirubarajan, 2001)"

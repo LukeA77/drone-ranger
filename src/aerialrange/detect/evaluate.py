@@ -51,13 +51,14 @@ def average_precision(recall: NDArray, precision: NDArray) -> float:
     return float(vals.mean())
 
 
-def evaluate_detections(
+def ap_pieces(
     gt: Mapping[str, NDArray],
     det: Mapping[str, tuple[NDArray, NDArray]],
     iou_thr: float,
     height_range: tuple[float, float] | None = None,
-) -> dict[str, float]:
-    """AP for one group. `gt[img]`: (n, 4) ltwh; `det[img]`: ((m, 4) ltwh, (m,) scores)."""
+) -> tuple[NDArray, NDArray, int]:
+    """Scores, true-positive flags and ground-truth count for one group (and size bin), so
+    pieces from several sequences can be pooled (`ap_from_pieces`)."""
     all_scores, all_tp, n_gt = [], [], 0
     lo, hi = height_range if height_range else (-np.inf, np.inf)
     for img, g in gt.items():
@@ -75,6 +76,14 @@ def evaluate_detections(
         all_tp.append(tp[keep])
     scores = np.concatenate(all_scores) if all_scores else np.zeros(0)
     tps = np.concatenate(all_tp) if all_tp else np.zeros(0, bool)
+    return scores, tps, n_gt
+
+
+def ap_from_pieces(pieces: list[tuple[NDArray, NDArray, int]]) -> dict[str, float]:
+    """AP, ground-truth count, detection count and maximum recall from pooled pieces."""
+    scores = np.concatenate([p[0] for p in pieces]) if pieces else np.zeros(0)
+    tps = np.concatenate([p[1] for p in pieces]) if pieces else np.zeros(0, bool)
+    n_gt = int(sum(p[2] for p in pieces))
     if n_gt == 0:
         return {
             "ap": float("nan"),
@@ -92,3 +101,13 @@ def evaluate_detections(
         "n_det": int(len(scores)),
         "max_recall": float(recall[-1]) if len(recall) else 0.0,
     }
+
+
+def evaluate_detections(
+    gt: Mapping[str, NDArray],
+    det: Mapping[str, tuple[NDArray, NDArray]],
+    iou_thr: float,
+    height_range: tuple[float, float] | None = None,
+) -> dict[str, float]:
+    """AP for one group. `gt[img]`: (n, 4) ltwh; `det[img]`: ((m, 4) ltwh, (m,) scores)."""
+    return ap_from_pieces([ap_pieces(gt, det, iou_thr, height_range)])

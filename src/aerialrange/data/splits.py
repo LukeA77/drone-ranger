@@ -36,3 +36,37 @@ def split_trajectories(
         out[k] = sorted(shuffled[start : start + c])
         start += c
     return out
+
+
+def split_stratified(
+    strata: Mapping[str, Sequence[str]],
+    per_stratum: Mapping[str, int],
+    rest: str,
+    seed: int,
+) -> dict[str, list[str]]:
+    """Group-level split that keeps every stratum represented.
+
+    For each stratum (in sorted order) its members are shuffled with one seeded generator; the
+    first `per_stratum[split]` go to each split in the order given, and the remainder to
+    `rest`. Used for SynDrone towns: whole towns, never frames, so no scene
+    appears in two splits. The result does not depend on the input order.
+    """
+    seen: set[str] = set()
+    for members in strata.values():
+        if seen & set(members) or len(set(members)) != len(members):
+            raise ValueError("a member appears more than once")
+        seen |= set(members)
+    need = sum(per_stratum.values())
+    rng = np.random.default_rng(seed)
+    out: dict[str, list[str]] = {k: [] for k in [*per_stratum, rest]}
+    for name in sorted(strata):
+        members = sorted(strata[name])
+        if len(members) < need:
+            raise ValueError(f"stratum {name!r} has {len(members)} members, needs {need}")
+        shuffled = [members[i] for i in rng.permutation(len(members))]
+        start = 0
+        for split, n in per_stratum.items():
+            out[split] += shuffled[start : start + n]
+            start += n
+        out[rest] += shuffled[start:]
+    return {k: sorted(v) for k, v in out.items()}

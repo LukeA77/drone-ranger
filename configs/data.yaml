@@ -72,3 +72,30 @@ visdrone_eval_groups:
   value: {person: [1, 2], vehicle: [4, 5, 6, 9]}
   placeholder: null
   source: "Evaluation groups: person = pedestrian, people; vehicle = car, van, truck, bus; others (11) excluded; ignored regions (0) used to drop predictions"
+syndrone_subdir:
+  value: syndrone
+  placeholder: DATA_ROOT
+  source: "2026-11-04; local cache of SynDrone members fetched by scripts/syndrone_fetch.py"
+syndrone_base_url:
+  value: "https://lttm.dei.unipd.it/paper_data/syndrone/"
+  placeholder: null
+  source: "LTTM/Syndrone README (GitHub, main, read 2026-11-04): per-town TownXX_Opt_120_{color,depth}.zip"
+syndrone_towns:
+  value: [Town01, Town02, Town03, Town04, Town05, Town06, Town07, Town10HD]
+  placeholder: null
+  source: "LTTM/Syndrone README download table and server index, 2026-11-04"
+syndrone_strata:
+  value:
+    small_town: [Town01, Town02]
+    city: [Town03, Town05, Town10HD]
+    highway_rural: [Town04, Town06, Town07]
+  placeholder: null
+  source: "CARLA 0.9.12 maps page (carla.readthedocs.io/en/0.9.12/core_map, read 2026-11-04): Town01 basic town, Town02 'similar to Town01, but smaller'; Town03 'most complex town', Town05 'squared-grid town', Town10 'a city environment'; Town04 'infinite loop with a highway and a small town', Town06 'long highways', Town07 'a rural environment'. Grouping D-701"
+syndrone_split_per_stratum:
+  value: {development: 1, test: 1}
+  placeholder: null
+  source: "D-701: one town per stratum in development and in test; the remaining two towns are calibration"
+disk_floor_gb:
+  value: 15
+  placeholder: DISK_FLOOR_GB
+  source: "my choice: 15 GB, so the laptop never runs short of space mid-run (D-702)"

@@ -8,13 +8,18 @@ unknown); and configs/run.yaml (or another file of the same form). Writes, in `o
 depression, speed, speed sigma, validity, reason, reliability flag), `annotated.mp4`, and
 `timing.json` (per-stage medians and percentiles; overlay drawing reported separately and
 excluded from the latency budget).
+
+Version 2: `source` may also be any iterable of BGR frames and `metadata` a
+DataFrame, so frames can be streamed (SynDrone). tracks.csv also carries heading, heading
+sigma, the filter's age and recent mean NIS, and `speed_shown`, the display rule's verdict
+(`pipeline/speed_display.py`); speed is drawn on the overlay only when it is true.
 """
 
 from __future__ import annotations
 
 import json
 import time
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +30,7 @@ import pandas as pd
 from aerialrange.pipeline.filterbank import TrackFilterBank
 from aerialrange.pipeline.overlay import draw_frame
 from aerialrange.pipeline.ranging import CameraPose, RangingModel, range_boxes
+from aerialrange.pipeline.speed_display import SpeedDisplayRule
 from aerialrange.track.runner import DetSet, coast, make_tracker
 from aerialrange.utils.config import REPO_ROOT, load_config
 
@@ -47,10 +53,19 @@ COLUMNS = [
     "valid",
     "reason",
     "flag",
+    "heading_deg",
+    "heading_sigma_deg",
+    "track_age",
+    "nis_mean",
+    "speed_shown",
 ]
 
 
-def _frames(source: Path) -> Iterator[np.ndarray]:
+def _frames(source: Path | Iterable[np.ndarray]) -> Iterator[np.ndarray]:
+    if not isinstance(source, (str, Path)):
+        yield from source
+        return
+    source = Path(source)
     if source.is_dir():
         for p in sorted(list(source.glob("*.jpg")) + list(source.glob("*.png"))):
             yield cv2.imread(str(p))
@@ -77,18 +92,22 @@ def _stats(ms: list[float]) -> dict[str, float]:
 
 
 def run(
-    source: Path,
-    metadata: Path,
+    source: Path | Iterable[np.ndarray],
+    metadata: Path | pd.DataFrame,
     out: Path,
     config: str = "run",
     boxes_csv: Path | None = None,
     overrides: dict[str, Any] | None = None,
     max_frames: int | None = None,
     credit: str = "",
+    detections_out: list[dict] | None = None,
+    write_video: bool = True,
 ) -> dict[str, Any]:
     """Run the pipeline; returns the timing summary. `overrides` replace config values
     (e.g. camera intrinsics for the synthetic demo); `boxes_csv` makes the detector read boxes
-    from a CSV (frame, left, top, width, height, score, cls) instead of running a model."""
+    from a CSV (frame, left, top, width, height, score, cls) instead of running a model.
+    `detections_out`, if given, receives every raw detection before tracking (frame, box,
+    score, class), for detection evaluation; `write_video=False` skips the overlay video."""
     cfg = load_config(config)
 
     def get(k: str) -> Any:
@@ -112,7 +131,20 @@ def run(
     cmap = {
         int(k): v for k, v in load_config("detector").require("class_maps")["visdrone10"].items()
     }
-    meta = pd.read_csv(metadata).set_index("frame")
+    meta = (metadata if isinstance(metadata, pd.DataFrame) else pd.read_csv(metadata)).set_index(
+        "frame"
+    )
+    sd = get("speed_display")
+    rule = (
+        SpeedDisplayRule(
+            float(sd["sigma_max_ms"]),
+            int(sd["min_age"]),
+            int(sd["nis_window"]),
+            float(sd["nis_conf"]),
+        )
+        if sd.get("sigma_max_ms") is not None and sd.get("min_age") is not None
+        else None
+    )
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
 
@@ -150,14 +182,16 @@ def run(
         {"gmc_downscale": trk["gmc_downscale"]} if trk.get("gmc_downscale") else None,
     )
     stride = int(trk.get("det_stride", 1))
-    bank = TrackFilterBank(float(km["q"]), int(km["max_unseen_frames"]))
+    bank = TrackFilterBank(
+        float(km["q"]), int(km["max_unseen_frames"]), nis_window=int(sd["nis_window"])
+    )
     times: dict[str, list[float]] = {
         k: [] for k in ("read", "detect", "track", "range_filter", "end_to_end", "overlay")
     }
     rows_all: list[dict] = []
     writer = None
     t_prev = None
-    it = _frames(Path(source))
+    it = _frames(source)
     k = 0
     while max_frames is None or k < max_frames:
         t0 = time.perf_counter()
@@ -169,6 +203,19 @@ def run(
         if (k - 1) % stride == 0:
             d = detect(img, k)
             t2 = time.perf_counter()
+            if detections_out is not None:
+                for (cx_, cy_, w_, h_), sc, cl in zip(d.xywh, d.conf, d.cls, strict=True):
+                    detections_out.append(
+                        {
+                            "frame": k,
+                            "left": cx_ - w_ / 2,
+                            "top": cy_ - h_ / 2,
+                            "width": w_,
+                            "height": h_,
+                            "score": float(sc),
+                            "cls": int(cl),
+                        }
+                    )
             res = np.asarray(tracker.update(d, img)).reshape(-1, 8)
             tracked = [(int(r[4]), int(r[6]), r[0], r[1], r[2] - r[0], r[3] - r[1]) for r in res]
         else:
@@ -198,17 +245,25 @@ def run(
             np.column_stack([rg["ground_n_m"], rg["ground_e_m"]])[valid],
             msig[valid],
         )
-        speed = dict(
-            zip(
-                fb["id"].tolist(),
-                zip(fb["speed_ms"].tolist(), fb["speed_sigma_ms"].tolist(), strict=True),
-                strict=True,
+        speed = {
+            int(i): (
+                fb["speed_ms"][j],
+                fb["speed_sigma_ms"][j],
+                fb["heading_deg"][j],
+                fb["heading_sigma_deg"][j],
+                int(fb["age"][j]),
+                fb["nis_mean"][j],
+                int(fb["nis_n"][j]),
             )
-        )
+            for j, i in enumerate(fb["id"])
+        }
         t4 = time.perf_counter()
         frame_rows = []
         for j, (tid, cls, x, y, w, h) in enumerate(tracked):
-            sp, ss = speed.get(tid, (np.nan, np.nan))
+            sp, ss, hd, hs, age, nis_m, nis_n = speed.get(
+                tid, (np.nan, np.nan, np.nan, np.nan, 0, np.nan, 0)
+            )
+            shown = bool(rule is not None and valid[j] and rule.ok(ss, age, nis_m, nis_n))
             frame_rows.append(
                 {
                     "frame": k,
@@ -229,6 +284,11 @@ def run(
                     "valid": bool(valid[j]),
                     "reason": rg["reason"][j],
                     "flag": rg["flag"][j],
+                    "heading_deg": hd,
+                    "heading_sigma_deg": hs,
+                    "track_age": age,
+                    "nis_mean": nis_m,
+                    "speed_shown": shown,
                 }
             )
         rows_all += frame_rows
@@ -241,6 +301,8 @@ def run(
         ):
             times[name].append((b - a) * 1000)
         t5 = time.perf_counter()
+        if not write_video:
+            continue
         draw_frame(
             img,
             k,
@@ -274,6 +336,7 @@ def run(
         "frames": k,
         "det_stride": stride,
         "stages": {n: _stats(v) for n, v in times.items()},
+        "speed_display": "unresolved: no speed is displayed" if rule is None else vars(rule),
         "note": "Sequential run on this machine; overlay drawing excluded from end_to_end (10.1). "
         "detect is near zero on frames between detections. For the protocol benchmark see "
         "scripts/benchmark_pipeline.py and scripts/benchmark_threaded.py.",

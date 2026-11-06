@@ -1,0 +1,91 @@
+{
+  "town": "Town10HD",
+  "split": "development",
+  "frames": 3000,
+  "fitted_share": 0.958,
+  "min_boxes": 3,
+  "z0_m": {
+    "median": -0.016873999606437415,
+    "min": -0.06730430989728134,
+    "max": -0.0007337508737175369
+  },
+  "z0_se_m": {
+    "median": 0.0032659726383936754,
+    "p90": 0.004892077741845793
+  },
+  "boxes_per_frame_median": 15.0,
+  "camera_agreement": {
+    "h20_minus_h50": {
+      "frames": 2255,
+      "median_m": -0.004183712470960638,
+      "mad_m": 0.005347308647203425
+    },
+    "h20_minus_h80": {
+      "frames": 2205,
+      "median_m": -0.01803287638176701,
+      "mad_m": 0.006605426397713637
+    },
+    "h50_minus_h80": {
+      "frames": 2563,
+      "median_m": -0.013411772612847525,
+      "mad_m": 0.003620347471576024
+    }
+  },
+  "smoothness_resid_vs_5frame_interp_m": {
+    "median_abs": 0.00023693594804929594,
+    "p90_abs": 0.0012187474034901528
+  },
+  "reprojection": {
+    "h20": {
+      "n": 26080,
+      "median_abs_edge_px": 2.0,
+      "p90_abs_edge_px": 8.0,
+      "median_signed_edge_px": {
+        "left": -2.0,
+        "top": -4.0,
+        "right": 2.0,
+        "bottom": 1.0
+      },
+      "median_abs_centre_offset_px": 1.0,
+      "median_signed_centre_offset_px": [
+        0.0,
+        -1.5
+      ]
+    },
+    "h50": {
+      "n": 29691,
+      "median_abs_edge_px": 2.0,
+      "p90_abs_edge_px": 7.0,
+      "median_signed_edge_px": {
+        "left": -2.0,
+        "top": -3.0,
+        "right": 2.0,
+        "bottom": 1.0
+      },
+      "median_abs_centre_offset_px": 1.0,
+      "median_signed_centre_offset_px": [
+        0.0,
+        -1.0
+      ]
+    },
+    "h80": {
+      "n": 22151,
+      "median_abs_edge_px": 2.0,
+      "p90_abs_edge_px": 7.0,
+      "median_signed_edge_px": {
+        "left": -3.0,
+        "top": -2.0,
+        "right": 2.0,
+        "bottom": 2.0
+      },
+      "median_abs_centre_offset_px": 1.0,
+      "median_signed_centre_offset_px": [
+        -0.5,
+        0.0
+      ]
+    }
+  },
+  "reproj_px_max_proposal": 3.0,
+  "reproj_rule": "proposal = straight-down (h80) median |edge error| + 1 px; at nadir a z0 error hardly moves the projection, so that median is the gap between the object's shape and its box (D-704)",
+  "clean_view_definition": "person or vehicle actor, visibility >= 0.9, no truncation, >= 100 instance pixels"
+}

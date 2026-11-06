@@ -1,0 +1,29 @@
+# SynDrone truth and evaluation settings. Every value records its source.
+speed_window_frames:
+  value: 3
+  placeholder: null
+  source: "D-703: measured position jitter of moving actors is about 0.0001 m (Town01, development), so noise is negligible and the shortest centred window (central difference, exact for constant acceleration) has the least bias"
+vmax_walker_ms:
+  value: 2.5
+  placeholder: null
+  source: "D-703: walkers are spawned with set_max_speed(1 + random()), i.e. at most 2 m/s (LTTM/Syndrone spawn_utils.py); Town01 walker step speeds fall about 40-fold above 2.5 m/s (shoulder 2-2.5 m/s), so faster steps are physics glitches"
+vmax_vehicle_ms:
+  value: 70.0
+  placeholder: null
+  source: "D-703: a jump limit far above any town or highway speed (252 km/h); Town01 vehicle steps reach at most 17.6 m/s. Checked again on every development town"
+heading_min_speed_ms:
+  value: 0.5
+  placeholder: null
+  source: "D-703: below this, heading from a 3-frame difference of exact positions is still defined, but a near-stationary object's heading is not meaningful for display; reported, not tuned"
+truth_min_visibility:
+  value: 0.5
+  placeholder: null
+  source: "D-705: Town01 (development) person and vehicle actors: 77 % have visibility 0.9-1.0 and the rest spread almost evenly over 0-0.9 (no valley), so 0.5 (most of the object visible) is used; objects below it are ignored, not missed"
+truth_min_instance_px:
+  value: 4
+  placeholder: null
+  source: "D-705: the truth module's own minimum for a mask box (TruthSettings.min_instance_px); small objects are kept and reported by size bin rather than excluded, as for VisDrone in version 1"
+reproj_px_max:
+  value: 4.0
+  placeholder: REPROJ_PX_MAX
+  source: "D-706: Town01 (development) straight-down camera median |edge error| of clean views 3 px (shape-to-box gap, insensitive to z0) + 1 px rasterisation; results/syndrone/development/z0_check_Town01.json. Every camera height of every town must have a median at or below it"

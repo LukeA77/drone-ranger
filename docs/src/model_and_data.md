@@ -70,3 +70,16 @@ VisDrone2019 detection train (with {{RESULT:headline.json#data.visdrone_excluded
 - **Used:** all {{RESULT:headline.json#data.auair_frames|,d}} annotated frames (5 frames per second, {{RESULT:headline.json#data.auair_recordings|d}} recordings, {{RESULT:headline.json#data.auair_clips|d}} clips), with per-frame GPS position, altitude and drone attitude.
 - **Splits:** calibration recordings 20190829091111 and 20190905142119 for the camera model; the other six held out (D-506).
 - **Findings about the data:** altitude is in millimetres and drifts by metres within a flight; the camera tilt is not recorded; annotation boxes are looser than tight boxes (D-512) and not consistent from frame to frame (D-516); the paper's stated camera angles (45-90°) do not cover all clips (D-504).
+
+### SynDrone (end-to-end truth, synthetic; version 2)
+
+- **Source:** https://github.com/LTTM/Syndrone (generation code, Apache-2.0); data at https://lttm.dei.unipd.it/paper_data/syndrone/.
+- **Citation:** Rizzoli, G., Barbato, F., Caligiuri, M. and Zanuttigh, P. (2023) 'SynDrone: multi-modal UAV dataset for urban scenarios', *IEEE/CVF International Conference on Computer Vision Workshops (ICCVW)*; arXiv:2308.10491. To verify before publication.
+- **Licence (checked 2026-11-04):** neither the download page nor the paper states one. The authors' own arXiv comment reads "downloadable dataset with CC-BY license", with no version. Treated as Creative Commons Attribution (attribution required); no SynDrone images are committed to this repository, and contact sheets stay in `cache/`.
+- **Used:** CARLA-rendered flights over eight towns, 120 s each at 25 frames per second, each seen by three cameras (20 m at 30° below the horizon, 50 m at 60°, 80 m straight down): colour, depth, semantic labels, camera poses and 3D boxes with persistent actor identities. Read member by member from the archives with HTTP range requests (D-702).
+- **Splits:** by town, stratified by town type, seed 0: development Town01, Town07, Town10HD; calibration Town04, Town05; test Town02, Town03, Town06 (`results/splits.json`, D-701). The official split is by frame within each town and is not used.
+- **Limitation:** synthetic imagery from an ideal pinhole camera, with CARLA's traffic and pedestrian behaviour.
+
+## Code from other projects (version 2)
+
+- **TrackEval** (https://github.com/JonathonLuiten/TrackEval, commit 12c8791, MIT licence, checked from its LICENSE file 2026-11-04): the Higher Order Tracking Accuracy (HOTA) computation is vendored in `src/aerialrange/track/hota.py` with its copyright notice, changed only to run on NumPy 2.

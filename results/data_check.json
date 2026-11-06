@@ -4,28 +4,11 @@
   "results": [
     {
       "name": "VisDrone2019-MOT-train",
-      "status": "ok",
+      "status": "missing",
       "details": {
-        "source": "<repo>\\Data\\VisDrone-MOT\\VisDrone2019-MOT-train",
-        "format": "folder",
-        "sequences": 56,
-        "annotation_files": 56,
-        "frames": 24201,
-        "boxes": 1169359,
-        "ignored_region_rows": 62369,
-        "categories_seen": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11
+        "looked_for": [
+          "<repo>\\Data\\VisDrone-MOT\\VisDrone2019-MOT-train",
+          "<repo>\\Data\\VisDrone-MOT\\VisDrone2019-MOT-train.zip"
         ]
       },
       "problems": []
@@ -60,28 +43,11 @@
     },
     {
       "name": "VisDrone2019-MOT-test-dev",
-      "status": "ok",
+      "status": "missing",
       "details": {
-        "source": "<repo>\\Data\\VisDrone-MOT\\VisDrone2019-MOT-test-dev",
-        "format": "folder",
-        "sequences": 17,
-        "annotation_files": 17,
-        "frames": 6635,
-        "boxes": 333700,
-        "ignored_region_rows": 23472,
-        "categories_seen": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11
+        "looked_for": [
+          "<repo>\\Data\\VisDrone-MOT\\VisDrone2019-MOT-test-dev",
+          "<repo>\\Data\\VisDrone-MOT\\VisDrone2019-MOT-test-dev.zip"
         ]
       },
       "problems": []
@@ -119,29 +85,128 @@
         "sensor_records": "hdf5",
         "depth": {
           "trajectories_expected": 30,
-          "present": 12,
-          "frames": 26542
+          "present": 17,
+          "frames": 37391
         },
         "normals": {
           "trajectories_expected": 30,
-          "present": 12,
-          "frames": 26542
+          "present": 17,
+          "frames": 37511
         },
         "segmentation": {
           "trajectories_expected": 30,
-          "present": 12,
-          "frames": 26542
+          "present": 17,
+          "frames": 37511
         }
       },
       "problems": [
-        "54 of 90 trajectory folders missing"
+        "39 of 90 trajectory folders missing"
       ]
     },
     {
       "name": "auair",
       "status": "missing",
       "details": {
-        "note": "data.auair_subdir is null (not downloaded)"
+        "looked_for": "<repo>\\Data\\AU-AIR"
+      },
+      "problems": []
+    },
+    {
+      "name": "syndrone/Town01",
+      "status": "ok",
+      "details": {
+        "color_members": 30000,
+        "depth_members": 9000,
+        "indexes": [
+          "color",
+          "depth"
+        ],
+        "local_files_checked": {
+          "bboxes": 3000,
+          "camera": 9000,
+          "depth": 6,
+          "rgb": 12,
+          "semantic": 9000
+        },
+        "crc_checked": 21018
+      },
+      "problems": []
+    },
+    {
+      "name": "syndrone/Town02",
+      "status": "remote",
+      "details": {
+        "note": "nothing cached; streamed on demand (D-702)"
+      },
+      "problems": []
+    },
+    {
+      "name": "syndrone/Town03",
+      "status": "remote",
+      "details": {
+        "note": "nothing cached; streamed on demand (D-702)"
+      },
+      "problems": []
+    },
+    {
+      "name": "syndrone/Town04",
+      "status": "remote",
+      "details": {
+        "note": "nothing cached; streamed on demand (D-702)"
+      },
+      "problems": []
+    },
+    {
+      "name": "syndrone/Town05",
+      "status": "remote",
+      "details": {
+        "note": "nothing cached; streamed on demand (D-702)"
+      },
+      "problems": []
+    },
+    {
+      "name": "syndrone/Town06",
+      "status": "remote",
+      "details": {
+        "note": "nothing cached; streamed on demand (D-702)"
+      },
+      "problems": []
+    },
+    {
+      "name": "syndrone/Town07",
+      "status": "ok",
+      "details": {
+        "color_members": 30000,
+        "depth_members": 9000,
+        "indexes": [
+          "color",
+          "depth"
+        ],
+        "local_files_checked": {
+          "bboxes": 3000,
+          "camera": 9000,
+          "semantic": 9000
+        },
+        "crc_checked": 21000
+      },
+      "problems": []
+    },
+    {
+      "name": "syndrone/Town10HD",
+      "status": "ok",
+      "details": {
+        "color_members": 30000,
+        "depth_members": 9000,
+        "indexes": [
+          "color",
+          "depth"
+        ],
+        "local_files_checked": {
+          "bboxes": 3000,
+          "camera": 9000,
+          "semantic": 9000
+        },
+        "crc_checked": 21000
       },
       "problems": []
     }

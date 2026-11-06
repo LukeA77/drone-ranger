@@ -19,8 +19,16 @@ import pandas as pd
 from aerialrange.pipeline.run import run
 from aerialrange.pipeline.synthetic import make_flight
 
+SPEED_TOL_MS = (
+    0.5  # same tolerance as the display fit (D-706 / scripts/syndrone_speed_display_fit.py)
+)
 
-def demo(out: Path, n_frames: int = 60) -> dict[str, Any]:
+
+def demo(
+    out: Path, n_frames: int = 60, speed_display: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    """`speed_display` overrides the configured display rule (tests; the configured rule is
+    used otherwise, and shows nothing while `sigma_max_ms` is unset (D-710))."""
     out = Path(out)
     scene = make_flight(out / "flight", n_frames=n_frames)
     overrides = {
@@ -28,6 +36,8 @@ def demo(out: Path, n_frames: int = 60) -> dict[str, Any]:
         "detector": {"kind": "boxes"},
         "overlay": {"font_scale": 0.45},
     }
+    if speed_display is not None:
+        overrides["speed_display"] = speed_display
     timing = run(
         out / "flight" / "frames",
         out / "flight" / "metadata.csv",
@@ -39,17 +49,26 @@ def demo(out: Path, n_frames: int = 60) -> dict[str, Any]:
     tr = pd.read_csv(out / "run" / "tracks.csv")
     truth = pd.read_csv(out / "flight" / "truth.csv")
     meta = pd.read_csv(out / "flight" / "metadata.csv").set_index("frame")
-    errs, speeds = [], {}
+    errs, speeds, shown_err, shown_sig = [], {}, [], []
     for _, r in tr[tr["valid"]].iterrows():
         cam = meta.loc[r["frame"]]
         t = truth[truth["frame"] == r["frame"]]
         if not len(t):
             continue
         true_rng = np.hypot(np.hypot(t["n_m"] - cam["n_m"], t["e_m"] - cam["e_m"]), cam["h_m"])
-        j = int(np.argmin(np.abs(true_rng.to_numpy() - r["range_m"])))
+        # Match the row to the car nearest its estimated ground point (range, depression and
+        # azimuth); matching on range alone swaps cars at similar distances.
+        horiz = r["range_m"] * np.cos(np.radians(r["depression_deg"]))
+        gn = cam["n_m"] + horiz * np.cos(np.radians(r["azimuth_deg"]))
+        ge = cam["e_m"] + horiz * np.sin(np.radians(r["azimuth_deg"]))
+        j = int(np.argmin(np.hypot(t["n_m"].to_numpy() - gn, t["e_m"].to_numpy() - ge)))
         errs.append((r["range_m"] - true_rng.iloc[j]) / true_rng.iloc[j])
+        car = int(t["car"].iloc[j])
         if np.isfinite(r["speed_ms"]):
-            speeds.setdefault(int(t["car"].iloc[j]), []).append(r["speed_ms"])
+            speeds.setdefault(car, []).append(r["speed_ms"])
+        if bool(r.get("speed_shown", False)):
+            shown_err.append(r["speed_ms"] - scene["speeds_ms"][car - 1])
+            shown_sig.append(r["speed_sigma_ms"])
     summary = {
         "synthetic": True,
         "frames": timing["frames"],
@@ -59,6 +78,22 @@ def demo(out: Path, n_frames: int = 60) -> dict[str, Any]:
         "range_rel_error_signed_median": float(np.median(errs)) if errs else None,
         "speed_last_10_median_ms": {k: float(np.median(v[-10:])) for k, v in speeds.items()},
         "true_speeds_ms": dict(enumerate(scene["speeds_ms"], start=1)),
+        "displayed_speed": {
+            "rule": timing.get("speed_display"),
+            "n_shown": len(shown_err),
+            "share_of_valid_rows": len(shown_err) / max(int(tr["valid"].sum()), 1),
+            "median_abs_error_ms": float(np.median(np.abs(shown_err))) if shown_err else None,
+            "max_abs_error_ms": float(np.max(np.abs(shown_err))) if shown_err else None,
+            "tolerance_ms": SPEED_TOL_MS,
+            "share_within_tolerance": float(np.mean(np.abs(shown_err) <= SPEED_TOL_MS))
+            if shown_err
+            else None,
+            "share_within_own_95_interval": float(
+                np.mean(np.abs(shown_err) <= 1.96 * np.asarray(shown_sig))
+            )
+            if shown_err
+            else None,
+        },
         "note": "Range is to the box bottom-centre, the nearest edge of each footprint, so it "
         "reads slightly short of the footprint centre by construction.",
     }

@@ -159,21 +159,32 @@ class GroundKalmanBatch:
         self.x = self.x @ F.T
         self.P = F @ self.P @ F.T + cv_process_noise(dt, self.q)
 
-    def update(self, z: ArrayLike, R: ArrayLike, measured: ArrayLike | None = None) -> None:
+    def update(
+        self, z: ArrayLike, R: ArrayLike, measured: ArrayLike | None = None
+    ) -> NDArray[np.float64]:
         """Fuse measurements z (n, 2) with covariances R (n, 2, 2); filters where `measured`
-        is False are left predicted only (a missed detection)."""
+        is False are left predicted only (a missed detection).
+
+        Returns the normalised innovation squared `nu' S^-1 nu` per filter (NaN where not
+        measured), the consistency statistic of Bar-Shalom, Li and Kirubarajan (2001),
+        Section 5.4: chi-square with 2 degrees of freedom for a consistent filter.
+        """
         z, R = np.asarray(z, float), np.asarray(R, float)
         m = np.ones(len(self.x), bool) if measured is None else np.asarray(measured, bool)
+        nis = np.full(len(self.x), np.nan)
         if not m.any():
-            return
+            return nis
         x, P, zm, Rm = self.x[m], self.P[m], z[m], R[m]
         S = P[:, :2, :2] + Rm
+        nu = zm - x[:, :2]
+        nis[m] = np.einsum("ki,ki->k", nu, np.linalg.solve(S, nu[:, :, None])[:, :, 0])
         K = np.linalg.solve(S, P[:, :2, :]).transpose(0, 2, 1)  # (k, 4, 2)
-        x = x + np.einsum("kij,kj->ki", K, zm - x[:, :2])
+        x = x + np.einsum("kij,kj->ki", K, nu)
         H = np.hstack([I2, np.zeros((2, 2))])
         IKH = np.eye(4) - K @ H
         P = IKH @ P @ IKH.transpose(0, 2, 1) + K @ Rm @ K.transpose(0, 2, 1)  # Joseph form
         self.x[m], self.P[m] = x, 0.5 * (P + P.transpose(0, 2, 1))
+        return nis
 
     def speed(self) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
         """Speed (m/s) and its first-order sigma for every filter."""
@@ -183,3 +194,14 @@ class GroundKalmanBatch:
         var = np.einsum("ki,kij,kj->k", g, Pv, g)
         var = np.where(s > 0, var, np.trace(Pv, axis1=1, axis2=2) / 2)
         return s, np.sqrt(var)
+
+    def heading(self) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
+        """Heading (degrees clockwise from North) and its first-order sigma (degrees) for
+        every filter; NaN at zero speed."""
+        v, Pv = self.x[:, 2:], self.P[:, 2:, 2:]
+        s2 = v[:, 0] ** 2 + v[:, 1] ** 2
+        head = np.degrees(np.arctan2(v[:, 1], v[:, 0])) % 360.0
+        g = np.stack([-v[:, 1], v[:, 0]], axis=1) / np.where(s2 > 0, s2, 1.0)[:, None]
+        var = np.einsum("ki,kij,kj->k", g, Pv, g)
+        ok = s2 > 0
+        return np.where(ok, head, np.nan), np.where(ok, np.degrees(np.sqrt(var)), np.nan)

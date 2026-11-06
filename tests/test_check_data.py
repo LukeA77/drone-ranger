@@ -121,3 +121,87 @@ def test_midair_unextracted_zip_is_partial(tmp_path):
 
 def test_auair_unconfigured_is_missing():
     assert check_auair(None).status == "missing"
+
+
+# --- SynDrone cache (synthetic index and members; no network) ---
+
+
+def _syndrone_cache(tmp_path, n_frames=2, keep=None, drop=None):
+    """A fake SynDrone cache: both archive indexes for Town01 and a few kept members."""
+    import json
+    import zlib
+
+    from aerialrange.data.check import _expected_syndrone
+
+    camera = json.dumps({"x": 1, "y": 2, "z": 50, "pitch": -90, "yaw": 0, "roll": 0}).encode()
+    box = json.dumps([]).encode()
+    base = tmp_path / "syndrone"
+    data = {}
+    for archive in ("color", "depth"):
+        names = sorted(_expected_syndrone("Town01", archive, n_frames) - set(drop or ()))
+        members = []
+        for n in names:
+            b = camera if "/camera/" in n else box if "/bboxes/" in n else n.encode()
+            data[n] = b
+            members.append([n, 0, len(b), len(b), zlib.crc32(b), 8])
+        (base / "_index").mkdir(parents=True, exist_ok=True)
+        idx = base / "_index" / f"Town01_Opt_120_{archive}.zip.index.json"
+        idx.write_text(json.dumps({"url": "x", "size": 1, "members": members, "limit": {}}))
+    for n in keep or [n for n in data if "/camera/" in n or "/bboxes/" in n]:
+        (base / n).parent.mkdir(parents=True, exist_ok=True)
+        (base / n).write_bytes(data[n])
+    return base
+
+
+def test_syndrone_cache_ok_and_unfetched_town_is_remote(tmp_path):
+    from aerialrange.data.check import check_syndrone
+
+    base = _syndrone_cache(tmp_path)
+    r1, r2 = check_syndrone(base, ["Town01", "Town02"], n_frames=2)
+    assert r1.status == "ok", r1.problems
+    assert r1.details["crc_checked"] == 2 * 3 + 2  # camera at 3 heights and boxes, 2 frames
+    assert r2.status == "remote"
+
+
+def test_syndrone_corrupt_member_fails(tmp_path):
+    from aerialrange.data.check import check_syndrone
+
+    base = _syndrone_cache(tmp_path)
+    f = base / "Town01_Opt_120/ClearNoon/height50m/camera/00001.json"
+    f.write_bytes(f.read_bytes().replace(b"50", b"51"))
+    (r,) = check_syndrone(base, ["Town01"], n_frames=2)
+    assert r.status == "schema_error"
+    assert any("CRC-32" in p and "height50m" in p for p in r.problems)
+
+
+def test_syndrone_incomplete_archive_and_stray_files(tmp_path):
+    from aerialrange.data.check import check_syndrone
+
+    gone = "Town01_Opt_120/ClearNoon/height80m/depth/00001.png"
+    base = _syndrone_cache(tmp_path, drop=[gone])
+    (base / "Town01_Opt_120/ClearNoon/bboxes/00000.json.part").write_bytes(b"[")
+    (r,) = check_syndrone(base, ["Town01"], n_frames=2)
+    assert r.status == "schema_error"
+    assert any("depth: 1 expected members not in the archive" in p for p in r.problems)
+    assert any(".part" in p for p in r.problems)
+
+
+def test_syndrone_member_that_does_not_parse(tmp_path):
+    import json
+    import zlib
+
+    from aerialrange.data.check import check_syndrone
+
+    base = _syndrone_cache(tmp_path)
+    name = "Town01_Opt_120/ClearNoon/height20m/camera/00000.json"
+    bad = b'{"x": 1}'
+    idx = base / "_index" / "Town01_Opt_120_color.zip.index.json"
+    d = json.loads(idx.read_text())
+    for m in d["members"]:
+        if m[0] == name:
+            m[3], m[4] = len(bad), zlib.crc32(bad)
+    idx.write_text(json.dumps(d))
+    (base / name).write_bytes(bad)
+    (r,) = check_syndrone(base, ["Town01"], n_frames=2)
+    assert r.status == "schema_error"
+    assert any("does not parse as camera" in p for p in r.problems)

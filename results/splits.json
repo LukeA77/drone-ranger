@@ -46,5 +46,47 @@
         "trajectory_0027"
       ]
     }
+  },
+  "syndrone": {
+    "seed": 0,
+    "unit": "town",
+    "strata": {
+      "small_town": [
+        "Town01",
+        "Town02"
+      ],
+      "city": [
+        "Town03",
+        "Town05",
+        "Town10HD"
+      ],
+      "highway_rural": [
+        "Town04",
+        "Town06",
+        "Town07"
+      ]
+    },
+    "per_stratum": {
+      "development": 1,
+      "test": 1
+    },
+    "rest": "calibration",
+    "splits": {
+      "development": [
+        "Town01",
+        "Town07",
+        "Town10HD"
+      ],
+      "test": [
+        "Town02",
+        "Town03",
+        "Town06"
+      ],
+      "calibration": [
+        "Town04",
+        "Town05"
+      ]
+    },
+    "official_split_not_used": "official SynDrone split is by frame within each town (frames 0-99, 600-699, ...), so it is not a town-level split (D-701)"
   }
 }

@@ -6,6 +6,7 @@ read in place (listing and annotation text only); nothing is extracted or modifi
 
 from __future__ import annotations
 
+import json
 import zipfile
 from collections.abc import Iterator
 from dataclasses import dataclass, field
@@ -35,7 +36,7 @@ class CheckResult:
     """Outcome of checking one dataset component."""
 
     name: str
-    status: str  # "ok", "missing", "partial", "schema_error"
+    status: str  # "ok", "missing", "partial", "schema_error", "remote" (SynDrone, D-702)
     details: dict[str, Any] = field(default_factory=dict)
     problems: list[str] = field(default_factory=list)
 
@@ -328,6 +329,123 @@ def check_auair(base: Path | None) -> CheckResult:
     )
 
 
+def _expected_syndrone(town: str, archive: str, n_frames: int) -> set[str]:
+    from aerialrange.data.syndrone_archive import ARCHIVE_OF, HEIGHTS, member_name
+
+    out = set()
+    for modality, arch in ARCHIVE_OF.items():
+        if arch != archive:
+            continue
+        for k in range(n_frames):
+            if modality == "bboxes":
+                out.add(member_name(town, modality, k))
+            else:
+                out.update(member_name(town, modality, k, h) for h in HEIGHTS)
+    return out
+
+
+def check_syndrone(base: Path, towns: list[str], n_frames: int | None = None) -> list[CheckResult]:
+    """SynDrone local cache, one result per town. Offline: never downloads.
+
+    SynDrone is streamed from the remote archives (D-702), so a town with nothing cached is
+    status "remote" (expected, not a failure). Otherwise: each cached archive index must list
+    exactly the expected members (every frame of every camera and modality); every local file
+    must be a member of an index, with the recorded size and CRC-32 (all files are read); a
+    leftover `.part` file (interrupted write) is reported; the first and last cached camera
+    and box files must parse.
+    """
+    import zlib
+
+    from aerialrange.data.syndrone import N_FRAMES, parse_boxes, parse_camera
+    from aerialrange.data.syndrone_archive import parse_member_name
+
+    n_frames = N_FRAMES if n_frames is None else n_frames
+    results = []
+    for town in towns:
+        details: dict[str, Any] = {}
+        problems: list[str] = []
+        members: dict[str, tuple[int, int]] = {}
+        indexed = []
+        index_bad = False
+        for archive in ("color", "depth"):
+            p = base / "_index" / f"{town}_Opt_120_{archive}.zip.index.json"
+            if not p.is_file():
+                continue
+            indexed.append(archive)
+            try:
+                d = json.loads(p.read_text(encoding="utf-8"))
+                listed = {m[0]: (int(m[3]), int(m[4])) for m in d["members"]}
+            except (ValueError, KeyError, IndexError, TypeError) as e:
+                problems.append(f"{p.name}: unreadable index ({e})")
+                index_bad = True
+                continue
+            files = {n: v for n, v in listed.items() if not n.endswith("/")}
+            expected = _expected_syndrone(town, archive, n_frames)
+            missing, extra = expected - files.keys(), files.keys() - expected
+            index_bad |= bool(missing or extra)
+            if missing:
+                problems.append(f"{archive}: {len(missing)} expected members not in the archive")
+            if extra:
+                problems.append(f"{archive}: {len(extra)} unexpected members, e.g. {min(extra)}")
+            details[f"{archive}_members"] = len(files)
+            members.update(files)
+        details["indexes"] = indexed
+        folder = base / f"{town}_Opt_120"
+        local = sorted(p for p in folder.rglob("*") if p.is_file()) if folder.is_dir() else []
+        if not indexed and not local:
+            results.append(
+                CheckResult(
+                    f"syndrone/{town}",
+                    "remote",
+                    {"note": "nothing cached; streamed on demand (D-702)"},
+                )
+            )
+            continue
+        counts: dict[str, int] = {}
+        n_bad = 0
+        parse_targets: dict[str, list[Path]] = {"camera": [], "bboxes": []}
+        for p in local:
+            name = p.relative_to(base).as_posix()
+            if name.endswith(".part"):
+                problems.append(f"interrupted write left behind: {name}")
+                continue
+            if name not in members:
+                problems.append(f"local file is not an archive member: {name}")
+                n_bad += 1
+                continue
+            data = p.read_bytes()
+            usize, crc = members[name]
+            if len(data) != usize or zlib.crc32(data) != crc:
+                problems.append(f"size or CRC-32 differs from the archive: {name}")
+                n_bad += 1
+                continue
+            modality = parse_member_name(name)[1]
+            counts[modality] = counts.get(modality, 0) + 1
+            if modality in parse_targets:
+                parse_targets[modality].append(p)
+        for modality, paths in parse_targets.items():
+            for p in {paths[0], paths[-1]} if paths else ():
+                try:
+                    (parse_camera if modality == "camera" else parse_boxes)(p.read_bytes())
+                except (ValueError, KeyError, TypeError, IndexError) as e:
+                    problems.append(f"does not parse as {modality}: {p.name} ({e})")
+                    n_bad += 1
+        details["local_files_checked"] = counts
+        details["crc_checked"] = sum(counts.values())
+        if n_bad or index_bad:
+            status = "schema_error"
+        elif problems or len(indexed) < 2:
+            status = "partial"
+        else:
+            status = "ok"
+        if len(indexed) < 2:
+            problems.append(
+                f"index cached for {indexed or 'no archive'}; both color and depth needed"
+            )
+        results.append(CheckResult(f"syndrone/{town}", status, details, _cap(problems)))
+    return results
+
+
 def check_all(
     data_root: Path,
     visdrone_mot: Path,
@@ -336,10 +454,14 @@ def check_all(
     auair: Path | None,
     midair_climates: list[str] | None = None,
     midair_modalities: list[str] | None = None,
+    syndrone: Path | None = None,
+    syndrone_towns: list[str] | None = None,
 ) -> list[CheckResult]:
     """Run every check. `data_root` is reported; the other paths are dataset folders."""
     results = [check_visdrone_mot(visdrone_mot, s) for s in VISDRONE_MOT_SPLITS]
     results += [check_visdrone_det(visdrone_det, s) for s in VISDRONE_DET_SPLITS]
     results += check_midair(midair, midair_climates, midair_modalities)
     results.append(check_auair(auair))
+    if syndrone is not None and syndrone_towns:
+        results += check_syndrone(syndrone, syndrone_towns)
     return results

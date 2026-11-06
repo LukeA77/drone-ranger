@@ -1,0 +1,21 @@
+{
+  "town": "Town07",
+  "split": "development",
+  "window_frames": 3,
+  "vmax_walker_ms": 2.5,
+  "vmax_vehicle_ms": 70.0,
+  "n_actors": 178,
+  "n_samples": 533711,
+  "n_cuts": 364,
+  "share_samples_with_speed": 0.9982068947426603,
+  "position_jitter_m": {
+    "median": 1.3120705308369083e-05,
+    "p90": 9.415281396164041e-05
+  },
+  "speed_sigma_from_jitter_ms": 0.0016644023305017845,
+  "window_sensitivity_ms": {
+    "note": "|speed(window 3) - speed(window 5)| on moving samples; an upper bound on the bias from acceleration changes",
+    "median": 0.00029807907185142035,
+    "p99": 0.23942824680805908
+  }
+}

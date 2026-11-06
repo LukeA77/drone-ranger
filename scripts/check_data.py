@@ -2,8 +2,9 @@
 
 Usage: python scripts/check_data.py [--data-root PATH]
 
-Prints a report and writes `results/data_check.json`. Exits 1 if anything is missing or
-fails a schema check. Never downloads, extracts or modifies data.
+Prints a report and writes `results/data_check.json`. SynDrone: cached archive indexes and
+locally kept members are checked (sizes and CRC-32); towns never fetched report "remote".
+Exits 1 if anything is missing or fails a schema check. Never downloads, extracts or modifies data.
 """
 
 from __future__ import annotations
@@ -21,6 +22,7 @@ from aerialrange.utils.config import REPO_ROOT, load_config
 OUT = REPO_ROOT / "results" / "data_check.json"
 # Modalities the Mid-Air evaluation reads (colour images are optional and unused).
 MIDAIR_MODALITIES = ["depth", "segmentation", "normals"]
+ACCEPTED = ("ok", "remote")
 
 
 def _resolve(root: Path, sub: str | None) -> Path | None:
@@ -49,6 +51,8 @@ def main(argv: list[str] | None = None) -> int:
         auair=_resolve(root, cfg.get("auair_subdir")),
         midair_climates=[cfg.get("midair_climate")] if cfg.get("midair_climate") else None,
         midair_modalities=MIDAIR_MODALITIES,
+        syndrone=_resolve(root, cfg.get("syndrone_subdir")),
+        syndrone_towns=cfg.get("syndrone_towns"),
     )
 
     print(f"Data root: {root}\n")
@@ -58,8 +62,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{'':16}{k}: {v}")
         for p in r.problems:
             print(f"{'':16}! {p}")
-    ok = all(r.status == "ok" for r in results)
-    print(f"\n{sum(r.status == 'ok' for r in results)} of {len(results)} components ok.")
+    # SynDrone towns with nothing cached are streamed on demand (D-702): expected, not missing.
+    ok = all(r.status in ACCEPTED for r in results)
+    n_ok = sum(r.status in ACCEPTED for r in results)
+    print(f'\n{n_ok} of {len(results)} components ok (SynDrone "remote" counts as ok).')
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     payload = {"data_root": str(root), "all_ok": ok, "results": [asdict(r) for r in results]}
