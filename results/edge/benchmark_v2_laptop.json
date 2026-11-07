@@ -1,0 +1,120 @@
+{
+ "generated_utc": "2026-11-07T00:56:36+00:00",
+ "tag": "laptop",
+ "config": "run",
+ "detector": {
+  "kind": "yolo",
+  "weights": "weights/B2_yolo26n_960w_640_rect.onnx",
+  "imgsz": 640,
+  "score_floor": 0.1,
+  "runner": "YoloOnnx",
+  "input_hw": [
+   384,
+   640
+  ]
+ },
+ "tracker": {
+  "config": "configs/trackers/motion.yaml",
+  "gmc_downscale": 8,
+  "det_stride": 2
+ },
+ "frames": "MOT val uav0000086_00000_v (1344x756), in order; cycled per repeat",
+ "not_timed": "ranging and Kalman filter; overlay drawing",
+ "smoke": false,
+ "machine": {
+  "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+  "machine": "AMD64",
+  "logical_cores": 16,
+  "os": "Windows-11-10.0.26200-SP0",
+  "onnxruntime": "1.31.0",
+  "onnxruntime_threads": "default",
+  "opencv": "5.0.0"
+ },
+ "other_processes": "idle; queued overnight run, nothing else scheduled",
+ "background_measured": {
+  "other_processes_cpu_percent_of_one_core": 77.3,
+  "busiest": [
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 14.8
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 8.3
+   },
+   {
+    "name": "EOSOverlayRenderer-Win64-Shipping.exe",
+    "cpu_percent": 6.9
+   },
+   {
+    "name": "dwm.exe",
+    "cpu_percent": 6.3
+   },
+   {
+    "name": "EpicGamesLauncher.exe",
+    "cpu_percent": 4.0
+   }
+  ],
+  "window_s": 3.0
+ },
+ "stages": {
+  "read": {
+   "median_ms": 9.118050002143718,
+   "mean_ms": 9.54488255565391,
+   "p95_ms": 10.756100004073232,
+   "p99_ms": 11.22865601500962,
+   "max_ms": 16.520400007721037
+  },
+  "detect": {
+   "median_ms": 14.69905000703875,
+   "mean_ms": 18.03614366612035,
+   "p95_ms": 40.01720998639939,
+   "p99_ms": 42.275395016768016,
+   "max_ms": 45.75800002203323
+  },
+  "track": {
+   "median_ms": 5.732050005462952,
+   "mean_ms": 5.32041266715775,
+   "p95_ms": 6.849529997271019,
+   "p99_ms": 7.396461997122969,
+   "max_ms": 15.598800004227087
+  },
+  "end_to_end": {
+   "median_ms": 32.764299990958534,
+   "mean_ms": 32.901438888932006,
+   "p95_ms": 56.822340007056475,
+   "p99_ms": 59.4250579792424,
+   "max_ms": 63.21610003942624
+  }
+ },
+ "n_samples": 900,
+ "throughput_fps": 30.393807498078708,
+ "end_to_end_median_by_repeat_ms": [
+  33.399149993783794,
+  31.42995000234805,
+  30.898250013706274
+ ],
+ "peak_rss_mb": 183.33203125,
+ "protocol": {
+  "n_warmup": 20,
+  "n_timed": 300,
+  "n_repeats": 3
+ },
+ "detect_split_median_ms": {
+  "preprocess": 6.817449990194291,
+  "inference": 24.019899996346794,
+  "postprocess": 4.840549983782694
+ },
+ "budget": {
+  "30_fps": {
+   "budget_ms": 33.333333333333336,
+   "meets_at_median": true,
+   "meets_at_p99": false
+  },
+  "10_fps": {
+   "budget_ms": 100.0,
+   "meets_at_median": true,
+   "meets_at_p99": true
+  }
+ }
+}

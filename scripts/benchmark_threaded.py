@@ -30,8 +30,11 @@ from pathlib import Path
 import numpy as np
 
 from aerialrange.edge.benchmark import background_cpu, peak_rss_mb
-from aerialrange.track.runner import DetSet, coast, make_tracker
+from aerialrange.track.runner import DetSet, coast
 from aerialrange.utils.config import REPO_ROOT, latency_budget_ms, load_config
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # scripts/ultralytics_v1.py
+from ultralytics_v1 import make_tracker  # noqa: E402
 
 QUEUE = 2
 

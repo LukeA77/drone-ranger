@@ -50,3 +50,13 @@ def test_unresolved_placeholders_are_reported():
         "{{TARGET_FPS}}",
         "{{RESULT:x#y}}",
     ]
+
+
+def test_keys_containing_dots(tmp_path):
+    (tmp_path / "e.json").write_text(
+        json.dumps({"vehicle": {"pooled": {"range_coverage_0.90": 0.982}, "ci": {"x": [1, 2]}}})
+    )
+    t = "{{RESULT:e.json#vehicle.pooled.range_coverage_0.90|.0%}} {{RESULT:e.json#vehicle.ci.x.1}}"
+    assert fd.fill(t, tmp_path) == "98% 2"
+    with pytest.raises(fd.FillError, match="range_coverage_0"):
+        fd.fill("{{RESULT:e.json#vehicle.pooled.range_coverage_0.95}}", tmp_path)

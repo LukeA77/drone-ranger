@@ -1,0 +1,21 @@
+{
+ "generated_utc": "2026-11-06T21:39:01+00:00",
+ "weights": "cache/train/syndrone_ft_outputs/syndrone_ft_minus_Town07/weights/best.pt",
+ "onnx": "syndrone_ft_minus_Town07_960_rect.onnx",
+ "imgsz": 960,
+ "onnx_input_hw": [
+  544,
+  960
+ ],
+ "n_frames": 50,
+ "ultralytics": "8.4.182",
+ "onnxruntime": "1.31.0",
+ "max_box_diff_px": 0.0009765625,
+ "max_score_diff": 5.334615707397461e-06,
+ "agreement_original_side": 1.0,
+ "agreement_onnx_side": 1.0,
+ "detections_original": 389,
+ "detections_onnx": 389,
+ "parity_tol": 0.5,
+ "within_tol": true
+}

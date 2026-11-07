@@ -134,41 +134,106 @@
     },
     {
       "name": "syndrone/Town02",
-      "status": "remote",
+      "status": "ok",
       "details": {
-        "note": "nothing cached; streamed on demand (D-702)"
+        "color_members": 30000,
+        "depth_members": 9000,
+        "indexes": [
+          "color",
+          "depth"
+        ],
+        "local_files_checked": {
+          "bboxes": 3000,
+          "camera": 9000,
+          "depth": 9000,
+          "rgb": 9000,
+          "semantic": 9000
+        },
+        "crc_checked": 39000
       },
       "problems": []
     },
     {
       "name": "syndrone/Town03",
-      "status": "remote",
+      "status": "ok",
       "details": {
-        "note": "nothing cached; streamed on demand (D-702)"
+        "color_members": 30000,
+        "depth_members": 9000,
+        "indexes": [
+          "color",
+          "depth"
+        ],
+        "local_files_checked": {
+          "bboxes": 3000,
+          "camera": 9000,
+          "depth": 9000,
+          "rgb": 9000,
+          "semantic": 9000
+        },
+        "crc_checked": 39000
       },
       "problems": []
     },
     {
       "name": "syndrone/Town04",
-      "status": "remote",
+      "status": "ok",
       "details": {
-        "note": "nothing cached; streamed on demand (D-702)"
+        "color_members": 30000,
+        "depth_members": 9000,
+        "indexes": [
+          "color",
+          "depth"
+        ],
+        "local_files_checked": {
+          "bboxes": 3000,
+          "camera": 9000,
+          "depth": 9000,
+          "rgb": 9000,
+          "semantic": 9000
+        },
+        "crc_checked": 39000
       },
       "problems": []
     },
     {
       "name": "syndrone/Town05",
-      "status": "remote",
+      "status": "ok",
       "details": {
-        "note": "nothing cached; streamed on demand (D-702)"
+        "color_members": 30000,
+        "depth_members": 9000,
+        "indexes": [
+          "color",
+          "depth"
+        ],
+        "local_files_checked": {
+          "bboxes": 3000,
+          "camera": 9000,
+          "depth": 9000,
+          "rgb": 9000,
+          "semantic": 9000
+        },
+        "crc_checked": 39000
       },
       "problems": []
     },
     {
       "name": "syndrone/Town06",
-      "status": "remote",
+      "status": "ok",
       "details": {
-        "note": "nothing cached; streamed on demand (D-702)"
+        "color_members": 30000,
+        "depth_members": 9000,
+        "indexes": [
+          "color",
+          "depth"
+        ],
+        "local_files_checked": {
+          "bboxes": 3000,
+          "camera": 9000,
+          "depth": 9000,
+          "rgb": 9000,
+          "semantic": 9000
+        },
+        "crc_checked": 39000
       },
       "problems": []
     },
@@ -185,9 +250,10 @@
         "local_files_checked": {
           "bboxes": 3000,
           "camera": 9000,
+          "rgb": 9,
           "semantic": 9000
         },
-        "crc_checked": 21000
+        "crc_checked": 21009
       },
       "problems": []
     },
@@ -204,9 +270,10 @@
         "local_files_checked": {
           "bboxes": 3000,
           "camera": 9000,
+          "rgb": 9,
           "semantic": 9000
         },
-        "crc_checked": 21000
+        "crc_checked": 21009
       },
       "problems": []
     }

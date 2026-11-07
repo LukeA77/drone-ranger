@@ -71,3 +71,60 @@ VisDrone2019 detection train (with 78 images removed that share source videos wi
 - **Used:** all 32,823 annotated frames (5 frames per second, 8 recordings, 48 clips), with per-frame GPS position, altitude and drone attitude.
 - **Splits:** calibration recordings 20190829091111 and 20190905142119 for the camera model; the other six held out (D-506).
 - **Findings about the data:** altitude is in millimetres and drifts by metres within a flight; the camera tilt is not recorded; annotation boxes are looser than tight boxes (D-512) and not consistent from frame to frame (D-516); the paper's stated camera angles (45-90°) do not cover all clips (D-504).
+
+### SynDrone (end-to-end truth, synthetic; version 2)
+
+- **Source:** https://github.com/LTTM/Syndrone (generation code, Apache-2.0); data at https://lttm.dei.unipd.it/paper_data/syndrone/.
+- **Citation:** Rizzoli, G., Barbato, F., Caligiuri, M. and Zanuttigh, P. (2023) 'SynDrone: multi-modal UAV dataset for urban scenarios', *IEEE/CVF International Conference on Computer Vision Workshops (ICCVW)*; arXiv:2308.10491. To verify before publication.
+- **Licence (checked 2026-11-04):** neither the download page nor the paper states one. The authors' own arXiv comment reads "downloadable dataset with CC-BY license", with no version. Treated as Creative Commons Attribution (attribution required); no SynDrone images are committed to this repository, and contact sheets stay in `cache/`.
+- **Used:** CARLA-rendered flights over eight towns, 120 s each at 25 frames per second, each seen by three cameras (20 m at 30° below the horizon, 50 m at 60°, 80 m straight down): colour, depth, semantic labels, camera poses and 3D boxes with persistent actor identities. Read member by member from the archives with HTTP range requests (D-702).
+- **Splits:** by town, stratified by town type, seed 0: development Town01, Town07, Town10HD; calibration Town04, Town05; test Town02, Town03, Town06 (`results/splits.json`, D-701). The official split is by frame within each town and is not used.
+- **Limitation:** synthetic imagery from an ideal pinhole camera, with CARLA's traffic and pedestrian behaviour.
+
+## Code from other projects (version 2)
+
+- **TrackEval** (https://github.com/JonathonLuiten/TrackEval, commit 12c8791, MIT licence, checked from its LICENSE file 2026-11-04): the Higher Order Tracking Accuracy (HOTA) computation is vendored in `src/aerialrange/track/hota.py` with its copyright notice, changed only to run on NumPy 2.
+
+## Tracker (version 2)
+
+The project's own tracker (`src/aerialrange/track/tracker.py`, D-713) replaces the detector library's BoT-SORT. It is written from the published methods (ByteTrack: Zhang et al., 2022; BoT-SORT: Aharon et al., 2022; DeepSORT noise weights: Wojke et al., 2017) and contains no code from them. It uses motion and box overlap only; no appearance features are computed.
+
+## Package dependencies (version 2, licences checked 2026-11-07)
+
+The package (`src/aerialrange`) no longer uses Ultralytics (D-725). Its pinned environment, `requirements-lock.txt`, was built from `pyproject.toml` alone in a clean Python 3.12 and holds no PyTorch and no GPL or AGPL code. Licences below are read from each installed package's own metadata (its licence expression, or its licence classifiers where it has none).
+
+| Package | Licence |
+|---|---|
+| numpy | BSD-3-Clause (bundled parts: 0BSD, MIT, Zlib, CC0-1.0) |
+| scipy, pandas | BSD |
+| opencv-python-headless | Apache-2.0 |
+| onnxruntime | MIT |
+| onnx | Apache-2.0 |
+| onnxslim | MIT |
+| pillow | MIT-CMU |
+| matplotlib | Matplotlib licence (PSF-based) |
+| h5py, psutil | BSD-3-Clause |
+| pyyaml, typer, motmetrics | MIT |
+| Indirect: contourpy, cycler, kiwisolver, colorama, mpmath, sympy, protobuf, pygments, python-dateutil | BSD (python-dateutil also Apache-2.0) |
+| Indirect: fonttools, pyparsing, rich, markdown-it-py, mdurl, six, annotated-doc, xmltodict, shellingham | MIT (shellingham ISC) |
+| Indirect: flatbuffers, ml_dtypes, packaging, tzdata, typing_extensions | Apache-2.0 (packaging also BSD-2-Clause; typing_extensions PSF-2.0) |
+| Development only: pytest, pytest-cov, pluggy, iniconfig, ruff, coverage | MIT (coverage Apache-2.0) |
+
+Version 1's results can still be reproduced in a separate environment, `requirements-v1.txt`, which adds PyTorch and Ultralytics 8.4.182 (AGPL-3.0); the scripts that need it load the library through `scripts/ultralytics_v1.py`. The version 1 detector's weights were trained with that library from its COCO weights, which Ultralytics distributes under AGPL-3.0; running them through the project's own ONNX runner removes the library, not the weights' terms.
+
+## Detector candidates (version 2, licences checked 2026-11-06)
+
+The version 1 detector and its library are AGPL-3.0, so version 2 replaces them. Each candidate's licence was read from the LICENSE file in its own repository; the weights' terms from the repository's own statements and the place the weights are hosted. Only the sizes listed are candidates.
+
+| Candidate | Code licence | Pretrained weights | Pretraining data |
+|---|---|---|---|
+| RF-DETR Nano, Small, Medium (https://github.com/roboflow/rf-detr) | Apache-2.0 | Apache-2.0, stated for these sizes in the README; backbone DINOv2, Apache-2.0 | COCO; the paper's training recipe includes Objects365 pretraining |
+| D-FINE N, S, M (https://github.com/Peterande/D-FINE) | Apache-2.0 | Hosted in the authors' weights repository, licensed Apache-2.0 | COCO only, or Objects365 then COCO (both published) |
+| DEIM, D-FINE and RT-DETRv2 variants (https://github.com/Intellindust-AI-Lab/DEIM) | Apache-2.0 | Hosted on Google Drive with no separate terms; the repository licence covers the project | COCO only for the sizes considered |
+| RT-DETRv2 R18, R34 (https://github.com/lyuwenyu/RT-DETR) | Apache-2.0 | Hosted in the author's weights repository, which has no licence file | COCO only, or Objects365 then COCO |
+| YOLOX Nano, Tiny, S (https://github.com/Megvii-BaseDetection/YOLOX) | Apache-2.0 | Release assets of the Apache-2.0 repository | COCO |
+| NanoDet-Plus (https://github.com/RangiLyu/nanodet) | Apache-2.0 | Release assets of the Apache-2.0 repository (no commits since 2024) | COCO |
+
+**Excluded:** DEIMv2 (its 2026 licence allows non-commercial use only); RF-DETR Atto, Femto, Pico, XLarge and 2XLarge (Roboflow Platform Model License 1.0: commercial self-hosting needs a paid add-on); the original YOLOv7 and YOLOv9 repositories (GPL-3.0).
+
+**Open question, pretraining data:** Objects365's own site states no licence; a third-party listing describes it as non-commercial. Weights pretrained on it may inherit that restriction, so the COCO-only weights are preferred where a candidate offers both, and the choice is recorded with the result. COCO's annotations are CC-BY 4.0 and its images carry their Flickr licences; ImageNet-pretrained backbones carry ImageNet's research terms. These questions apply to almost every published detector, the version 1 one included. Not legal advice.

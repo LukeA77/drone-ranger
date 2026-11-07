@@ -13,7 +13,9 @@ Reads the truth chunks of one town (scripts/syndrone_truth.py) and writes:
 Final z0: the per-frame joint fit where it rests on at least `--min-boxes` vehicles, else
 linear interpolation in time between such frames (z0 comes from a cubic spline of a flight
 log, so it is smooth). Frames before the first or after the last fitted frame take the
-nearest fit. The choice is reported (fitted / interpolated share).
+nearest fit. The choice is reported (fitted / interpolated share). A town where no frame
+stands on enough vehicles uses the walker fit instead (scripts/syndrone_z0_walker_series.py,
+D-720), counted the same way; the source is reported.
 """
 
 from __future__ import annotations
@@ -117,6 +119,19 @@ def main(argv: list[str] | None = None) -> int:
             for r in recs
         ]
     )
+    source = "vehicles"
+    if not ((z["z0_n"] >= args.min_boxes) & np.isfinite(z["z0"])).any():
+        # No frame stands on enough vehicles (Town02: its vehicle actors are parked away from
+        # roads). Use the walker fit, checked on development and calibration towns (D-720).
+        wpath = TRUTH / args.town / "z0_walkers.csv"
+        if not wpath.exists():
+            print("no vehicle-fitted frame; run scripts/syndrone_z0_walker_series.py first")
+            return 1
+        w = pd.read_csv(wpath).set_index("frame").reindex(z["frame"])
+        z["z0"] = w["z0_walkers"].to_numpy()
+        z["z0_se"] = w["se_walkers"].to_numpy()
+        z["z0_n"] = w["n_walkers"].to_numpy()
+        source = "walkers"
     z["z0_final"], fitted = final_z0(z, args.min_boxes)
     z["fitted"] = fitted
     z.to_csv(TRUTH / args.town / "z0.csv", index=False)
@@ -230,6 +245,7 @@ def main(argv: list[str] | None = None) -> int:
         "town": args.town,
         "split": split,
         "frames": len(z),
+        "z0_source": source,
         "fitted_share": float(z["fitted"].mean()),
         "min_boxes": args.min_boxes,
         "z0_m": {

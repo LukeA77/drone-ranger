@@ -1,9 +1,12 @@
-"""Run a detector + tracker over a VisDrone sequence.
+"""Run a detector and a tracker over a sequence.
 
-Uses the detector library's own trackers (ByteTrack, BoT-SORT) through `model.track`.
-Appearance re-identification stays off (motion and overlap only). Each
-detector class maps to an evaluation group through `class_to_group`; classes not in the map
-are dropped before tracking.
+The tracker is the project's own (`track/tracker.py`), built from a tracker YAML with
+`tracker_type: motion`. Any object with the same interface works in `run_sequence_custom`
+(`update(DetSet, image)` returning rows of x1, y1, x2, y2, id, score, class, index, and
+`coast(image)` returning predicted confirmed tracks): version 1's library trackers are
+wrapped that way in scripts/ultralytics_v1.py, outside the package. Appearance
+re-identification is not used. Each detector class maps to an evaluation group through
+`class_to_group`; classes not in the map are dropped before tracking.
 """
 
 from __future__ import annotations
@@ -17,51 +20,11 @@ from typing import Any
 import numpy as np
 
 
-def run_sequence(
-    model: Any,
-    frames: Sequence[Path],
-    tracker_cfg: str,
-    imgsz: int,
-    class_to_group: Mapping[int, str],
-    max_det: int = 300,
-) -> tuple[dict[str, np.ndarray], dict[str, float]]:
-    """Track one sequence. Returns rows per group, (frame, id, left, top, width, height,
-    score), with 1-based frame numbers as in VisDrone, and timing totals in seconds.
-    `max_det` caps detections per frame (`max_det` in configs/detector.yaml, D-316)."""
-    rows: dict[str, list] = {g: [] for g in set(class_to_group.values())}
-    classes = sorted(class_to_group)
-    t_total = 0.0
-    for k, path in enumerate(frames, start=1):
-        t0 = time.perf_counter()
-        res = model.track(
-            source=str(path),
-            persist=k > 1,
-            tracker=tracker_cfg,
-            imgsz=imgsz,
-            classes=classes,
-            max_det=max_det,
-            verbose=False,
-        )[0]
-        t_total += time.perf_counter() - t0
-        b = res.boxes
-        if b is None or b.id is None or len(b) == 0:
-            continue
-        xyxy = b.xyxy.cpu().numpy()
-        ids = b.id.cpu().numpy().astype(int)
-        cls = b.cls.cpu().numpy().astype(int)
-        conf = b.conf.cpu().numpy()
-        for (x1, y1, x2, y2), i, c, s in zip(xyxy, ids, cls, conf, strict=True):
-            g = class_to_group.get(int(c))
-            if g is not None:
-                rows[g].append((k, i, x1, y1, x2 - x1, y2 - y1, s))
-    out = {g: np.array(v, float).reshape(-1, 7) for g, v in rows.items()}
-    return out, {"track_seconds": t_total, "frames": len(frames)}
-
-
 @dataclass
 class DetSet:
-    """Detections in the form the library trackers accept: centre-format boxes (xywh, pixels),
-    scores and class ids, with boolean indexing."""
+    """Detections in the form the trackers accept (the project's, and version 1's library
+    trackers): centre-format boxes (xywh, pixels), scores and class ids, with boolean
+    indexing."""
 
     xywh: np.ndarray
     conf: np.ndarray
@@ -72,8 +35,8 @@ class DetSet:
 
     @property
     def xyxy(self) -> np.ndarray:
-        """Corner-format boxes; BoT-SORT's camera-motion compensation uses them to mask the
-        detections (without it GMC silently falls back to identity)."""
+        """Corner-format boxes; camera-motion compensation uses them to mask the detections
+        (without them version 1's BoT-SORT silently fell back to no compensation)."""
         c, wh = self.xywh[:, :2], self.xywh[:, 2:4]
         return np.column_stack([c - wh / 2, c + wh / 2])
 
@@ -81,44 +44,49 @@ class DetSet:
         return DetSet(self.xywh[m], self.conf[m], self.cls[m])
 
 
-def make_tracker(tracker_cfg: str, overrides: Mapping[str, Any] | None = None) -> Any:
-    """A library tracker (ByteTrack, BoT-SORT, ...) built from a tracker YAML. `overrides`
-    replace YAML values (the validation grid, `{{TRACKER_GRID}}`); unknown keys are refused.
-    `gmc_downscale` sets BoT-SORT's camera-motion frame downscale (library default 2), which
-    the library does not read from YAML (Phase 5 speed options)."""
-    from ultralytics.trackers.track import TRACKER_MAP
-    from ultralytics.utils import YAML, IterableSimpleNamespace
+# Version 1's library tracker keys and the project's tracker settings they correspond to.
+LIBRARY_KEYS = {
+    "gmc_downscale": "cmc_downscale",
+    "track_high_thresh": "high",
+    "track_low_thresh": "low",
+    "new_track_thresh": "new",
+}
 
-    raw = YAML.load(tracker_cfg)
+
+def make_tracker(tracker_cfg: str, overrides: Mapping[str, Any] | None = None) -> Any:
+    """The project's tracker (`track/tracker.py`) from a tracker YAML with
+    `tracker_type: motion`; its keys are `TrackerSettings` fields. `overrides` replace YAML
+    values (the validation grid, `{{TRACKER_GRID}}`); unknown keys are refused. Version 1's
+    library tracker names are accepted as overrides so the validation grid tunes every
+    tracker the same way: `gmc_downscale` sets `cmc_downscale`, `track_high_thresh` sets
+    `high`, `track_low_thresh` sets `low` and `new_track_thresh` sets `new`. Other tracker
+    types (version 1's ByteTrack and BoT-SORT) are built by scripts/ultralytics_v1.py."""
+    import yaml
+
+    from aerialrange.track.tracker import MotionTracker, TrackerSettings
+
+    with open(tracker_cfg, encoding="utf-8") as f:
+        raw = yaml.safe_load(f)
+    if raw.get("tracker_type") != "motion":
+        raise ValueError(
+            f"{tracker_cfg}: tracker_type {raw.get('tracker_type')!r} is not the project's "
+            "tracker ('motion'); version 1's library trackers are in scripts/ultralytics_v1.py"
+        )
     ov = dict(overrides or {})
-    gmc_downscale = ov.pop("gmc_downscale", None)  # not a YAML key in the library (Phase 5)
+    for lib_key, own_key in LIBRARY_KEYS.items():
+        if lib_key in ov:
+            ov[own_key] = ov.pop(lib_key)
     unknown = set(ov) - set(raw)
     if unknown:
         raise KeyError(f"tracker overrides not in {tracker_cfg}: {sorted(unknown)}")
-    cfg = IterableSimpleNamespace(**{**raw, **ov})
-    tracker = TRACKER_MAP[cfg.tracker_type](args=cfg)
-    if gmc_downscale is not None:
-        if not hasattr(tracker, "gmc"):
-            raise KeyError(f"gmc_downscale given but {cfg.tracker_type} has no motion compensation")
-        tracker.gmc.downscale = max(1, int(gmc_downscale))
-    return tracker
+    merged = {k: v for k, v in {**raw, **ov}.items() if k != "tracker_type"}
+    return MotionTracker(TrackerSettings.from_mapping(merged))
 
 
 def coast(tracker: Any, img: np.ndarray) -> list:
-    """Advance a library tracker by one frame without detections and return its confirmed
-    tracks (predicted). Mirrors the library's update up to matching: Kalman predict of the
-    tracked and lost tracks, then, for BoT-SORT, the camera-motion warp of those and of the
-    unconfirmed tracks. Tracks are neither confirmed, lost nor removed here."""
-    from ultralytics.trackers.utils.stracks import joint_stracks, multi_gmc
-
-    unconfirmed, tracked = tracker._split_tracked()
-    pool = joint_stracks(tracked, tracker.lost_stracks)
-    tracker.multi_predict(pool)
-    if hasattr(tracker, "gmc") and tracker.gmc.method is not None:
-        warp = tracker.gmc.apply(img, np.zeros((0, 4)))
-        multi_gmc(pool, warp)
-        multi_gmc(unconfirmed, warp)
-    return [t for t in tracked if t.is_activated]
+    """Advance a tracker by one frame without detections and return its confirmed tracks
+    (predicted). Tracks are neither confirmed, lost nor removed."""
+    return tracker.coast(img)
 
 
 def run_sequence_custom(
@@ -128,23 +96,25 @@ def run_sequence_custom(
     class_to_group: Mapping[int, str],
     overrides: Mapping[str, Any] | None = None,
     det_stride: int = 1,
+    build_tracker: Callable[[str, Mapping[str, Any] | None], Any] | None = None,
 ) -> tuple[dict[str, np.ndarray], dict[str, float]]:
     """Track one sequence with any detection function (for example tiled detection, B3).
 
     `detect(image)` returns (ltwh boxes, scores, class ids). Frames are image paths or arrays.
-    Same output as `run_sequence`: rows per group (frame, id, left, top, width, height, score),
-    1-based frames, and timing totals (detection plus tracking). `overrides` as in
-    `make_tracker`.
+    Returns rows per group (frame, id, left, top, width, height, score), with 1-based frame
+    numbers as in VisDrone, and timing totals (detection plus tracking). `overrides` as in
+    `make_tracker`; `build_tracker(tracker_cfg, overrides)` replaces `make_tracker` (for
+    example scripts/ultralytics_v1.py's, for version 1's library trackers).
 
     `det_stride` > 1 runs the detector on every `det_stride`-th frame only (Phase 5, D-610).
     On the frames in between, the tracker is not updated (an update without detections would
-    delete new, not yet confirmed tracks); its motion model is advanced instead, exactly as
-    the library does before matching (Kalman predict of tracked and lost tracks, then the
-    camera-motion warp for BoT-SORT), and the predicted boxes of confirmed tracks are output.
+    delete new, not yet confirmed tracks); it coasts instead (`coast`: motion model and
+    camera-motion compensation advanced), and the predicted boxes of confirmed tracks are
+    output.
     """
     import cv2
 
-    tracker = make_tracker(tracker_cfg, overrides)
+    tracker = (build_tracker or make_tracker)(tracker_cfg, overrides)
     rows: dict[str, list] = {g: [] for g in set(class_to_group.values())}
     t_total = 0.0
     for k, f in enumerate(frames, start=1):

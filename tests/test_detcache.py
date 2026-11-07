@@ -1,5 +1,8 @@
 """Saved detections replayed into the tracker (validation grid)."""
 
+import sys
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -44,7 +47,6 @@ def test_replay_refuses_frames_of_another_size(tmp_path):
 
 def test_replay_through_tracker_matches_live_detection(tmp_path):
     """Replaying saved detections gives the same tracks as calling the detector live."""
-    pytest.importorskip("ultralytics")
     from aerialrange.track.runner import run_sequence_custom
     from aerialrange.utils.config import REPO_ROOT
 
@@ -52,7 +54,7 @@ def test_replay_through_tracker_matches_live_detection(tmp_path):
     live = [
         (np.array([[40.0 + 6 * k, 100, 20, 30]]), np.array([0.9]), np.array([3])) for k in range(12)
     ]
-    cfg = str(REPO_ROOT / "configs" / "trackers" / "botsort_cmc.yaml")
+    cfg = str(REPO_ROOT / "configs" / "trackers" / "motion.yaml")
     calls = iter(live)
     a, _ = run_sequence_custom(lambda img: next(calls), frames, cfg, {3: "vehicle"})
     save_sequence(tmp_path / "s.npz", live, [(240, 320)] * 12)
@@ -62,18 +64,18 @@ def test_replay_through_tracker_matches_live_detection(tmp_path):
 
 
 def test_tracker_overrides_change_behaviour_and_refuse_unknown_keys():
-    pytest.importorskip("ultralytics")
     from aerialrange.track.runner import make_tracker, run_sequence_custom
     from aerialrange.utils.config import REPO_ROOT
 
-    cfg = str(REPO_ROOT / "configs" / "trackers" / "bytetrack.yaml")
+    cfg = str(REPO_ROOT / "configs" / "trackers" / "motion.yaml")
     frames = [np.full((240, 320, 3), 90, np.uint8) for _ in range(8)]
 
     def det(img):
-        return np.array([[40.0, 100, 20, 30]]), np.array([0.5]), np.array([3])
+        return np.array([[40.0, 100, 20, 30]]), np.array([0.6]), np.array([3])
 
+    # A 0.6 detection starts a track at the configured 0.55, not at 0.7 (version 1's key name).
     on, _ = run_sequence_custom(det, frames, cfg, {3: "vehicle"})
-    off, _ = run_sequence_custom(det, frames, cfg, {3: "vehicle"}, {"new_track_thresh": 0.6})
+    off, _ = run_sequence_custom(det, frames, cfg, {3: "vehicle"}, {"new_track_thresh": 0.7})
     assert len(on["vehicle"]) > 0 and len(off["vehicle"]) == 0
     with pytest.raises(KeyError):
         make_tracker(cfg, {"no_such_key": 1})
@@ -81,8 +83,9 @@ def test_tracker_overrides_change_behaviour_and_refuse_unknown_keys():
 
 def test_gmc_downscale_override():
     pytest.importorskip("ultralytics")
-    from aerialrange.track.runner import make_tracker
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
     from aerialrange.utils.config import REPO_ROOT
+    from ultralytics_v1 import make_tracker
 
     bot = str(REPO_ROOT / "configs" / "trackers" / "botsort_cmc.yaml")
     assert make_tracker(bot).gmc.downscale == 2  # library default
@@ -94,7 +97,6 @@ def test_gmc_downscale_override():
 
 
 def test_replay_stays_in_step_under_a_detection_stride(tmp_path):
-    pytest.importorskip("ultralytics")
     from aerialrange.track.runner import run_sequence_custom
     from aerialrange.utils.config import REPO_ROOT
 
@@ -104,7 +106,7 @@ def test_replay_stays_in_step_under_a_detection_stride(tmp_path):
     ]
     save_sequence(tmp_path / "s.npz", live, [(240, 320)] * 10)
     replay = Replay(*load_sequence(tmp_path / "s.npz"))
-    cfg = str(REPO_ROOT / "configs" / "trackers" / "bytetrack.yaml")
+    cfg = str(REPO_ROOT / "configs" / "trackers" / "motion.yaml")
     rows, _ = run_sequence_custom(replay, frames, cfg, {3: "vehicle"}, det_stride=2)
     assert replay.k == 10  # every frame consumed, detected or skipped
     v = rows["vehicle"]

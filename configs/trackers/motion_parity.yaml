@@ -1,0 +1,25 @@
+# The project's own tracker (src/aerialrange/track/tracker.py) with the settings that mirror
+# the version 1 tracker: BoT-SORT with camera-motion compensation and the thresholds tuned for
+# B2 YOLO26n 960 (D-321), no appearance re-identification. Used to check the new tracker
+# against version 1 on identical detections before anything is tuned.
+tracker_type: motion
+high: 0.05          # D-321 (below the 0.1 detection floor: every detection is "confident")
+low: 0.1            # library default; also the detection score floor
+new: 0.55           # D-321
+match_cost: 0.8     # library default match_thresh
+second_cost: 0.5    # second-stage gate in ByteTrack
+tentative_cost: 0.7 # gate for tracks with one detection, ByteTrack
+fuse_score: true    # library default
+max_lost: 30        # library default track_buffer (frames)
+duplicate_iou: 0.85 # ByteTrack
+cmc: true
+cmc_downscale: 2    # library default
+cmc_corners: 1000   # as the library's sparse optical flow
+cmc_min_distance_px: 3.0
+cmc_window_px: 21   # OpenCV default
+cmc_levels: 3       # OpenCV default
+cmc_check_back: true
+std_pos: 0.05       # DeepSORT, 1/20
+std_vel: 0.00625    # DeepSORT, 1/160
+class_groups: null
+iou_buffer: 0.0

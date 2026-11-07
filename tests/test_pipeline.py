@@ -74,7 +74,6 @@ def test_filter_bank_predicts_through_misses_and_drops_lost_tracks():
 
 
 def test_demo_runs_end_to_end_and_matches_truth(tmp_path):
-    pytest.importorskip("ultralytics")
     import json
 
     import pandas as pd
@@ -96,7 +95,6 @@ def test_demo_runs_end_to_end_and_matches_truth(tmp_path):
 
 def test_demo_checks_displayed_speed(tmp_path):
     """The demo's check covers the speed shown on the overlay."""
-    pytest.importorskip("ultralytics")
     from aerialrange.pipeline.demo import demo
 
     rule = {"sigma_max_ms": 1.0, "min_age": 5, "nis_window": 10, "nis_conf": 0.95}

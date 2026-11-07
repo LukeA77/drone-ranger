@@ -1,13 +1,15 @@
 """Detection AP per evaluation group and box-height bin on VisDrone MOT frames.
 
 Usage: python scripts/detect_eval.py --run B0_yolo26n_640 --weights weights/yolo26n.pt
-       --class-map coco --imgsz 640 [--split val] [--frame-stride 10] [--tiled --tile 640
-       --overlap 0.2]
+       --class-map coco --imgsz 640 [--kind yolo|rfdetr] [--split val] [--frame-stride 10]
+       [--tiled --tile 640 --overlap 0.2]
 
 Uses every `frame-stride`-th frame of each sequence (neighbouring frames are near-duplicates).
 Ground truth per group comes from scripts/visdrone_prep.py --mot; predictions in ignored
 regions are removed first (D-302). AP at IoU `{{IOU_MATCH}}` and averaged over 0.5:0.95,
-overall and per height bin. Writes results/visdrone/<split>/detect_<run>.json.
+overall and per height bin. Every kind of detector is scored with the same score floor,
+Ultralytics' predict default of 0.25 that version 1's scores used (`detect.factory`).
+Writes results/visdrone/<split>/detect_<run>.json.
 """
 
 from __future__ import annotations
@@ -17,14 +19,19 @@ import json
 import sys
 import time
 from datetime import UTC, datetime
+from pathlib import Path
 
 import numpy as np
 
 from aerialrange.data.visdrone import outside_ignored
 from aerialrange.detect.evaluate import evaluate_detections
+from aerialrange.detect.factory import KINDS, YOLO_PREDICT_CONF
 from aerialrange.detect.tiling import detect_tiled
 from aerialrange.track.evaluate import read_ignored, read_rows
 from aerialrange.utils.config import REPO_ROOT, load_config
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # scripts/ultralytics_v1.py
+from ultralytics_v1 import library_version, make_detector  # noqa: E402
 
 PREP = REPO_ROOT / "cache" / "visdrone" / "mot"
 # Box-height bins (pixels): doubling widths; small objects dominate VisDrone (D-312).
@@ -38,6 +45,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--weights", required=True)
     ap.add_argument("--class-map", required=True)
     ap.add_argument("--imgsz", type=int, required=True)
+    ap.add_argument("--kind", default="yolo", choices=KINDS)
     ap.add_argument("--split", default="val", choices=["val", "test-dev"])
     ap.add_argument("--final", action="store_true")
     ap.add_argument("--frame-stride", type=int, default=10)
@@ -53,22 +61,15 @@ def main(argv: list[str] | None = None) -> int:
         print("--tiled needs --tile and --overlap ({{TILE_SIZE}}, {{TILE_OVERLAP}})")
         return 1
     import cv2
-    from ultralytics import YOLO
 
     det_cfg = load_config("detector")
     iou = det_cfg.require("iou_match")
     max_det = det_cfg.require("max_det")
     cmap = {int(k): v for k, v in det_cfg.require("class_maps")[args.class_map].items()}
     groups = sorted(set(cmap.values()))
-    model = YOLO(args.weights)
-
-    def predict(img: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        r = model.predict(
-            img, imgsz=args.imgsz, classes=sorted(cmap), max_det=max_det, verbose=False
-        )[0]
-        xyxy = r.boxes.xyxy.cpu().numpy()
-        ltwh = np.column_stack([xyxy[:, :2], xyxy[:, 2:] - xyxy[:, :2]])
-        return ltwh, r.boxes.conf.cpu().numpy(), r.boxes.cls.cpu().numpy().astype(int)
+    # None keeps the YOLO library's own default (0.25), exactly as version 1 was scored.
+    floor = None if args.kind == "yolo" else YOLO_PREDICT_CONF
+    predict = make_detector(args.kind, args.weights, args.imgsz, floor, max_det, sorted(cmap))
 
     gt = {g: {} for g in groups}
     det = {g: {} for g in groups}
@@ -121,8 +122,6 @@ def main(argv: list[str] | None = None) -> int:
                 for lo, hi in HEIGHT_BINS
             },
         }
-    import ultralytics
-
     out = {
         "generated_utc": datetime.now(UTC).isoformat(timespec="seconds"),
         "run": args.run,
@@ -138,7 +137,9 @@ def main(argv: list[str] | None = None) -> int:
         "n_images": n_img,
         "iou_match": iou,
         "max_det": max_det,
-        "ultralytics": ultralytics.__version__,
+        "kind": args.kind,
+        "conf_floor": YOLO_PREDICT_CONF,
+        "library": library_version(args.kind, args.weights),
         "seconds_per_image_wall": t_total / max(n_img, 1),
         "timing_note": "Wall time, not the latency benchmark protocol (D-601).",
         "results": res,

@@ -427,5 +427,12 @@
    "accuracy": 0.19291819291819293
   }
  ],
- "chosen": null
+ "chosen": null,
+ "most_accurate": {
+  "sigma_max_ms": 1.0,
+  "min_age": 50,
+  "displayed_share": 0.00838569880823402,
+  "n_displayed": 387,
+  "accuracy": 0.3178294573643411
+ }
 }

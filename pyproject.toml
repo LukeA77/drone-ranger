@@ -20,12 +20,14 @@ dependencies = [
     "matplotlib",
     "pandas",
     "motmetrics",
+    "opencv-python-headless",
+    "onnxruntime",
+    "psutil",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov", "ruff"]
-train = ["torch", "torchvision", "ultralytics", "opencv-python-headless", "lap"]  # AGPL-3.0, which is why this project is AGPL-3.0
-edge = ["onnx", "onnxruntime", "onnxslim"]
+edge = ["onnx", "onnxslim"]  # model export and quantisation tools
 
 [project.scripts]
 aerialrange = "aerialrange.cli:app"

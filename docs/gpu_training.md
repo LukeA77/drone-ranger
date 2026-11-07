@@ -38,3 +38,14 @@ The version 1 detector is fine-tuned on SynDrone development towns so that detec
 2. Upload two **private** Kaggle datasets: the zip, and `cache/train/B2_yolo26n_960/weights/best.pt` renamed `B2_yolo26n_960_best.pt` (the starting weights, so the only change from zero-shot is SynDrone training; copy it into `cache/gpu_package/` under that name so both uploads sit together). Before uploading, check the zip's SHA-256 against the manifest. Kaggle may unpack the zip on upload, and the notebook accepts either form.
 3. In a GPU notebook with both attached, paste `gpu/train_syndrone_kaggle.py` into one cell and use **Save & Run All**. It trains the three folds in turn, resumes after a session timeout, and refuses to run without a GPU.
 4. Download `syndrone_ft_outputs.zip` and unzip it into `cache/train/`, so that `cache/train/syndrone_ft_outputs/syndrone_ft_minus_<Town>/weights/best.pt` exists. Scoring then runs locally (`docs/runbook.md`, Phase 7).
+
+## Detector candidates (version 2)
+
+The version 1 detector's library is AGPL-3.0, so version 2 trains permissively licensed candidates on the same VisDrone data (`docs/model_and_data.md`, detector candidates). The first is RF-DETR (Apache-2.0); the others follow the same pattern.
+
+1. Build the package: `python scripts/visdrone_coco_package.py` writes `cache/gpu_package/visdrone_det_coco.zip` (VisDrone DET train and val in COCO format; the same images and labels as version 1's training set) and `visdrone_coco_manifest.json` with counts and the SHA-256.
+2. Upload the zip as a **private** Kaggle dataset, once; every candidate uses it. Kaggle may unpack the zip on upload, and the notebook accepts either form.
+3. In a GPU notebook with the dataset attached, paste `gpu/train_rfdetr_kaggle.py` into one cell, set `RUN` on its first settings line (for example `rfdetr_nano_640`), and use **Save & Run All**. One run per session; training stops cleanly after 11 hours if it has not finished, so the outputs are never lost to Kaggle's 12-hour limit.
+4. Download `<run>.zip` and unzip it into `cache/train/`, so that `cache/train/<run>/checkpoint_best_total.pth` exists.
+5. D-FINE works the same way with `gpu/train_dfine_kaggle.py` (runs `dfine_n_640`, `dfine_n_960`, `dfine_s_640`); the notebook needs **Internet** on, because it fetches the authors' code at a fixed commit and their COCO-only start weights. Its zip holds `checkpoint_best.pth`.
+6. Score each run locally with one command: `bash scripts/queues/score_candidate.sh <run> <input size> <rfdetr|dfine>`. It exports to ONNX and checks parity against the training code, scores detection on VisDrone MOT val, caches detections, and tunes the project's tracker on them (log in `cache/logs/candidates/`). The training libraries live in their own environments under `cache/venvs/` (D-717).

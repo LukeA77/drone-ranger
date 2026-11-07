@@ -1,0 +1,22 @@
+{
+ "generated_utc": "2026-11-07T12:04:24+00:00",
+ "run": "rfdetr_nano_960",
+ "checkpoint": "checkpoint_best_total.pth",
+ "onnx": "rfdetr_nano_960.onnx",
+ "input_hw": [
+  960,
+  960
+ ],
+ "score_floor": 0.1,
+ "n_frames": 50,
+ "rfdetr": "1.12.0",
+ "onnxruntime": "1.31.1",
+ "max_box_diff_px": 0.04881441593170166,
+ "p99_box_diff_px": 0.0008459252119064279,
+ "max_score_diff": 0.0002886311413474729,
+ "reference": "library validation transform + library post-processing (PyTorch); classes from the checkpoint's class names",
+ "agreement_library_side": 1.0,
+ "agreement_onnx_side": 1.0,
+ "detections_library": 8028,
+ "detections_onnx": 8028
+}

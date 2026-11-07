@@ -23,3 +23,19 @@ jobs:
         run: make lint
       - name: Test
         run: make test
+
+  arm64-container:
+    # Every run-time dependency must install on ARM64 (Raspberry Pi 5): build the image for
+    # linux/arm64 under QEMU and run the synthetic demo and the tests in it. No model weights
+    # in CI; the comparison with real frames is `make platform-check` (docs/edge.md).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+      - uses: docker/setup-buildx-action@v3
+      - name: Build (linux/arm64)
+        run: docker buildx build --platform linux/arm64 -f docker/Dockerfile -t aerialrange:arm64 --load .
+      - name: Demo in the ARM64 image
+        run: docker run --rm --platform linux/arm64 aerialrange:arm64 aerialrange demo --out /tmp/demo

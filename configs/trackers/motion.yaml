@@ -1,0 +1,25 @@
+# The project's own tracker (src/aerialrange/track/tracker.py), as chosen on VisDrone MOT
+# validation (D-713). Association settings mirror the version 1 tracker (D-321); the camera-
+# motion estimate uses the fastest optical-flow settings that keep validation IDF1 at or above
+# version 1's (results/visdrone/val/track_variants_cmc_speed.json). No appearance features.
+tracker_type: motion
+high: 0.05          # D-321 (below the 0.1 detection floor: every detection is "confident")
+low: 0.1            # also the detection score floor
+new: 0.55           # D-321
+match_cost: 0.8
+second_cost: 0.5
+tentative_cost: 0.7
+fuse_score: true
+max_lost: 30        # frames
+duplicate_iou: 0.85
+cmc: true
+cmc_downscale: 8    # the pipeline's setting (D-609)
+cmc_corners: 400    # D-713
+cmc_min_distance_px: 6.0
+cmc_window_px: 21
+cmc_levels: 3
+cmc_check_back: false  # D-713: RANSAC alone rejects the outliers as well, at half the cost
+std_pos: 0.05       # DeepSORT, 1/20
+std_vel: 0.00625    # DeepSORT, 1/160
+class_groups: null
+iou_buffer: 0.0

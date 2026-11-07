@@ -1,0 +1,74 @@
+{
+ "label": "ESTIMATED, NOT MEASURED",
+ "generated_utc": "2026-11-07T00:55:38+00:00",
+ "method": "laptop median x (published Pi 5 time / laptop median) of the same reference",
+ "reference": {
+  "onnx": "weights/yolo26n_640.onnx",
+  "pi5_ms": 126.9,
+  "source": "Arm, 'Arm Runtime for YOLO26 on Raspberry Pi 5' model card, benchmark table: YOLO26n, 640x640, batch 1, ONNX Runtime 126.90 ms/image, inference only, Raspberry Pi OS Trixie (huggingface.co/Arm/Arm-Runtime-for-YOLO26-on-Raspberry-Pi-5, read 2026-11-07)"
+ },
+ "reference_laptop": {
+  "input_shape": [
+   1,
+   3,
+   640,
+   640
+  ],
+  "median_ms": 45.430650003254414,
+  "p90_ms": 49.898329997085966,
+  "repeats": 200
+ },
+ "ratio_pi5_over_laptop": 2.7932684210089347,
+ "range_factor": [
+  0.75,
+  1.5
+ ],
+ "range_note": "assumption: the ratio is measured on a convolutional network; attention-heavy networks may scale differently between x86 and ARM",
+ "threads": 4,
+ "scope": "inference only (session.run), batch 1, no pre- or post-processing",
+ "laptop_cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+ "laptop_logical_cpus": 16,
+ "onnxruntime": "1.31.0",
+ "models": {
+  "v1_yolo26n_960": {
+   "onnx": "weights/B2_yolo26n_960_rect.onnx",
+   "laptop": {
+    "input_shape": [
+     1,
+     3,
+     544,
+     960
+    ],
+    "median_ms": 56.72229999618139,
+    "p90_ms": 58.64980999613181,
+    "repeats": 200
+   },
+   "pi5_estimate_ms": 158.4406093463287,
+   "pi5_estimate_range_ms": [
+    118.83045700974652,
+    237.66091401949305
+   ],
+   "pi5_estimate_fps": 6.311513217007023
+  },
+  "v1_yolo26n_640": {
+   "onnx": "weights/B2_yolo26n_960w_640_rect.onnx",
+   "laptop": {
+    "input_shape": [
+     1,
+     3,
+     384,
+     640
+    ],
+    "median_ms": 26.533399999607354,
+    "p90_ms": 27.731350000249222,
+    "repeats": 200
+   },
+   "pi5_estimate_ms": 74.1149083209017,
+   "pi5_estimate_range_ms": [
+    55.58618124067628,
+    111.17236248135256
+   ],
+   "pi5_estimate_fps": 13.492562058772492
+  }
+ }
+}

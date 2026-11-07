@@ -29,11 +29,26 @@ class FillError(KeyError):
 
 
 def _lookup(obj: Any, dotted: str, where: str) -> Any:
-    for part in dotted.split("."):
-        try:
-            obj = obj[int(part)] if isinstance(obj, list) else obj[part]
-        except (KeyError, IndexError, ValueError) as e:
-            raise FillError(f"{where}: no '{part}' in {dotted}") from e
+    """Follow a dotted key path. A dictionary key may itself contain dots (for example
+    `range_coverage_0.90`): when a part is not a key, the shortest run of following
+    parts that joins into one is used."""
+    parts = dotted.split(".")
+    i = 0
+    while i < len(parts):
+        if isinstance(obj, list):
+            try:
+                obj = obj[int(parts[i])]
+            except (IndexError, ValueError) as e:
+                raise FillError(f"{where}: no '{parts[i]}' in {dotted}") from e
+            i += 1
+            continue
+        for j in range(i + 1, len(parts) + 1):
+            key = ".".join(parts[i:j])
+            if isinstance(obj, dict) and key in obj:
+                obj, i = obj[key], j
+                break
+        else:
+            raise FillError(f"{where}: no '{parts[i]}' in {dotted}")
     return obj
 
 

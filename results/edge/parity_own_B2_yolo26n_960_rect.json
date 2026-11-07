@@ -1,0 +1,19 @@
+{
+ "generated_utc": "2026-11-06T23:46:36+00:00",
+ "onnx": "B2_yolo26n_960_rect.onnx",
+ "input_hw": [
+  544,
+  960
+ ],
+ "score_floor": 0.1,
+ "n_frames": 50,
+ "ultralytics": "8.4.182",
+ "onnxruntime": "1.31.0",
+ "max_box_diff_px": 0.0002695719399525842,
+ "p99_box_diff_px": 0.00023193359356810106,
+ "max_score_diff": 0.0,
+ "agreement_library_side": 1.0,
+ "agreement_own_side": 0.9997591522157996,
+ "detections_library": 4151,
+ "detections_own": 4152
+}

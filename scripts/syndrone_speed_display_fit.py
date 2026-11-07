@@ -85,6 +85,12 @@ def main(argv: list[str] | None = None) -> int:
         "grid": [{k: v for k, v in g.items() if k != "_show"} for g in grid],
         "chosen": None,
     }
+    # the most accurate setting that shows enough speeds to judge (same >= 100 rule as
+    # the choice), so a report can say how far short of the target the filter falls
+    judged = [g for g in grid if g["n_displayed"] >= 100]
+    if judged:
+        top = max(judged, key=lambda g: g["accuracy"])
+        res["most_accurate"] = {k: v for k, v in top.items() if k != "_show"}
     if best is not None:
         show = best["_show"]
         sub = df.assign(show=show)

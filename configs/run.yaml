@@ -2,11 +2,11 @@
 detector:
   value: {kind: yolo, weights: weights/B2_yolo26n_960w_640_rect.onnx, imgsz: 640, score_floor: 0.1}
   placeholder: null
-  source: "Fastest Pareto-frontier setting (D-611): B2 YOLO26n trained at 960, run at 640 through ONNX (parity D-604). Score floor 0.1 as in tracking (D-319). kind: boxes reads boxes from a CSV instead (synthetic demo)"
+  source: "Fastest Pareto-frontier setting (D-611): B2 YOLO26n trained at 960, run at 640 through ONNX (parity D-604). Score floor 0.1 as in tracking (D-319). kind: boxes reads boxes from a CSV instead (synthetic demo); kind: rfdetr runs an RF-DETR ONNX export (D-717)"
 tracker:
-  value: {config: configs/trackers/botsort_cmc_tuned_B2_yolo26n_960.yaml, gmc_downscale: 8, det_stride: 2}
+  value: {config: configs/trackers/motion.yaml, gmc_downscale: 8, det_stride: 2}
   placeholder: null
-  source: "Tuned BoT-SORT (D-321), camera-motion compensation at 1/8 (D-609), detection on every 2nd frame (D-610, D-611: 33 fps sustained with overlap)"
+  source: "The project's own tracker (D-713; version 1 used tuned BoT-SORT, D-321), camera-motion compensation at 1/8 (D-609), detection on every 2nd frame (D-610, D-611: 33 fps sustained with overlap). Validation mean IDF1 at this stride 0.600 (version 1's tracker 0.603)"
 camera:
   value: {focal_px: 1259, cx: 960, cy: 540}
   placeholder: null

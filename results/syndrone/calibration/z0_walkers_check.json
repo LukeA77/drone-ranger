@@ -1,0 +1,5464 @@
+{
+ "towns": [
+  "Town01",
+  "Town07",
+  "Town10HD",
+  "Town04",
+  "Town05"
+ ],
+ "stride": 25,
+ "ground_tags": [
+  6,
+  7,
+  8,
+  14,
+  22
+ ],
+ "ring_m": 1.0,
+ "min_px": 30,
+ "rule": {
+  "median_abs_m": 0.05,
+  "p90_abs_m": 0.1
+ },
+ "bias_walkers_minus_vehicles_m": 0.021511627121315803,
+ "per_town_after_bias": {
+  "Town01": {
+   "n_frames": 99,
+   "median_abs_m": 0.007780931867833317,
+   "p90_abs_m": 0.033364938756935435,
+   "median_signed_m": 0.0016159052627191285,
+   "share_frames_with_walkers": 1.0
+  },
+  "Town07": {
+   "n_frames": 94,
+   "median_abs_m": 0.007090375556287543,
+   "p90_abs_m": 0.03158972228912449,
+   "median_signed_m": -0.0016906377746775739,
+   "share_frames_with_walkers": 0.7916666666666666
+  },
+  "Town10HD": {
+   "n_frames": 115,
+   "median_abs_m": 0.0051299942849381,
+   "p90_abs_m": 0.01028639329719758,
+   "median_signed_m": -0.003108248916414813,
+   "share_frames_with_walkers": 0.9666666666666667
+  },
+  "Town04": {
+   "n_frames": 54,
+   "median_abs_m": 0.01462448022444501,
+   "p90_abs_m": 0.048832844938570145,
+   "median_signed_m": 0.012623180740876296,
+   "share_frames_with_walkers": 0.6
+  },
+  "Town05": {
+   "n_frames": 105,
+   "median_abs_m": 0.00653123855232653,
+   "p90_abs_m": 0.022766190131619547,
+   "median_signed_m": 9.382892155061426e-05,
+   "share_frames_with_walkers": 1.0
+  }
+ },
+ "passed": true,
+ "frames": [
+  {
+   "town": "Town01",
+   "frame": 0,
+   "z0_vehicles": 0.011214760709904273,
+   "n_vehicles": 9,
+   "z0_walkers": -0.005748486584964968,
+   "se_walkers": 0.002400505942796591,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town01",
+   "frame": 25,
+   "z0_vehicles": -0.027963008437210148,
+   "n_vehicles": 9,
+   "z0_walkers": 0.0017541735302087217,
+   "se_walkers": 0.0013061727865514461,
+   "n_walkers": 21
+  },
+  {
+   "town": "Town01",
+   "frame": 50,
+   "z0_vehicles": -0.026048382027871637,
+   "n_vehicles": 8,
+   "z0_walkers": -0.000810759657666006,
+   "se_walkers": 0.001953511284039031,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town01",
+   "frame": 75,
+   "z0_vehicles": -0.02293509477201732,
+   "n_vehicles": 10,
+   "z0_walkers": 0.0032494711493038474,
+   "se_walkers": 0.0012879861053120205,
+   "n_walkers": 25
+  },
+  {
+   "town": "Town01",
+   "frame": 100,
+   "z0_vehicles": -0.011897222806841174,
+   "n_vehicles": 12,
+   "z0_walkers": 0.004499661466212861,
+   "se_walkers": 0.0005513173887679018,
+   "n_walkers": 22
+  },
+  {
+   "town": "Town01",
+   "frame": 125,
+   "z0_vehicles": -0.023511261284090347,
+   "n_vehicles": 5,
+   "z0_walkers": -0.0004322446718424912,
+   "se_walkers": 0.001236160708698936,
+   "n_walkers": 33
+  },
+  {
+   "town": "Town01",
+   "frame": 150,
+   "z0_vehicles": -0.0026697350305509415,
+   "n_vehicles": 5,
+   "z0_walkers": 0.001432497188304666,
+   "se_walkers": 0.0009467485038130373,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town01",
+   "frame": 175,
+   "z0_vehicles": -0.009928623254475771,
+   "n_vehicles": 2,
+   "z0_walkers": -0.0015284820012239646,
+   "se_walkers": 0.0012596647491600126,
+   "n_walkers": 27
+  },
+  {
+   "town": "Town01",
+   "frame": 200,
+   "z0_vehicles": -0.003080585402161329,
+   "n_vehicles": 1,
+   "z0_walkers": 0.0004790447189629423,
+   "se_walkers": 0.0009959664580453925,
+   "n_walkers": 30
+  },
+  {
+   "town": "Town01",
+   "frame": 225,
+   "z0_vehicles": -0.004281397224089184,
+   "n_vehicles": 1,
+   "z0_walkers": 0.0023462810414902825,
+   "se_walkers": 0.000580469897760913,
+   "n_walkers": 47
+  },
+  {
+   "town": "Town01",
+   "frame": 250,
+   "z0_vehicles": 0.09138442263549312,
+   "n_vehicles": 2,
+   "z0_walkers": 0.0009419236751581022,
+   "se_walkers": 0.0009631145000686491,
+   "n_walkers": 40
+  },
+  {
+   "town": "Town01",
+   "frame": 275,
+   "z0_vehicles": -0.07551517661411052,
+   "n_vehicles": 3,
+   "z0_walkers": 0.002572990674579245,
+   "se_walkers": 0.0010002179585703727,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town01",
+   "frame": 300,
+   "z0_vehicles": -0.041131198648650134,
+   "n_vehicles": 3,
+   "z0_walkers": 0.0013564080474927419,
+   "se_walkers": 0.0018651326619423092,
+   "n_walkers": 21
+  },
+  {
+   "town": "Town01",
+   "frame": 325,
+   "z0_vehicles": -0.05582195680836043,
+   "n_vehicles": 3,
+   "z0_walkers": -0.0013165881093798507,
+   "se_walkers": 0.0024381463633615717,
+   "n_walkers": 18
+  },
+  {
+   "town": "Town01",
+   "frame": 350,
+   "z0_vehicles": -0.047035109169912576,
+   "n_vehicles": 4,
+   "z0_walkers": -0.005830307330724441,
+   "se_walkers": 0.003413323977703783,
+   "n_walkers": 14
+  },
+  {
+   "town": "Town01",
+   "frame": 375,
+   "z0_vehicles": -0.032624688075080385,
+   "n_vehicles": 5,
+   "z0_walkers": -0.006833782293962949,
+   "se_walkers": 0.004156115835940753,
+   "n_walkers": 14
+  },
+  {
+   "town": "Town01",
+   "frame": 400,
+   "z0_vehicles": -0.029347884777410783,
+   "n_vehicles": 6,
+   "z0_walkers": -0.005857366007385355,
+   "se_walkers": 0.003562657669963358,
+   "n_walkers": 17
+  },
+  {
+   "town": "Town01",
+   "frame": 425,
+   "z0_vehicles": -0.027251404353165476,
+   "n_vehicles": 5,
+   "z0_walkers": -0.006206528305261546,
+   "se_walkers": 0.002368972086979346,
+   "n_walkers": 20
+  },
+  {
+   "town": "Town01",
+   "frame": 450,
+   "z0_vehicles": -0.021904685299489274,
+   "n_vehicles": 6,
+   "z0_walkers": -0.003427062427548296,
+   "se_walkers": 0.0021191371274601406,
+   "n_walkers": 19
+  },
+  {
+   "town": "Town01",
+   "frame": 475,
+   "z0_vehicles": -0.017471110504690936,
+   "n_vehicles": 6,
+   "z0_walkers": -0.0003217041946731304,
+   "se_walkers": 0.0013718447461180485,
+   "n_walkers": 30
+  },
+  {
+   "town": "Town01",
+   "frame": 500,
+   "z0_vehicles": -0.012733851363272963,
+   "n_vehicles": 5,
+   "z0_walkers": 0.0001330228935752349,
+   "se_walkers": 0.001441730778106232,
+   "n_walkers": 26
+  },
+  {
+   "town": "Town01",
+   "frame": 525,
+   "z0_vehicles": -0.009619175245713263,
+   "n_vehicles": 2,
+   "z0_walkers": 0.004614560260571457,
+   "se_walkers": 0.0014123861612160519,
+   "n_walkers": 21
+  },
+  {
+   "town": "Town01",
+   "frame": 550,
+   "z0_vehicles": -0.0080961857159903,
+   "n_vehicles": 2,
+   "z0_walkers": 0.005214264921555098,
+   "se_walkers": 0.0009649007272566853,
+   "n_walkers": 20
+  },
+  {
+   "town": "Town01",
+   "frame": 575,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": 0.004773936727475463,
+   "se_walkers": 0.0014523262737668235,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town01",
+   "frame": 600,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": -0.004753747473089125,
+   "se_walkers": 0.00423970746194126,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town01",
+   "frame": 625,
+   "z0_vehicles": -0.07752606920412583,
+   "n_vehicles": 3,
+   "z0_walkers": -0.005181491374969442,
+   "se_walkers": 0.002914496639954502,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town01",
+   "frame": 650,
+   "z0_vehicles": -0.07987167532535874,
+   "n_vehicles": 3,
+   "z0_walkers": -0.006109753631400986,
+   "se_walkers": 0.0015297403014430937,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town01",
+   "frame": 675,
+   "z0_vehicles": -0.07429177686152658,
+   "n_vehicles": 3,
+   "z0_walkers": -0.0022133068310731165,
+   "se_walkers": 0.0014739269460544528,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town01",
+   "frame": 700,
+   "z0_vehicles": -0.058587715470580656,
+   "n_vehicles": 4,
+   "z0_walkers": 0.0036786273079205036,
+   "se_walkers": 0.0017900148301278665,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town01",
+   "frame": 725,
+   "z0_vehicles": -0.05929726943872471,
+   "n_vehicles": 5,
+   "z0_walkers": 0.006210991969475397,
+   "se_walkers": 0.0015328593905365494,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town01",
+   "frame": 750,
+   "z0_vehicles": -0.046818097088034534,
+   "n_vehicles": 6,
+   "z0_walkers": 0.007229368948959205,
+   "se_walkers": 0.002108935616689501,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town01",
+   "frame": 775,
+   "z0_vehicles": -0.03949252294058077,
+   "n_vehicles": 7,
+   "z0_walkers": 0.0038699679637908472,
+   "se_walkers": 0.0044690280505629105,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town01",
+   "frame": 800,
+   "z0_vehicles": -0.04237970778584618,
+   "n_vehicles": 5,
+   "z0_walkers": 0.001241263710692656,
+   "se_walkers": 0.011855693029206126,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town01",
+   "frame": 825,
+   "z0_vehicles": -0.03710970839407198,
+   "n_vehicles": 5,
+   "z0_walkers": -0.022754519837566857,
+   "se_walkers": 0.01120534626100555,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town01",
+   "frame": 850,
+   "z0_vehicles": -0.036394666331565,
+   "n_vehicles": 9,
+   "z0_walkers": -0.0202350410165632,
+   "se_walkers": 0.0043688716954945915,
+   "n_walkers": 28
+  },
+  {
+   "town": "Town01",
+   "frame": 875,
+   "z0_vehicles": -0.02853019504825658,
+   "n_vehicles": 6,
+   "z0_walkers": -0.015582710203919145,
+   "se_walkers": 0.0034140026102663194,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town01",
+   "frame": 900,
+   "z0_vehicles": -0.021850236579083998,
+   "n_vehicles": 6,
+   "z0_walkers": -0.014845978694679959,
+   "se_walkers": 0.002944347692306193,
+   "n_walkers": 44
+  },
+  {
+   "town": "Town01",
+   "frame": 925,
+   "z0_vehicles": -0.019831218161022443,
+   "n_vehicles": 6,
+   "z0_walkers": -0.008599873780796005,
+   "se_walkers": 0.0021477305750374803,
+   "n_walkers": 40
+  },
+  {
+   "town": "Town01",
+   "frame": 950,
+   "z0_vehicles": -0.019345949269932123,
+   "n_vehicles": 7,
+   "z0_walkers": -0.0047941408963368334,
+   "se_walkers": 0.0015419293862999268,
+   "n_walkers": 57
+  },
+  {
+   "town": "Town01",
+   "frame": 975,
+   "z0_vehicles": -0.009939967154460659,
+   "n_vehicles": 7,
+   "z0_walkers": -0.003930083748567523,
+   "se_walkers": 0.001436529343459233,
+   "n_walkers": 58
+  },
+  {
+   "town": "Town01",
+   "frame": 1000,
+   "z0_vehicles": -0.007453657307907362,
+   "n_vehicles": 4,
+   "z0_walkers": -0.00010921433915809998,
+   "se_walkers": 0.001120470452316438,
+   "n_walkers": 60
+  },
+  {
+   "town": "Town01",
+   "frame": 1025,
+   "z0_vehicles": -0.06981935190038445,
+   "n_vehicles": 6,
+   "z0_walkers": -0.00361224940498268,
+   "se_walkers": 0.0019291399857136802,
+   "n_walkers": 63
+  },
+  {
+   "town": "Town01",
+   "frame": 1050,
+   "z0_vehicles": -0.06264660442183509,
+   "n_vehicles": 7,
+   "z0_walkers": -0.009263509742329876,
+   "se_walkers": 0.0024444363752487005,
+   "n_walkers": 53
+  },
+  {
+   "town": "Town01",
+   "frame": 1075,
+   "z0_vehicles": -0.055841685302569444,
+   "n_vehicles": 4,
+   "z0_walkers": -0.006275740390289258,
+   "se_walkers": 0.0017564483231974843,
+   "n_walkers": 45
+  },
+  {
+   "town": "Town01",
+   "frame": 1100,
+   "z0_vehicles": -0.0422699461057921,
+   "n_vehicles": 8,
+   "z0_walkers": -0.005027964523956168,
+   "se_walkers": 0.001517394177490324,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town01",
+   "frame": 1125,
+   "z0_vehicles": -0.03612995243818956,
+   "n_vehicles": 8,
+   "z0_walkers": -0.0012560859377586074,
+   "se_walkers": 0.0010377609642676846,
+   "n_walkers": 41
+  },
+  {
+   "town": "Town01",
+   "frame": 1150,
+   "z0_vehicles": -0.028264146079412477,
+   "n_vehicles": 12,
+   "z0_walkers": 0.0028949322021409097,
+   "se_walkers": 0.0008727190730020724,
+   "n_walkers": 36
+  },
+  {
+   "town": "Town01",
+   "frame": 1175,
+   "z0_vehicles": -0.024406401043295854,
+   "n_vehicles": 10,
+   "z0_walkers": 0.004886157945853268,
+   "se_walkers": 0.0008997579586636417,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town01",
+   "frame": 1200,
+   "z0_vehicles": -0.020632550590940015,
+   "n_vehicles": 5,
+   "z0_walkers": 0.0005775086553133329,
+   "se_walkers": 0.001967787890261905,
+   "n_walkers": 32
+  },
+  {
+   "town": "Town01",
+   "frame": 1225,
+   "z0_vehicles": -0.035605207010289734,
+   "n_vehicles": 3,
+   "z0_walkers": 0.002484408158080497,
+   "se_walkers": 0.0011114038855155823,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town01",
+   "frame": 1250,
+   "z0_vehicles": -0.025973028653492984,
+   "n_vehicles": 4,
+   "z0_walkers": -0.00011626130739032916,
+   "se_walkers": 0.0011736953203252403,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town01",
+   "frame": 1275,
+   "z0_vehicles": -0.027774146754804444,
+   "n_vehicles": 4,
+   "z0_walkers": 0.004064029029572404,
+   "se_walkers": 0.0008126965737673159,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town01",
+   "frame": 1300,
+   "z0_vehicles": -0.05388783110671079,
+   "n_vehicles": 2,
+   "z0_walkers": 0.005464431421240367,
+   "se_walkers": 0.0005866335916436761,
+   "n_walkers": 33
+  },
+  {
+   "town": "Town01",
+   "frame": 1325,
+   "z0_vehicles": -0.07835090409125778,
+   "n_vehicles": 1,
+   "z0_walkers": 0.005183073283882541,
+   "se_walkers": 0.0005089139910146207,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town01",
+   "frame": 1350,
+   "z0_vehicles": -0.06944740067328903,
+   "n_vehicles": 1,
+   "z0_walkers": -0.0023393004976218707,
+   "se_walkers": 0.0015811217064141503,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town01",
+   "frame": 1375,
+   "z0_vehicles": -0.03598662910891997,
+   "n_vehicles": 4,
+   "z0_walkers": -0.0002357068909970712,
+   "se_walkers": 0.0011238094673523577,
+   "n_walkers": 37
+  },
+  {
+   "town": "Town01",
+   "frame": 1400,
+   "z0_vehicles": -0.019521050863539984,
+   "n_vehicles": 6,
+   "z0_walkers": 0.0027315622577168595,
+   "se_walkers": 0.0013363026795941428,
+   "n_walkers": 41
+  },
+  {
+   "town": "Town01",
+   "frame": 1425,
+   "z0_vehicles": -0.021456014555144228,
+   "n_vehicles": 8,
+   "z0_walkers": 0.00424349007794666,
+   "se_walkers": 0.0008524114891923085,
+   "n_walkers": 34
+  },
+  {
+   "town": "Town01",
+   "frame": 1450,
+   "z0_vehicles": -0.02358355920864279,
+   "n_vehicles": 14,
+   "z0_walkers": 0.0010824695589763986,
+   "se_walkers": 0.0019945752712037306,
+   "n_walkers": 32
+  },
+  {
+   "town": "Town01",
+   "frame": 1475,
+   "z0_vehicles": -0.018713990030931136,
+   "n_vehicles": 14,
+   "z0_walkers": -0.0002727793610613941,
+   "se_walkers": 0.0019021479695116555,
+   "n_walkers": 23
+  },
+  {
+   "town": "Town01",
+   "frame": 1500,
+   "z0_vehicles": -0.013209945988164875,
+   "n_vehicles": 13,
+   "z0_walkers": 0.0043969559004969185,
+   "se_walkers": 0.0017465282078903198,
+   "n_walkers": 23
+  },
+  {
+   "town": "Town01",
+   "frame": 1525,
+   "z0_vehicles": -0.0076144138649052034,
+   "n_vehicles": 6,
+   "z0_walkers": 0.004509410534372201,
+   "se_walkers": 0.0007594000903979773,
+   "n_walkers": 21
+  },
+  {
+   "town": "Town01",
+   "frame": 1550,
+   "z0_vehicles": -0.024554954131934047,
+   "n_vehicles": 9,
+   "z0_walkers": -0.018073076318642172,
+   "se_walkers": 0.006706248271866486,
+   "n_walkers": 16
+  },
+  {
+   "town": "Town01",
+   "frame": 1575,
+   "z0_vehicles": -0.032924455374305724,
+   "n_vehicles": 9,
+   "z0_walkers": -0.011265719930330917,
+   "se_walkers": 0.002890818930342317,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town01",
+   "frame": 1600,
+   "z0_vehicles": -0.029165490164280054,
+   "n_vehicles": 11,
+   "z0_walkers": -0.008038822962873211,
+   "se_walkers": 0.0016368468297180618,
+   "n_walkers": 32
+  },
+  {
+   "town": "Town01",
+   "frame": 1625,
+   "z0_vehicles": -0.02783683525902812,
+   "n_vehicles": 10,
+   "z0_walkers": -0.0060392652904206106,
+   "se_walkers": 0.0006397223523441078,
+   "n_walkers": 23
+  },
+  {
+   "town": "Town01",
+   "frame": 1650,
+   "z0_vehicles": -0.020355965494233418,
+   "n_vehicles": 14,
+   "z0_walkers": 0.0034279869492267307,
+   "se_walkers": 0.001504180270314551,
+   "n_walkers": 28
+  },
+  {
+   "town": "Town01",
+   "frame": 1675,
+   "z0_vehicles": -0.021698764996632897,
+   "n_vehicles": 9,
+   "z0_walkers": 0.001255064590515191,
+   "se_walkers": 0.0016175083798406868,
+   "n_walkers": 30
+  },
+  {
+   "town": "Town01",
+   "frame": 1700,
+   "z0_vehicles": -0.014137120134124853,
+   "n_vehicles": 5,
+   "z0_walkers": 0.0009922731270694777,
+   "se_walkers": 0.0018167547706994115,
+   "n_walkers": 23
+  },
+  {
+   "town": "Town01",
+   "frame": 1725,
+   "z0_vehicles": -0.017004092099006985,
+   "n_vehicles": 3,
+   "z0_walkers": 0.0032504333390129814,
+   "se_walkers": 0.0018484441091577693,
+   "n_walkers": 18
+  },
+  {
+   "town": "Town01",
+   "frame": 1750,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": 0.005671815077463815,
+   "se_walkers": 0.0016726829726710244,
+   "n_walkers": 15
+  },
+  {
+   "town": "Town01",
+   "frame": 1775,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": 0.0013891624423095171,
+   "se_walkers": 0.0025591923654314013,
+   "n_walkers": 18
+  },
+  {
+   "town": "Town01",
+   "frame": 1800,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": 0.0012968814722946224,
+   "se_walkers": 0.0030526307480849193,
+   "n_walkers": 15
+  },
+  {
+   "town": "Town01",
+   "frame": 1825,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": 0.0007946555408905934,
+   "se_walkers": 0.0028604199325208152,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town01",
+   "frame": 1850,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": -0.0002622182095864849,
+   "se_walkers": 0.002268271679538284,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town01",
+   "frame": 1875,
+   "z0_vehicles": -0.026326830315379163,
+   "n_vehicles": 2,
+   "z0_walkers": 0.0006014704704284668,
+   "se_walkers": 0.0017820442680157485,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town01",
+   "frame": 1900,
+   "z0_vehicles": -0.02040793130359264,
+   "n_vehicles": 1,
+   "z0_walkers": 0.004898917007530814,
+   "se_walkers": 0.0006609011032817152,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town01",
+   "frame": 1925,
+   "z0_vehicles": -0.06117753345495771,
+   "n_vehicles": 4,
+   "z0_walkers": -0.001201570883520945,
+   "se_walkers": 0.0023909874031091405,
+   "n_walkers": 21
+  },
+  {
+   "town": "Town01",
+   "frame": 1950,
+   "z0_vehicles": -0.04378543776837465,
+   "n_vehicles": 5,
+   "z0_walkers": 0.0008719714585034049,
+   "se_walkers": 0.0019177722619042453,
+   "n_walkers": 22
+  },
+  {
+   "town": "Town01",
+   "frame": 1975,
+   "z0_vehicles": -0.05196180092557599,
+   "n_vehicles": 6,
+   "z0_walkers": 7.249672590275909e-05,
+   "se_walkers": 0.003176197108034819,
+   "n_walkers": 16
+  },
+  {
+   "town": "Town01",
+   "frame": 2000,
+   "z0_vehicles": -0.043851597180504846,
+   "n_vehicles": 5,
+   "z0_walkers": -0.006654033574485772,
+   "se_walkers": 0.006084934168419464,
+   "n_walkers": 16
+  },
+  {
+   "town": "Town01",
+   "frame": 2025,
+   "z0_vehicles": -0.05167896161252185,
+   "n_vehicles": 8,
+   "z0_walkers": 0.004682392982812003,
+   "se_walkers": 0.004313601281531606,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town01",
+   "frame": 2050,
+   "z0_vehicles": -0.04352502257024694,
+   "n_vehicles": 8,
+   "z0_walkers": -0.007614600701709104,
+   "se_walkers": 0.011172888370958076,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town01",
+   "frame": 2075,
+   "z0_vehicles": -0.03273090779032619,
+   "n_vehicles": 11,
+   "z0_walkers": -0.00970322263060534,
+   "se_walkers": 0.0006940903768138368,
+   "n_walkers": 15
+  },
+  {
+   "town": "Town01",
+   "frame": 2100,
+   "z0_vehicles": -0.029143022815005862,
+   "n_vehicles": 11,
+   "z0_walkers": -0.00787996302344833,
+   "se_walkers": 0.0010911947324843884,
+   "n_walkers": 19
+  },
+  {
+   "town": "Town01",
+   "frame": 2125,
+   "z0_vehicles": -0.02190969302060823,
+   "n_vehicles": 11,
+   "z0_walkers": -0.00018716196088126922,
+   "se_walkers": 0.0020938998018022762,
+   "n_walkers": 29
+  },
+  {
+   "town": "Town01",
+   "frame": 2150,
+   "z0_vehicles": -0.018262758717955626,
+   "n_vehicles": 11,
+   "z0_walkers": -0.00025130599286959243,
+   "se_walkers": 0.002046701505197892,
+   "n_walkers": 28
+  },
+  {
+   "town": "Town01",
+   "frame": 2175,
+   "z0_vehicles": -0.019212006520567766,
+   "n_vehicles": 10,
+   "z0_walkers": 0.0012321815868907716,
+   "se_walkers": 0.002079354322620791,
+   "n_walkers": 23
+  },
+  {
+   "town": "Town01",
+   "frame": 2200,
+   "z0_vehicles": -0.03744499052151258,
+   "n_vehicles": 6,
+   "z0_walkers": 0.007089635022579769,
+   "se_walkers": 0.0018099138246026579,
+   "n_walkers": 26
+  },
+  {
+   "town": "Town01",
+   "frame": 2225,
+   "z0_vehicles": -0.03649987120403553,
+   "n_vehicles": 8,
+   "z0_walkers": 0.0020045197888426637,
+   "se_walkers": 0.003233714637574212,
+   "n_walkers": 22
+  },
+  {
+   "town": "Town01",
+   "frame": 2250,
+   "z0_vehicles": -0.03555785042270922,
+   "n_vehicles": 9,
+   "z0_walkers": -0.006747551766274958,
+   "se_walkers": 0.004180992898106956,
+   "n_walkers": 21
+  },
+  {
+   "town": "Town01",
+   "frame": 2275,
+   "z0_vehicles": -0.029489185746309897,
+   "n_vehicles": 10,
+   "z0_walkers": -0.003883656583514072,
+   "se_walkers": 0.0035178893826203136,
+   "n_walkers": 20
+  },
+  {
+   "town": "Town01",
+   "frame": 2300,
+   "z0_vehicles": -0.03315598073461194,
+   "n_vehicles": 12,
+   "z0_walkers": -0.014981310506417987,
+   "se_walkers": 0.0013851054423654572,
+   "n_walkers": 27
+  },
+  {
+   "town": "Town01",
+   "frame": 2325,
+   "z0_vehicles": -0.015818512747130208,
+   "n_vehicles": 7,
+   "z0_walkers": -0.0036138637387366375,
+   "se_walkers": 0.0028686967875516875,
+   "n_walkers": 25
+  },
+  {
+   "town": "Town01",
+   "frame": 2350,
+   "z0_vehicles": -0.00964701914785838,
+   "n_vehicles": 4,
+   "z0_walkers": -0.002272176413382015,
+   "se_walkers": 0.0029438394871400455,
+   "n_walkers": 28
+  },
+  {
+   "town": "Town01",
+   "frame": 2375,
+   "z0_vehicles": -0.02013601309596082,
+   "n_vehicles": 7,
+   "z0_walkers": -0.001127599052252382,
+   "se_walkers": 0.0017522569917419496,
+   "n_walkers": 22
+  },
+  {
+   "town": "Town01",
+   "frame": 2400,
+   "z0_vehicles": -0.01298625877624129,
+   "n_vehicles": 7,
+   "z0_walkers": 0.004581973002922041,
+   "se_walkers": 0.0006886206501700395,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town01",
+   "frame": 2425,
+   "z0_vehicles": -0.02666454155432125,
+   "n_vehicles": 5,
+   "z0_walkers": -0.00537639867901718,
+   "se_walkers": 0.0019093695773209542,
+   "n_walkers": 33
+  },
+  {
+   "town": "Town01",
+   "frame": 2450,
+   "z0_vehicles": -0.02298831331870841,
+   "n_vehicles": 6,
+   "z0_walkers": -0.0018649809112599861,
+   "se_walkers": 0.001429576096706839,
+   "n_walkers": 36
+  },
+  {
+   "town": "Town01",
+   "frame": 2475,
+   "z0_vehicles": -0.020149748856708585,
+   "n_vehicles": 7,
+   "z0_walkers": 0.0006634545033274162,
+   "se_walkers": 0.001444998138929447,
+   "n_walkers": 36
+  },
+  {
+   "town": "Town01",
+   "frame": 2500,
+   "z0_vehicles": -0.018676486192162098,
+   "n_vehicles": 4,
+   "z0_walkers": 0.0005319973758438244,
+   "se_walkers": 0.0013574186359091623,
+   "n_walkers": 34
+  },
+  {
+   "town": "Town01",
+   "frame": 2525,
+   "z0_vehicles": -0.01956246097129445,
+   "n_vehicles": 4,
+   "z0_walkers": -0.001257946239529305,
+   "se_walkers": 0.0017730441339610468,
+   "n_walkers": 25
+  },
+  {
+   "town": "Town01",
+   "frame": 2550,
+   "z0_vehicles": -0.009686051084236202,
+   "n_vehicles": 2,
+   "z0_walkers": -0.0005052584815409953,
+   "se_walkers": 0.0017494857759798761,
+   "n_walkers": 22
+  },
+  {
+   "town": "Town01",
+   "frame": 2575,
+   "z0_vehicles": -0.0006379726698001464,
+   "n_vehicles": 1,
+   "z0_walkers": 0.0016307953860214826,
+   "se_walkers": 0.0014557792143466033,
+   "n_walkers": 20
+  },
+  {
+   "town": "Town01",
+   "frame": 2600,
+   "z0_vehicles": -0.017930680562139256,
+   "n_vehicles": 2,
+   "z0_walkers": -0.001691086670333584,
+   "se_walkers": 0.0018486575702119903,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town01",
+   "frame": 2625,
+   "z0_vehicles": -0.01522653402330696,
+   "n_vehicles": 3,
+   "z0_walkers": -0.0023526939431399167,
+   "se_walkers": 0.001732999714989713,
+   "n_walkers": 32
+  },
+  {
+   "town": "Town01",
+   "frame": 2650,
+   "z0_vehicles": -0.016527216721732917,
+   "n_vehicles": 4,
+   "z0_walkers": -0.008240958119825713,
+   "se_walkers": 0.0025092689252373132,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town01",
+   "frame": 2675,
+   "z0_vehicles": -0.03766156005219847,
+   "n_vehicles": 6,
+   "z0_walkers": -0.008097758112496368,
+   "se_walkers": 0.002238786099766676,
+   "n_walkers": 48
+  },
+  {
+   "town": "Town01",
+   "frame": 2700,
+   "z0_vehicles": -0.03164362938557737,
+   "n_vehicles": 6,
+   "z0_walkers": -0.007250128982084829,
+   "se_walkers": 0.0025567885997701766,
+   "n_walkers": 56
+  },
+  {
+   "town": "Town01",
+   "frame": 2725,
+   "z0_vehicles": -0.018618954284708125,
+   "n_vehicles": 6,
+   "z0_walkers": -0.006327692390556562,
+   "se_walkers": 0.0018889440924674252,
+   "n_walkers": 58
+  },
+  {
+   "town": "Town01",
+   "frame": 2750,
+   "z0_vehicles": -0.028989841686667923,
+   "n_vehicles": 6,
+   "z0_walkers": -0.008996811327668277,
+   "se_walkers": 0.0022100626643329247,
+   "n_walkers": 52
+  },
+  {
+   "town": "Town01",
+   "frame": 2775,
+   "z0_vehicles": -0.016137331861015868,
+   "n_vehicles": 9,
+   "z0_walkers": -0.004041410540967425,
+   "se_walkers": 0.0014749489766139065,
+   "n_walkers": 57
+  },
+  {
+   "town": "Town01",
+   "frame": 2800,
+   "z0_vehicles": -0.015068858994587257,
+   "n_vehicles": 8,
+   "z0_walkers": -0.0012125029183101999,
+   "se_walkers": 0.001412868203251728,
+   "n_walkers": 50
+  },
+  {
+   "town": "Town01",
+   "frame": 2825,
+   "z0_vehicles": -0.024586716422404013,
+   "n_vehicles": 8,
+   "z0_walkers": -0.0014591840383690819,
+   "se_walkers": 0.0012092334713092276,
+   "n_walkers": 49
+  },
+  {
+   "town": "Town01",
+   "frame": 2850,
+   "z0_vehicles": -0.023730889496598517,
+   "n_vehicles": 7,
+   "z0_walkers": 0.001394871356860572,
+   "se_walkers": 0.0008370975607304335,
+   "n_walkers": 48
+  },
+  {
+   "town": "Town01",
+   "frame": 2875,
+   "z0_vehicles": -0.02137092330704001,
+   "n_vehicles": 7,
+   "z0_walkers": 0.0025525432421820283,
+   "se_walkers": 0.0007702939330409975,
+   "n_walkers": 37
+  },
+  {
+   "town": "Town01",
+   "frame": 2900,
+   "z0_vehicles": -0.023638059117628285,
+   "n_vehicles": 7,
+   "z0_walkers": 0.002347917711324164,
+   "se_walkers": 0.0007214596709380753,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town01",
+   "frame": 2925,
+   "z0_vehicles": -0.0271752838580507,
+   "n_vehicles": 5,
+   "z0_walkers": 0.0026713674852740714,
+   "se_walkers": 0.0008986973233550711,
+   "n_walkers": 18
+  },
+  {
+   "town": "Town01",
+   "frame": 2950,
+   "z0_vehicles": -0.02472226100792052,
+   "n_vehicles": 4,
+   "z0_walkers": 0.0028962994272770863,
+   "se_walkers": 0.0008478941515025398,
+   "n_walkers": 16
+  },
+  {
+   "town": "Town01",
+   "frame": 2975,
+   "z0_vehicles": -0.03269118669241668,
+   "n_vehicles": 6,
+   "z0_walkers": -0.0012325121296655496,
+   "se_walkers": 0.0015723111676542443,
+   "n_walkers": 30
+  },
+  {
+   "town": "Town07",
+   "frame": 0,
+   "z0_vehicles": 0.042350782223387756,
+   "n_vehicles": 19,
+   "z0_walkers": 0.015508664298786105,
+   "se_walkers": 0.0009873741549265619,
+   "n_walkers": 83
+  },
+  {
+   "town": "Town07",
+   "frame": 25,
+   "z0_vehicles": -0.0011182764157758238,
+   "n_vehicles": 22,
+   "z0_walkers": 0.02997592594716456,
+   "se_walkers": 0.000975747647596758,
+   "n_walkers": 77
+  },
+  {
+   "town": "Town07",
+   "frame": 50,
+   "z0_vehicles": -0.0075096204754937996,
+   "n_vehicles": 22,
+   "z0_walkers": 0.034296819141932895,
+   "se_walkers": 0.0007979964260236526,
+   "n_walkers": 70
+  },
+  {
+   "town": "Town07",
+   "frame": 75,
+   "z0_vehicles": 0.001834263950349604,
+   "n_vehicles": 20,
+   "z0_walkers": 0.036094145522496346,
+   "se_walkers": 0.0011895900619790544,
+   "n_walkers": 48
+  },
+  {
+   "town": "Town07",
+   "frame": 100,
+   "z0_vehicles": 0.006416290496903139,
+   "n_vehicles": 18,
+   "z0_walkers": 0.03869470392980757,
+   "se_walkers": 0.00094709008801941,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town07",
+   "frame": 125,
+   "z0_vehicles": -0.024260678347206244,
+   "n_vehicles": 11,
+   "z0_walkers": 0.00829215610728543,
+   "se_walkers": 0.0008047699884227234,
+   "n_walkers": 17
+  },
+  {
+   "town": "Town07",
+   "frame": 150,
+   "z0_vehicles": -0.014062962781730293,
+   "n_vehicles": 10,
+   "z0_walkers": 0.005351483379577357,
+   "se_walkers": 1.9708914118833482e-07,
+   "n_walkers": 14
+  },
+  {
+   "town": "Town07",
+   "frame": 175,
+   "z0_vehicles": -0.032430237421647086,
+   "n_vehicles": 11,
+   "z0_walkers": -0.0002796534944821298,
+   "se_walkers": 0.0033428337849346445,
+   "n_walkers": 30
+  },
+  {
+   "town": "Town07",
+   "frame": 200,
+   "z0_vehicles": 0.07411013656811723,
+   "n_vehicles": 15,
+   "z0_walkers": 0.10344708274210232,
+   "se_walkers": 0.0028705229919260477,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town07",
+   "frame": 225,
+   "z0_vehicles": 0.2927499022206742,
+   "n_vehicles": 12,
+   "z0_walkers": 0.31710737979569986,
+   "se_walkers": 0.002709270326722167,
+   "n_walkers": 30
+  },
+  {
+   "town": "Town07",
+   "frame": 250,
+   "z0_vehicles": 0.2077571295192876,
+   "n_vehicles": 13,
+   "z0_walkers": 0.2312746603020045,
+   "se_walkers": 0.0015841767014802969,
+   "n_walkers": 28
+  },
+  {
+   "town": "Town07",
+   "frame": 275,
+   "z0_vehicles": 0.08988052340248881,
+   "n_vehicles": 13,
+   "z0_walkers": 0.11451257437746601,
+   "se_walkers": 0.0007745704140089258,
+   "n_walkers": 16
+  },
+  {
+   "town": "Town07",
+   "frame": 300,
+   "z0_vehicles": -0.01093910806211936,
+   "n_vehicles": 15,
+   "z0_walkers": 0.016170594705966122,
+   "se_walkers": 0.0029099944404643524,
+   "n_walkers": 22
+  },
+  {
+   "town": "Town07",
+   "frame": 325,
+   "z0_vehicles": -0.02228867373470771,
+   "n_vehicles": 20,
+   "z0_walkers": -0.009287106455928618,
+   "se_walkers": 0.0012208445256413592,
+   "n_walkers": 72
+  },
+  {
+   "town": "Town07",
+   "frame": 350,
+   "z0_vehicles": -0.011562821117750153,
+   "n_vehicles": 28,
+   "z0_walkers": -0.003917569583093939,
+   "se_walkers": 0.0012529966275142202,
+   "n_walkers": 92
+  },
+  {
+   "town": "Town07",
+   "frame": 375,
+   "z0_vehicles": 0.05579347814838234,
+   "n_vehicles": 24,
+   "z0_walkers": 0.06875520728399424,
+   "se_walkers": 0.0006796292201813482,
+   "n_walkers": 70
+  },
+  {
+   "town": "Town07",
+   "frame": 400,
+   "z0_vehicles": 0.13552675890885832,
+   "n_vehicles": 19,
+   "z0_walkers": 0.14514744400759025,
+   "se_walkers": 0.0005175791796042482,
+   "n_walkers": 52
+  },
+  {
+   "town": "Town07",
+   "frame": 425,
+   "z0_vehicles": 0.18568794428230287,
+   "n_vehicles": 18,
+   "z0_walkers": 0.20911772271071596,
+   "se_walkers": 0.00040430773703099035,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town07",
+   "frame": 450,
+   "z0_vehicles": 0.12253778204813898,
+   "n_vehicles": 16,
+   "z0_walkers": 0.1474705689555767,
+   "se_walkers": 0.0003423736350934081,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town07",
+   "frame": 475,
+   "z0_vehicles": 0.14116301055255653,
+   "n_vehicles": 13,
+   "z0_walkers": 0.14828207095464072,
+   "se_walkers": 0.0004883318527410335,
+   "n_walkers": 3
+  },
+  {
+   "town": "Town07",
+   "frame": 500,
+   "z0_vehicles": 0.13326744385258932,
+   "n_vehicles": 14,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 525,
+   "z0_vehicles": 0.13305937230810289,
+   "n_vehicles": 12,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 550,
+   "z0_vehicles": 0.13730027271068757,
+   "n_vehicles": 7,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 575,
+   "z0_vehicles": 0.008895388287299438,
+   "n_vehicles": 7,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 600,
+   "z0_vehicles": -0.013922060866757777,
+   "n_vehicles": 4,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 625,
+   "z0_vehicles": -0.008178420020469208,
+   "n_vehicles": 3,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 650,
+   "z0_vehicles": 0.023373154475047352,
+   "n_vehicles": 8,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 675,
+   "z0_vehicles": 1.4694747258816583,
+   "n_vehicles": 10,
+   "z0_walkers": 1.4193527102470398,
+   "se_walkers": NaN,
+   "n_walkers": 1
+  },
+  {
+   "town": "Town07",
+   "frame": 700,
+   "z0_vehicles": 3.402218773198771,
+   "n_vehicles": 19,
+   "z0_walkers": 3.3823956847190857,
+   "se_walkers": 0.0019402723180475176,
+   "n_walkers": 2
+  },
+  {
+   "town": "Town07",
+   "frame": 725,
+   "z0_vehicles": 5.174374740646216,
+   "n_vehicles": 22,
+   "z0_walkers": 5.170282201066918,
+   "se_walkers": 0.0022147702609124705,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town07",
+   "frame": 750,
+   "z0_vehicles": 7.167817049367279,
+   "n_vehicles": 12,
+   "z0_walkers": 7.183292924773201,
+   "se_walkers": 0.0019842034658309107,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town07",
+   "frame": 775,
+   "z0_vehicles": 6.692757350659293,
+   "n_vehicles": 6,
+   "z0_walkers": 6.725695908069611,
+   "se_walkers": 0.0,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town07",
+   "frame": 800,
+   "z0_vehicles": 4.921604199715455,
+   "n_vehicles": 4,
+   "z0_walkers": 4.879351913928986,
+   "se_walkers": 0.0,
+   "n_walkers": 4
+  },
+  {
+   "town": "Town07",
+   "frame": 825,
+   "z0_vehicles": 3.427463600202655,
+   "n_vehicles": 4,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 850,
+   "z0_vehicles": 1.3560575823653196,
+   "n_vehicles": 5,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 875,
+   "z0_vehicles": -0.2250567195231481,
+   "n_vehicles": 6,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 900,
+   "z0_vehicles": 0.2853418987255301,
+   "n_vehicles": 8,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 925,
+   "z0_vehicles": 2.018306515778596,
+   "n_vehicles": 12,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 950,
+   "z0_vehicles": 3.8227909930864206,
+   "n_vehicles": 17,
+   "z0_walkers": 3.8043968534055814,
+   "se_walkers": 0.004159510089703424,
+   "n_walkers": 16
+  },
+  {
+   "town": "Town07",
+   "frame": 975,
+   "z0_vehicles": 5.514948160700012,
+   "n_vehicles": 16,
+   "z0_walkers": 5.5083207403383705,
+   "se_walkers": 0.004190991035948545,
+   "n_walkers": 25
+  },
+  {
+   "town": "Town07",
+   "frame": 1000,
+   "z0_vehicles": 6.593553399305932,
+   "n_vehicles": 12,
+   "z0_walkers": 6.613555226509201,
+   "se_walkers": 0.0077628278349464695,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town07",
+   "frame": 1025,
+   "z0_vehicles": 9.033061588223175,
+   "n_vehicles": 9,
+   "z0_walkers": 9.08764179826483,
+   "se_walkers": 0.0011168242722089607,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town07",
+   "frame": 1050,
+   "z0_vehicles": 8.998427248790197,
+   "n_vehicles": 11,
+   "z0_walkers": 9.039066417923616,
+   "se_walkers": 0.003971179924641399,
+   "n_walkers": 37
+  },
+  {
+   "town": "Town07",
+   "frame": 1075,
+   "z0_vehicles": 7.402517140751615,
+   "n_vehicles": 12,
+   "z0_walkers": 7.438339108565012,
+   "se_walkers": 0.0022992676120593644,
+   "n_walkers": 47
+  },
+  {
+   "town": "Town07",
+   "frame": 1100,
+   "z0_vehicles": 5.713580718016448,
+   "n_vehicles": 11,
+   "z0_walkers": 5.749072396188899,
+   "se_walkers": 0.0013536965555941422,
+   "n_walkers": 63
+  },
+  {
+   "town": "Town07",
+   "frame": 1125,
+   "z0_vehicles": 3.6501560276800924,
+   "n_vehicles": 7,
+   "z0_walkers": 3.6695328205130417,
+   "se_walkers": 0.0008534816536826777,
+   "n_walkers": 32
+  },
+  {
+   "town": "Town07",
+   "frame": 1150,
+   "z0_vehicles": 1.8215139369240871,
+   "n_vehicles": 4,
+   "z0_walkers": 1.8486063569578266,
+   "se_walkers": 0.0012839268333790454,
+   "n_walkers": 28
+  },
+  {
+   "town": "Town07",
+   "frame": 1175,
+   "z0_vehicles": 0.19092516698440562,
+   "n_vehicles": 6,
+   "z0_walkers": 0.2131417774802532,
+   "se_walkers": 0.0019643764495861937,
+   "n_walkers": 26
+  },
+  {
+   "town": "Town07",
+   "frame": 1200,
+   "z0_vehicles": 0.008571061692341921,
+   "n_vehicles": 7,
+   "z0_walkers": 0.03596442456802016,
+   "se_walkers": 0.0002532524177431975,
+   "n_walkers": 14
+  },
+  {
+   "town": "Town07",
+   "frame": 1225,
+   "z0_vehicles": 0.008383511419788192,
+   "n_vehicles": 5,
+   "z0_walkers": 0.03586807847026832,
+   "se_walkers": 1.7152482920628873e-06,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town07",
+   "frame": 1250,
+   "z0_vehicles": 0.00763156448043139,
+   "n_vehicles": 7,
+   "z0_walkers": 0.03586884736754979,
+   "se_walkers": 9.74478636359922e-08,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town07",
+   "frame": 1275,
+   "z0_vehicles": -0.01204553204970657,
+   "n_vehicles": 2,
+   "z0_walkers": 0.005351245403290017,
+   "se_walkers": NaN,
+   "n_walkers": 1
+  },
+  {
+   "town": "Town07",
+   "frame": 1300,
+   "z0_vehicles": -0.01153042751869543,
+   "n_vehicles": 2,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 1325,
+   "z0_vehicles": -0.011387077441299645,
+   "n_vehicles": 2,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 1350,
+   "z0_vehicles": -0.04564885249330165,
+   "n_vehicles": 10,
+   "z0_walkers": 0.010268712043762184,
+   "se_walkers": 0.001309819208902523,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town07",
+   "frame": 1375,
+   "z0_vehicles": -0.03970504587667478,
+   "n_vehicles": 14,
+   "z0_walkers": 0.008871554536126291,
+   "se_walkers": 0.0017413097906180874,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town07",
+   "frame": 1400,
+   "z0_vehicles": -0.03659778538114797,
+   "n_vehicles": 12,
+   "z0_walkers": 0.008488699462556091,
+   "se_walkers": 0.000192252181654115,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town07",
+   "frame": 1425,
+   "z0_vehicles": -0.031840258465366686,
+   "n_vehicles": 11,
+   "z0_walkers": 0.009069717202295371,
+   "se_walkers": 0.0009330416802700471,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town07",
+   "frame": 1450,
+   "z0_vehicles": -0.017485077979414676,
+   "n_vehicles": 12,
+   "z0_walkers": 0.008873641114505615,
+   "se_walkers": 0.00040594238125690713,
+   "n_walkers": 4
+  },
+  {
+   "town": "Town07",
+   "frame": 1475,
+   "z0_vehicles": -0.02034955824924313,
+   "n_vehicles": 13,
+   "z0_walkers": 0.011283099651336725,
+   "se_walkers": 0.0015402144319820721,
+   "n_walkers": 2
+  },
+  {
+   "town": "Town07",
+   "frame": 1500,
+   "z0_vehicles": -0.033691603042197184,
+   "n_vehicles": 20,
+   "z0_walkers": -0.008110124944638723,
+   "se_walkers": 0.00224687732642109,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town07",
+   "frame": 1525,
+   "z0_vehicles": 0.5252604111931183,
+   "n_vehicles": 33,
+   "z0_walkers": 0.5258783890426744,
+   "se_walkers": 0.002403775045245608,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town07",
+   "frame": 1550,
+   "z0_vehicles": 0.4586755441552265,
+   "n_vehicles": 29,
+   "z0_walkers": 0.46107290431984993,
+   "se_walkers": 0.0017668323104658538,
+   "n_walkers": 54
+  },
+  {
+   "town": "Town07",
+   "frame": 1575,
+   "z0_vehicles": 0.015771968997013993,
+   "n_vehicles": 16,
+   "z0_walkers": 0.023615202649620918,
+   "se_walkers": 0.0014773999324652998,
+   "n_walkers": 53
+  },
+  {
+   "town": "Town07",
+   "frame": 1600,
+   "z0_vehicles": 0.016748883354346357,
+   "n_vehicles": 13,
+   "z0_walkers": 0.025749341803679333,
+   "se_walkers": 0.0011641738035597295,
+   "n_walkers": 55
+  },
+  {
+   "town": "Town07",
+   "frame": 1625,
+   "z0_vehicles": 0.018012784584899334,
+   "n_vehicles": 13,
+   "z0_walkers": 0.032729563046595744,
+   "se_walkers": 0.0009176723040473325,
+   "n_walkers": 52
+  },
+  {
+   "town": "Town07",
+   "frame": 1650,
+   "z0_vehicles": -0.001822197428380196,
+   "n_vehicles": 7,
+   "z0_walkers": 0.03466319580672228,
+   "se_walkers": 0.0008428496333348285,
+   "n_walkers": 45
+  },
+  {
+   "town": "Town07",
+   "frame": 1675,
+   "z0_vehicles": 0.002933764698767938,
+   "n_vehicles": 19,
+   "z0_walkers": 0.027519922399410136,
+   "se_walkers": 0.0010229925287932149,
+   "n_walkers": 88
+  },
+  {
+   "town": "Town07",
+   "frame": 1700,
+   "z0_vehicles": -0.024194101581673403,
+   "n_vehicles": 21,
+   "z0_walkers": -0.000857949988851273,
+   "se_walkers": 0.001060722969764405,
+   "n_walkers": 93
+  },
+  {
+   "town": "Town07",
+   "frame": 1725,
+   "z0_vehicles": -0.017844228934582863,
+   "n_vehicles": 19,
+   "z0_walkers": 0.006050240691517856,
+   "se_walkers": 0.0008076288970665827,
+   "n_walkers": 109
+  },
+  {
+   "town": "Town07",
+   "frame": 1750,
+   "z0_vehicles": 0.013753903653439613,
+   "n_vehicles": 26,
+   "z0_walkers": 0.03465143089840702,
+   "se_walkers": 0.0008810417499916013,
+   "n_walkers": 81
+  },
+  {
+   "town": "Town07",
+   "frame": 1775,
+   "z0_vehicles": 0.036114191258461846,
+   "n_vehicles": 23,
+   "z0_walkers": 0.05350734384743099,
+   "se_walkers": 0.00040379054870927995,
+   "n_walkers": 90
+  },
+  {
+   "town": "Town07",
+   "frame": 1800,
+   "z0_vehicles": 0.01806497600725606,
+   "n_vehicles": 22,
+   "z0_walkers": 0.03697952978876678,
+   "se_walkers": 0.0007095433850789459,
+   "n_walkers": 61
+  },
+  {
+   "town": "Town07",
+   "frame": 1825,
+   "z0_vehicles": 0.019503332691870337,
+   "n_vehicles": 16,
+   "z0_walkers": 0.03259560011866512,
+   "se_walkers": 0.000731706982197954,
+   "n_walkers": 93
+  },
+  {
+   "town": "Town07",
+   "frame": 1850,
+   "z0_vehicles": -0.02042134679415022,
+   "n_vehicles": 17,
+   "z0_walkers": 0.0017751210675414637,
+   "se_walkers": 0.0007038439351429778,
+   "n_walkers": 101
+  },
+  {
+   "town": "Town07",
+   "frame": 1875,
+   "z0_vehicles": -0.013528554217944024,
+   "n_vehicles": 26,
+   "z0_walkers": 0.0016285885398188437,
+   "se_walkers": 0.0006701164549078613,
+   "n_walkers": 112
+  },
+  {
+   "town": "Town07",
+   "frame": 1900,
+   "z0_vehicles": -0.013281986375402777,
+   "n_vehicles": 30,
+   "z0_walkers": 0.0011645694736794638,
+   "se_walkers": 0.0008663284893590747,
+   "n_walkers": 104
+  },
+  {
+   "town": "Town07",
+   "frame": 1925,
+   "z0_vehicles": -0.008372192412517535,
+   "n_vehicles": 29,
+   "z0_walkers": 0.0022980323012855098,
+   "se_walkers": 0.0007105062928912086,
+   "n_walkers": 105
+  },
+  {
+   "town": "Town07",
+   "frame": 1950,
+   "z0_vehicles": -0.011820116672015655,
+   "n_vehicles": 23,
+   "z0_walkers": 0.00441847447914999,
+   "se_walkers": 0.0006070221917577118,
+   "n_walkers": 101
+  },
+  {
+   "town": "Town07",
+   "frame": 1975,
+   "z0_vehicles": -0.009952047798431207,
+   "n_vehicles": 16,
+   "z0_walkers": 0.006330873519637358,
+   "se_walkers": 0.0005400001255868348,
+   "n_walkers": 76
+  },
+  {
+   "town": "Town07",
+   "frame": 2000,
+   "z0_vehicles": -0.00950452021007072,
+   "n_vehicles": 20,
+   "z0_walkers": 0.00902030965808365,
+   "se_walkers": 5.6565806275783075e-05,
+   "n_walkers": 46
+  },
+  {
+   "town": "Town07",
+   "frame": 2025,
+   "z0_vehicles": -0.013497776854460231,
+   "n_vehicles": 30,
+   "z0_walkers": 0.007260093983727722,
+   "se_walkers": 0.0006153760655568011,
+   "n_walkers": 62
+  },
+  {
+   "town": "Town07",
+   "frame": 2050,
+   "z0_vehicles": -0.0018985167970487257,
+   "n_vehicles": 30,
+   "z0_walkers": 0.00016498806638014137,
+   "se_walkers": 0.000901297092980902,
+   "n_walkers": 98
+  },
+  {
+   "town": "Town07",
+   "frame": 2075,
+   "z0_vehicles": -0.008608394453983172,
+   "n_vehicles": 24,
+   "z0_walkers": 0.003086487092038385,
+   "se_walkers": 0.000898935209508859,
+   "n_walkers": 106
+  },
+  {
+   "town": "Town07",
+   "frame": 2100,
+   "z0_vehicles": -0.008716221480757744,
+   "n_vehicles": 18,
+   "z0_walkers": 0.00482404642549819,
+   "se_walkers": 0.0008324787848827204,
+   "n_walkers": 70
+  },
+  {
+   "town": "Town07",
+   "frame": 2125,
+   "z0_vehicles": 0.048852388636665287,
+   "n_vehicles": 13,
+   "z0_walkers": 0.06849254012667348,
+   "se_walkers": 0.0004913903667175221,
+   "n_walkers": 55
+  },
+  {
+   "town": "Town07",
+   "frame": 2150,
+   "z0_vehicles": -0.009475147181607635,
+   "n_vehicles": 14,
+   "z0_walkers": 0.008980337181969075,
+   "se_walkers": 0.00010856154368212807,
+   "n_walkers": 30
+  },
+  {
+   "town": "Town07",
+   "frame": 2175,
+   "z0_vehicles": -0.005971761300940933,
+   "n_vehicles": 9,
+   "z0_walkers": 0.009021091024224116,
+   "se_walkers": 6.542647684931219e-05,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town07",
+   "frame": 2200,
+   "z0_vehicles": -0.031022607717094107,
+   "n_vehicles": 13,
+   "z0_walkers": 0.007296312505382878,
+   "se_walkers": 0.0007488426219079162,
+   "n_walkers": 43
+  },
+  {
+   "town": "Town07",
+   "frame": 2225,
+   "z0_vehicles": 0.08355795878755791,
+   "n_vehicles": 15,
+   "z0_walkers": 0.11380910987704047,
+   "se_walkers": 0.000757656684194337,
+   "n_walkers": 49
+  },
+  {
+   "town": "Town07",
+   "frame": 2250,
+   "z0_vehicles": 0.2290927686573472,
+   "n_vehicles": 9,
+   "z0_walkers": 0.25368207693099976,
+   "se_walkers": NaN,
+   "n_walkers": 1
+  },
+  {
+   "town": "Town07",
+   "frame": 2275,
+   "z0_vehicles": 0.02574556191731398,
+   "n_vehicles": 4,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 2300,
+   "z0_vehicles": -0.020927102075716346,
+   "n_vehicles": 7,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 2325,
+   "z0_vehicles": -0.0099512432725373,
+   "n_vehicles": 9,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 2350,
+   "z0_vehicles": -0.007287763800460054,
+   "n_vehicles": 7,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 2375,
+   "z0_vehicles": 0.004102301247407449,
+   "n_vehicles": 9,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 2400,
+   "z0_vehicles": 0.0038448861830599444,
+   "n_vehicles": 8,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 2425,
+   "z0_vehicles": 0.004277271217905761,
+   "n_vehicles": 17,
+   "z0_walkers": -0.01927250623703003,
+   "se_walkers": NaN,
+   "n_walkers": 1
+  },
+  {
+   "town": "Town07",
+   "frame": 2450,
+   "z0_vehicles": 0.11311768448429527,
+   "n_vehicles": 18,
+   "z0_walkers": 0.13009874755522877,
+   "se_walkers": 0.0006299281499796799,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town07",
+   "frame": 2475,
+   "z0_vehicles": 0.11473655550247248,
+   "n_vehicles": 15,
+   "z0_walkers": 0.12913250278344676,
+   "se_walkers": 0.0031077302721925874,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town07",
+   "frame": 2500,
+   "z0_vehicles": 0.11028274925501043,
+   "n_vehicles": 18,
+   "z0_walkers": 0.12347170674825679,
+   "se_walkers": 0.003479205704104205,
+   "n_walkers": 29
+  },
+  {
+   "town": "Town07",
+   "frame": 2525,
+   "z0_vehicles": 0.11702845723336808,
+   "n_vehicles": 21,
+   "z0_walkers": 0.13221459636355753,
+   "se_walkers": 0.00230821014959962,
+   "n_walkers": 33
+  },
+  {
+   "town": "Town07",
+   "frame": 2550,
+   "z0_vehicles": 0.11640951889375782,
+   "n_vehicles": 38,
+   "z0_walkers": 0.13247185739786096,
+   "se_walkers": 0.0012617305328994767,
+   "n_walkers": 81
+  },
+  {
+   "town": "Town07",
+   "frame": 2575,
+   "z0_vehicles": 0.16394070300450178,
+   "n_vehicles": 33,
+   "z0_walkers": 0.17243545360657722,
+   "se_walkers": 0.0006879073848291712,
+   "n_walkers": 109
+  },
+  {
+   "town": "Town07",
+   "frame": 2600,
+   "z0_vehicles": 0.08077096736259406,
+   "n_vehicles": 21,
+   "z0_walkers": 0.09572636066047323,
+   "se_walkers": 0.0005835849019582877,
+   "n_walkers": 100
+  },
+  {
+   "town": "Town07",
+   "frame": 2625,
+   "z0_vehicles": 0.001991721264231345,
+   "n_vehicles": 23,
+   "z0_walkers": 0.016730513054742043,
+   "se_walkers": 0.0008343762063436106,
+   "n_walkers": 91
+  },
+  {
+   "town": "Town07",
+   "frame": 2650,
+   "z0_vehicles": -0.015496964054913706,
+   "n_vehicles": 20,
+   "z0_walkers": 0.002589104933741473,
+   "se_walkers": 0.0009284674541523614,
+   "n_walkers": 86
+  },
+  {
+   "town": "Town07",
+   "frame": 2675,
+   "z0_vehicles": -0.01985225384727462,
+   "n_vehicles": 20,
+   "z0_walkers": 0.005582606165142499,
+   "se_walkers": 0.0007342947851854887,
+   "n_walkers": 80
+  },
+  {
+   "town": "Town07",
+   "frame": 2700,
+   "z0_vehicles": -0.02279417254897254,
+   "n_vehicles": 31,
+   "z0_walkers": 0.0030159599380236396,
+   "se_walkers": 0.001102278249349341,
+   "n_walkers": 61
+  },
+  {
+   "town": "Town07",
+   "frame": 2725,
+   "z0_vehicles": -0.016918974076143047,
+   "n_vehicles": 22,
+   "z0_walkers": 0.00567202120459568,
+   "se_walkers": 0.0010435964449723506,
+   "n_walkers": 40
+  },
+  {
+   "town": "Town07",
+   "frame": 2750,
+   "z0_vehicles": -0.015860214784713292,
+   "n_vehicles": 30,
+   "z0_walkers": 0.005041519182412578,
+   "se_walkers": 0.001118848788866749,
+   "n_walkers": 28
+  },
+  {
+   "town": "Town07",
+   "frame": 2775,
+   "z0_vehicles": -0.01641978100215917,
+   "n_vehicles": 31,
+   "z0_walkers": 0.007584596724664477,
+   "se_walkers": 0.0009345577226727383,
+   "n_walkers": 16
+  },
+  {
+   "town": "Town07",
+   "frame": 2800,
+   "z0_vehicles": -0.014050995810436838,
+   "n_vehicles": 25,
+   "z0_walkers": 0.008806197597071321,
+   "se_walkers": 0.0004908935924731843,
+   "n_walkers": 15
+  },
+  {
+   "town": "Town07",
+   "frame": 2825,
+   "z0_vehicles": -0.015194902864269602,
+   "n_vehicles": 22,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 2850,
+   "z0_vehicles": -0.016884050525585944,
+   "n_vehicles": 12,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 2875,
+   "z0_vehicles": -0.011078912258012734,
+   "n_vehicles": 8,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 2900,
+   "z0_vehicles": -0.0093181251072761,
+   "n_vehicles": 7,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 2925,
+   "z0_vehicles": -0.011030007508666527,
+   "n_vehicles": 6,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town07",
+   "frame": 2950,
+   "z0_vehicles": -0.013144290398632684,
+   "n_vehicles": 12,
+   "z0_walkers": -0.04338159264112246,
+   "se_walkers": 0.0004967764854580418,
+   "n_walkers": 3
+  },
+  {
+   "town": "Town07",
+   "frame": 2975,
+   "z0_vehicles": -0.02362920302235685,
+   "n_vehicles": 19,
+   "z0_walkers": -0.03927928134019605,
+   "se_walkers": 0.0025673019344651035,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town10HD",
+   "frame": 0,
+   "z0_vehicles": -0.010911548653817504,
+   "n_vehicles": 13,
+   "z0_walkers": -0.0065933770776246065,
+   "se_walkers": 0.003455550720730959,
+   "n_walkers": 27
+  },
+  {
+   "town": "Town10HD",
+   "frame": 25,
+   "z0_vehicles": -0.028190013855872758,
+   "n_vehicles": 16,
+   "z0_walkers": -0.0014409275984562982,
+   "se_walkers": 0.0026063572749858172,
+   "n_walkers": 33
+  },
+  {
+   "town": "Town10HD",
+   "frame": 50,
+   "z0_vehicles": -0.02533255290073569,
+   "n_vehicles": 19,
+   "z0_walkers": -0.006180223973070034,
+   "se_walkers": 0.00290315703023923,
+   "n_walkers": 39
+  },
+  {
+   "town": "Town10HD",
+   "frame": 75,
+   "z0_vehicles": -0.02170987575079145,
+   "n_vehicles": 18,
+   "z0_walkers": 0.000550339789870737,
+   "se_walkers": 0.0013976947514654533,
+   "n_walkers": 42
+  },
+  {
+   "town": "Town10HD",
+   "frame": 100,
+   "z0_vehicles": -0.01134581714078061,
+   "n_vehicles": 13,
+   "z0_walkers": 0.000518814876114329,
+   "se_walkers": 0.001466318576392342,
+   "n_walkers": 41
+  },
+  {
+   "town": "Town10HD",
+   "frame": 125,
+   "z0_vehicles": -0.01637039442441317,
+   "n_vehicles": 10,
+   "z0_walkers": 0.007032803095389278,
+   "se_walkers": 0.0006772604448953001,
+   "n_walkers": 34
+  },
+  {
+   "town": "Town10HD",
+   "frame": 150,
+   "z0_vehicles": -0.010742269730136863,
+   "n_vehicles": 7,
+   "z0_walkers": 0.004389357435851875,
+   "se_walkers": 0.0013398004515341735,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town10HD",
+   "frame": 175,
+   "z0_vehicles": -0.010954364231803761,
+   "n_vehicles": 10,
+   "z0_walkers": 0.006722602011787514,
+   "se_walkers": 0.0009213413312982798,
+   "n_walkers": 34
+  },
+  {
+   "town": "Town10HD",
+   "frame": 200,
+   "z0_vehicles": -0.01725868233038625,
+   "n_vehicles": 17,
+   "z0_walkers": -0.001751901994119055,
+   "se_walkers": 0.0013905226194424996,
+   "n_walkers": 45
+  },
+  {
+   "town": "Town10HD",
+   "frame": 225,
+   "z0_vehicles": -0.01460635760378006,
+   "n_vehicles": 20,
+   "z0_walkers": -0.0029444428306895708,
+   "se_walkers": 0.001633708856886725,
+   "n_walkers": 47
+  },
+  {
+   "town": "Town10HD",
+   "frame": 250,
+   "z0_vehicles": -0.01248656726259234,
+   "n_vehicles": 13,
+   "z0_walkers": -0.0011432655886475238,
+   "se_walkers": 0.0023774300940697015,
+   "n_walkers": 42
+  },
+  {
+   "town": "Town10HD",
+   "frame": 275,
+   "z0_vehicles": -0.012381492110092061,
+   "n_vehicles": 13,
+   "z0_walkers": -0.0011284390949506031,
+   "se_walkers": 0.0013594642972213065,
+   "n_walkers": 48
+  },
+  {
+   "town": "Town10HD",
+   "frame": 300,
+   "z0_vehicles": -0.019072437315668,
+   "n_vehicles": 20,
+   "z0_walkers": 0.0012890629319635956,
+   "se_walkers": 0.0006089368996938267,
+   "n_walkers": 143
+  },
+  {
+   "town": "Town10HD",
+   "frame": 325,
+   "z0_vehicles": -0.0195859671380149,
+   "n_vehicles": 18,
+   "z0_walkers": 0.0025063923607225934,
+   "se_walkers": 0.0004783743871533674,
+   "n_walkers": 170
+  },
+  {
+   "town": "Town10HD",
+   "frame": 350,
+   "z0_vehicles": -0.023207719415885616,
+   "n_vehicles": 17,
+   "z0_walkers": 0.0013578661501198225,
+   "se_walkers": 0.000783046808831727,
+   "n_walkers": 131
+  },
+  {
+   "town": "Town10HD",
+   "frame": 375,
+   "z0_vehicles": -0.0189833426086028,
+   "n_vehicles": 22,
+   "z0_walkers": 0.009104450265684925,
+   "se_walkers": 1.697868250177408e-07,
+   "n_walkers": 95
+  },
+  {
+   "town": "Town10HD",
+   "frame": 400,
+   "z0_vehicles": -0.015457202769065266,
+   "n_vehicles": 18,
+   "z0_walkers": 0.008748012208014633,
+   "se_walkers": 6.726849513137486e-05,
+   "n_walkers": 102
+  },
+  {
+   "town": "Town10HD",
+   "frame": 425,
+   "z0_vehicles": -0.01103749071777506,
+   "n_vehicles": 19,
+   "z0_walkers": 0.0011596107169201792,
+   "se_walkers": 0.0007654625846586645,
+   "n_walkers": 76
+  },
+  {
+   "town": "Town10HD",
+   "frame": 450,
+   "z0_vehicles": -0.00958787760445998,
+   "n_vehicles": 13,
+   "z0_walkers": 0.008532592852022734,
+   "se_walkers": 0.00015682715873892436,
+   "n_walkers": 66
+  },
+  {
+   "town": "Town10HD",
+   "frame": 475,
+   "z0_vehicles": -0.004653157132721504,
+   "n_vehicles": 8,
+   "z0_walkers": 0.008593007115778338,
+   "se_walkers": 0.00017484720446783947,
+   "n_walkers": 42
+  },
+  {
+   "town": "Town10HD",
+   "frame": 500,
+   "z0_vehicles": -0.010881714129668691,
+   "n_vehicles": 10,
+   "z0_walkers": 0.0009363164557074043,
+   "se_walkers": 0.001638559092883583,
+   "n_walkers": 29
+  },
+  {
+   "town": "Town10HD",
+   "frame": 525,
+   "z0_vehicles": -0.014771006754053155,
+   "n_vehicles": 14,
+   "z0_walkers": 0.0068663372645160516,
+   "se_walkers": 0.0008262170683253985,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town10HD",
+   "frame": 550,
+   "z0_vehicles": -0.015997827280019167,
+   "n_vehicles": 18,
+   "z0_walkers": -0.0045207372860647166,
+   "se_walkers": 0.0021678046871784398,
+   "n_walkers": 37
+  },
+  {
+   "town": "Town10HD",
+   "frame": 575,
+   "z0_vehicles": -0.01271707071283317,
+   "n_vehicles": 18,
+   "z0_walkers": -0.004279414940785079,
+   "se_walkers": 0.0023733629248276072,
+   "n_walkers": 34
+  },
+  {
+   "town": "Town10HD",
+   "frame": 600,
+   "z0_vehicles": -0.018049345031130766,
+   "n_vehicles": 16,
+   "z0_walkers": -0.004728045592699919,
+   "se_walkers": 0.002206264692569802,
+   "n_walkers": 34
+  },
+  {
+   "town": "Town10HD",
+   "frame": 625,
+   "z0_vehicles": -0.016995652222966954,
+   "n_vehicles": 14,
+   "z0_walkers": -0.0009928443819596773,
+   "se_walkers": 0.00189567728563489,
+   "n_walkers": 32
+  },
+  {
+   "town": "Town10HD",
+   "frame": 650,
+   "z0_vehicles": -0.012778113006794078,
+   "n_vehicles": 16,
+   "z0_walkers": 0.009104791674326842,
+   "se_walkers": 3.979041907482803e-08,
+   "n_walkers": 68
+  },
+  {
+   "town": "Town10HD",
+   "frame": 675,
+   "z0_vehicles": -0.011870910459047233,
+   "n_vehicles": 12,
+   "z0_walkers": 0.0019755374009859544,
+   "se_walkers": 0.0014660980574857415,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town10HD",
+   "frame": 700,
+   "z0_vehicles": -0.016999218529324865,
+   "n_vehicles": 19,
+   "z0_walkers": 0.00023255433027224108,
+   "se_walkers": 0.0015515544888416014,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town10HD",
+   "frame": 725,
+   "z0_vehicles": -0.017932516488823515,
+   "n_vehicles": 19,
+   "z0_walkers": -0.0017820259329862866,
+   "se_walkers": 0.0016757641764561285,
+   "n_walkers": 35
+  },
+  {
+   "town": "Town10HD",
+   "frame": 750,
+   "z0_vehicles": -0.02125620026636459,
+   "n_vehicles": 19,
+   "z0_walkers": 0.008634424454882723,
+   "se_walkers": 9.868709430909978e-05,
+   "n_walkers": 102
+  },
+  {
+   "town": "Town10HD",
+   "frame": 775,
+   "z0_vehicles": -0.022244781725779397,
+   "n_vehicles": 15,
+   "z0_walkers": 0.008988821504063724,
+   "se_walkers": 2.496178635012734e-05,
+   "n_walkers": 99
+  },
+  {
+   "town": "Town10HD",
+   "frame": 800,
+   "z0_vehicles": -0.02271193250401405,
+   "n_vehicles": 14,
+   "z0_walkers": 0.009104634041848157,
+   "se_walkers": 8.321187093566611e-08,
+   "n_walkers": 96
+  },
+  {
+   "town": "Town10HD",
+   "frame": 825,
+   "z0_vehicles": -0.020046161092413594,
+   "n_vehicles": 22,
+   "z0_walkers": 0.009104780767387423,
+   "se_walkers": 6.606698544814563e-08,
+   "n_walkers": 86
+  },
+  {
+   "town": "Town10HD",
+   "frame": 850,
+   "z0_vehicles": -0.01538965944849704,
+   "n_vehicles": 20,
+   "z0_walkers": 0.009104899321455572,
+   "se_walkers": 2.4918437195463697e-08,
+   "n_walkers": 72
+  },
+  {
+   "town": "Town10HD",
+   "frame": 875,
+   "z0_vehicles": -0.009294279295208058,
+   "n_vehicles": 19,
+   "z0_walkers": 0.009104907627298549,
+   "se_walkers": 2.3566678803435793e-08,
+   "n_walkers": 66
+  },
+  {
+   "town": "Town10HD",
+   "frame": 900,
+   "z0_vehicles": -0.012821250624846429,
+   "n_vehicles": 21,
+   "z0_walkers": 0.009104833355396602,
+   "se_walkers": 3.4128678687347177e-08,
+   "n_walkers": 71
+  },
+  {
+   "town": "Town10HD",
+   "frame": 925,
+   "z0_vehicles": -0.010800487071516433,
+   "n_vehicles": 19,
+   "z0_walkers": 0.009104791760260248,
+   "se_walkers": 4.288976816626582e-08,
+   "n_walkers": 71
+  },
+  {
+   "town": "Town10HD",
+   "frame": 950,
+   "z0_vehicles": -0.00865774255800035,
+   "n_vehicles": 16,
+   "z0_walkers": 0.004448452931381211,
+   "se_walkers": 0.0011717978129317538,
+   "n_walkers": 41
+  },
+  {
+   "town": "Town10HD",
+   "frame": 975,
+   "z0_vehicles": -0.007804908075248418,
+   "n_vehicles": 13,
+   "z0_walkers": 0.004161420422150303,
+   "se_walkers": 0.000974868857795418,
+   "n_walkers": 69
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1000,
+   "z0_vehicles": -0.010483648098544069,
+   "n_vehicles": 11,
+   "z0_walkers": 0.006756391169528357,
+   "se_walkers": 0.0007898709533668924,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1025,
+   "z0_vehicles": -0.013363520069680708,
+   "n_vehicles": 16,
+   "z0_walkers": 0.004843172555080904,
+   "se_walkers": 0.0013813648941142357,
+   "n_walkers": 29
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1050,
+   "z0_vehicles": -0.016855580547386947,
+   "n_vehicles": 17,
+   "z0_walkers": 0.0017457892144882808,
+   "se_walkers": 0.001605195542525663,
+   "n_walkers": 29
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1075,
+   "z0_vehicles": -0.013830492640070429,
+   "n_vehicles": 14,
+   "z0_walkers": 0.004611047983088683,
+   "se_walkers": 0.0014414199610542182,
+   "n_walkers": 27
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1100,
+   "z0_vehicles": -0.014792640585270847,
+   "n_vehicles": 15,
+   "z0_walkers": 0.0026302285033151865,
+   "se_walkers": 0.0015358238949135612,
+   "n_walkers": 22
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1125,
+   "z0_vehicles": -0.017977489331218666,
+   "n_vehicles": 20,
+   "z0_walkers": -0.0006450653076171709,
+   "se_walkers": 0.0018196242607917644,
+   "n_walkers": 20
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1150,
+   "z0_vehicles": -0.017866792765749616,
+   "n_vehicles": 23,
+   "z0_walkers": 0.002623373191740556,
+   "se_walkers": 0.0011589054668090628,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1175,
+   "z0_vehicles": -0.01987969951326078,
+   "n_vehicles": 15,
+   "z0_walkers": 0.005986318628808038,
+   "se_walkers": 0.0010753532907443301,
+   "n_walkers": 21
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1200,
+   "z0_vehicles": -0.017235971182881626,
+   "n_vehicles": 13,
+   "z0_walkers": 0.008811537848756183,
+   "se_walkers": 0.0001460957564146774,
+   "n_walkers": 19
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1225,
+   "z0_vehicles": -0.020313119310190822,
+   "n_vehicles": 10,
+   "z0_walkers": 0.008060505070199887,
+   "se_walkers": 0.0003626601555829943,
+   "n_walkers": 16
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1250,
+   "z0_vehicles": -0.016216450804574283,
+   "n_vehicles": 7,
+   "z0_walkers": 0.008445974481806624,
+   "se_walkers": 0.00022756462260453515,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1275,
+   "z0_vehicles": -0.015398232243364462,
+   "n_vehicles": 10,
+   "z0_walkers": -0.007594190159293267,
+   "se_walkers": 0.0031167653602093203,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1300,
+   "z0_vehicles": -0.013716913920495111,
+   "n_vehicles": 11,
+   "z0_walkers": -0.00523261870107342,
+   "se_walkers": 0.002307141556858778,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1325,
+   "z0_vehicles": -0.008417700356073985,
+   "n_vehicles": 9,
+   "z0_walkers": 0.0024223898209497015,
+   "se_walkers": 0.0013344109607559336,
+   "n_walkers": 37
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1350,
+   "z0_vehicles": -0.0007338882408585052,
+   "n_vehicles": 3,
+   "z0_walkers": 0.00884895505759414,
+   "se_walkers": 0.0001842945493764048,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1375,
+   "z0_vehicles": -0.0006812336087684001,
+   "n_vehicles": 2,
+   "z0_walkers": 0.008866190910339355,
+   "se_walkers": NaN,
+   "n_walkers": 1
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1400,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1425,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1450,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1475,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1500,
+   "z0_vehicles": -0.056563178508078384,
+   "n_vehicles": 5,
+   "z0_walkers": -0.035527050495147705,
+   "se_walkers": NaN,
+   "n_walkers": 1
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1525,
+   "z0_vehicles": -0.049361977240475655,
+   "n_vehicles": 5,
+   "z0_walkers": -0.024882137775421143,
+   "se_walkers": NaN,
+   "n_walkers": 1
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1550,
+   "z0_vehicles": -0.036705377070283214,
+   "n_vehicles": 7,
+   "z0_walkers": -0.010107184035153958,
+   "se_walkers": 0.0007576740044684974,
+   "n_walkers": 8
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1575,
+   "z0_vehicles": -0.029838341019365344,
+   "n_vehicles": 15,
+   "z0_walkers": -0.046761138255200056,
+   "se_walkers": 4.506895859236245e-08,
+   "n_walkers": 52
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1600,
+   "z0_vehicles": -0.02061401387335969,
+   "n_vehicles": 15,
+   "z0_walkers": -0.001979918859394533,
+   "se_walkers": 0.0010324222816656798,
+   "n_walkers": 32
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1625,
+   "z0_vehicles": -0.015528612715467781,
+   "n_vehicles": 15,
+   "z0_walkers": -0.0039009672515549123,
+   "se_walkers": 0.0012999636562765187,
+   "n_walkers": 50
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1650,
+   "z0_vehicles": -0.01903213972983562,
+   "n_vehicles": 21,
+   "z0_walkers": -0.011278117827271558,
+   "se_walkers": 0.0013746364302575993,
+   "n_walkers": 120
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1675,
+   "z0_vehicles": -0.018185148587701296,
+   "n_vehicles": 27,
+   "z0_walkers": -0.007638597575527086,
+   "se_walkers": 0.0009248298907520786,
+   "n_walkers": 148
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1700,
+   "z0_vehicles": -0.02136281160705535,
+   "n_vehicles": 26,
+   "z0_walkers": 0.008174330103064249,
+   "se_walkers": 0.000178198957867833,
+   "n_walkers": 127
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1725,
+   "z0_vehicles": -0.0173571508448131,
+   "n_vehicles": 21,
+   "z0_walkers": 0.009104876714803605,
+   "se_walkers": 3.3928425798309274e-08,
+   "n_walkers": 86
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1750,
+   "z0_vehicles": -0.017573732643648827,
+   "n_vehicles": 20,
+   "z0_walkers": 0.003937894477666976,
+   "se_walkers": 0.001269191516344532,
+   "n_walkers": 36
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1775,
+   "z0_vehicles": -0.01176848505358415,
+   "n_vehicles": 22,
+   "z0_walkers": 0.006740649286309094,
+   "se_walkers": 0.0007953647540663989,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1800,
+   "z0_vehicles": -0.009503401649994496,
+   "n_vehicles": 18,
+   "z0_walkers": 0.005181724339020756,
+   "se_walkers": 0.002420877520394747,
+   "n_walkers": 19
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1825,
+   "z0_vehicles": -0.01638292997681395,
+   "n_vehicles": 19,
+   "z0_walkers": 0.0057655269545788725,
+   "se_walkers": 0.0012897623514900706,
+   "n_walkers": 18
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1850,
+   "z0_vehicles": -0.014057760497746968,
+   "n_vehicles": 17,
+   "z0_walkers": -0.004198484759205388,
+   "se_walkers": 0.002842187552412615,
+   "n_walkers": 23
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1875,
+   "z0_vehicles": -0.0170333842621365,
+   "n_vehicles": 11,
+   "z0_walkers": -0.0032548493359702423,
+   "se_walkers": 0.0019115266617134787,
+   "n_walkers": 33
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1900,
+   "z0_vehicles": -0.01481513603140074,
+   "n_vehicles": 14,
+   "z0_walkers": -0.0022366877918288575,
+   "se_walkers": 0.0013511340189563796,
+   "n_walkers": 37
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1925,
+   "z0_vehicles": -0.015712502628708783,
+   "n_vehicles": 10,
+   "z0_walkers": -0.0004059862006794146,
+   "se_walkers": 0.0011343543341126065,
+   "n_walkers": 44
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1950,
+   "z0_vehicles": -0.0187845534126564,
+   "n_vehicles": 20,
+   "z0_walkers": -0.0030617386756186483,
+   "se_walkers": 0.0016195870418805741,
+   "n_walkers": 57
+  },
+  {
+   "town": "Town10HD",
+   "frame": 1975,
+   "z0_vehicles": -0.01884684854734815,
+   "n_vehicles": 22,
+   "z0_walkers": -0.005855942145870307,
+   "se_walkers": 0.0016255794464058043,
+   "n_walkers": 76
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2000,
+   "z0_vehicles": -0.01936419064399129,
+   "n_vehicles": 21,
+   "z0_walkers": -0.0038194433529962343,
+   "se_walkers": 0.0015541350791780425,
+   "n_walkers": 75
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2025,
+   "z0_vehicles": -0.016374666537217253,
+   "n_vehicles": 20,
+   "z0_walkers": -0.00101366560782219,
+   "se_walkers": 0.0010321169710767227,
+   "n_walkers": 79
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2050,
+   "z0_vehicles": -0.0165268893893846,
+   "n_vehicles": 18,
+   "z0_walkers": 0.001376881946133926,
+   "se_walkers": 0.0008470417819726936,
+   "n_walkers": 85
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2075,
+   "z0_vehicles": -0.015348789457581788,
+   "n_vehicles": 13,
+   "z0_walkers": 0.007042629069448779,
+   "se_walkers": 0.00045524048646173075,
+   "n_walkers": 71
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2100,
+   "z0_vehicles": -0.01859344953004727,
+   "n_vehicles": 22,
+   "z0_walkers": -0.005859044529219357,
+   "se_walkers": 0.0012915145756461192,
+   "n_walkers": 132
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2125,
+   "z0_vehicles": -0.019759743565314257,
+   "n_vehicles": 21,
+   "z0_walkers": -0.004976597536939288,
+   "se_walkers": 0.0009759190436197939,
+   "n_walkers": 170
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2150,
+   "z0_vehicles": -0.019954365688455294,
+   "n_vehicles": 13,
+   "z0_walkers": -0.0035106864176802552,
+   "se_walkers": 0.0004299941766619699,
+   "n_walkers": 165
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2175,
+   "z0_vehicles": -0.01974304029543758,
+   "n_vehicles": 14,
+   "z0_walkers": 0.00044651887228616905,
+   "se_walkers": 0.0006326539329919836,
+   "n_walkers": 199
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2200,
+   "z0_vehicles": -0.017517046859866246,
+   "n_vehicles": 20,
+   "z0_walkers": 0.0013167031710244021,
+   "se_walkers": 0.0007910461927907344,
+   "n_walkers": 156
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2225,
+   "z0_vehicles": -0.01769142920586535,
+   "n_vehicles": 21,
+   "z0_walkers": 0.008229566606917827,
+   "se_walkers": 0.0001609001254773954,
+   "n_walkers": 118
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2250,
+   "z0_vehicles": -0.011153346770492317,
+   "n_vehicles": 20,
+   "z0_walkers": 0.009103273286897586,
+   "se_walkers": 4.638856640234076e-07,
+   "n_walkers": 99
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2275,
+   "z0_vehicles": -0.01268316951306811,
+   "n_vehicles": 16,
+   "z0_walkers": 0.008955517687380185,
+   "se_walkers": 8.027019836188524e-05,
+   "n_walkers": 33
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2300,
+   "z0_vehicles": -0.008259112484578442,
+   "n_vehicles": 13,
+   "z0_walkers": 0.007835723334899947,
+   "se_walkers": 0.0006626247666506995,
+   "n_walkers": 17
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2325,
+   "z0_vehicles": -0.0025038848626578606,
+   "n_vehicles": 5,
+   "z0_walkers": 0.009017454287011043,
+   "se_walkers": 9.479269621353876e-05,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2350,
+   "z0_vehicles": -0.01226079157976081,
+   "n_vehicles": 5,
+   "z0_walkers": 0.008808330603310611,
+   "se_walkers": 0.0001911536794242835,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2375,
+   "z0_vehicles": -0.02390679321220052,
+   "n_vehicles": 11,
+   "z0_walkers": -0.007629519572067981,
+   "se_walkers": 0.0015835143127335102,
+   "n_walkers": 8
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2400,
+   "z0_vehicles": -0.018152693623423085,
+   "n_vehicles": 14,
+   "z0_walkers": 0.0003535920728648933,
+   "se_walkers": 0.0035182660089844386,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2425,
+   "z0_vehicles": -0.014044413281363464,
+   "n_vehicles": 15,
+   "z0_walkers": 0.0010935862841841952,
+   "se_walkers": 0.0012603647929989188,
+   "n_walkers": 33
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2450,
+   "z0_vehicles": -0.01128222313799132,
+   "n_vehicles": 12,
+   "z0_walkers": 0.007121155066909669,
+   "se_walkers": 0.0006122733023743763,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2475,
+   "z0_vehicles": -0.0077548419187583395,
+   "n_vehicles": 7,
+   "z0_walkers": 0.00888791461603709,
+   "se_walkers": 7.96278384929321e-05,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2500,
+   "z0_vehicles": -0.009646992999501617,
+   "n_vehicles": 4,
+   "z0_walkers": 0.009068396118241506,
+   "se_walkers": 1.9232683607453527e-05,
+   "n_walkers": 15
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2525,
+   "z0_vehicles": -0.018912197929030254,
+   "n_vehicles": 5,
+   "z0_walkers": 0.009022826333497831,
+   "se_walkers": 4.4720894423884226e-05,
+   "n_walkers": 15
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2550,
+   "z0_vehicles": -0.022194237046546345,
+   "n_vehicles": 8,
+   "z0_walkers": 0.007784572102156536,
+   "se_walkers": 0.000551664557413089,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2575,
+   "z0_vehicles": -0.02046484486005444,
+   "n_vehicles": 15,
+   "z0_walkers": 0.006176776546199464,
+   "se_walkers": 0.0012539169515691493,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2600,
+   "z0_vehicles": -0.019179922210148043,
+   "n_vehicles": 16,
+   "z0_walkers": -0.00018376510314076385,
+   "se_walkers": 0.0015429676980093356,
+   "n_walkers": 27
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2625,
+   "z0_vehicles": -0.027651729406116946,
+   "n_vehicles": 19,
+   "z0_walkers": -0.007413108731456054,
+   "se_walkers": 0.0019270545993669847,
+   "n_walkers": 48
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2650,
+   "z0_vehicles": -0.02760139488476699,
+   "n_vehicles": 20,
+   "z0_walkers": -0.0059392731375743114,
+   "se_walkers": 0.002115673656024102,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2675,
+   "z0_vehicles": -0.02484790912704007,
+   "n_vehicles": 22,
+   "z0_walkers": -0.00614695310795944,
+   "se_walkers": 0.0006035922460754024,
+   "n_walkers": 104
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2700,
+   "z0_vehicles": -0.019140229609127292,
+   "n_vehicles": 26,
+   "z0_walkers": -0.004933241456325196,
+   "se_walkers": 0.00036116886043816644,
+   "n_walkers": 143
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2725,
+   "z0_vehicles": -0.018866503567587824,
+   "n_vehicles": 22,
+   "z0_walkers": 0.0035978309056406456,
+   "se_walkers": 0.0005940023316590575,
+   "n_walkers": 159
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2750,
+   "z0_vehicles": -0.016636594095816134,
+   "n_vehicles": 23,
+   "z0_walkers": 0.006928001664060832,
+   "se_walkers": 0.0003858713428762621,
+   "n_walkers": 137
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2775,
+   "z0_vehicles": -0.014376900367326582,
+   "n_vehicles": 23,
+   "z0_walkers": 0.008578747717667276,
+   "se_walkers": 0.000183780321080514,
+   "n_walkers": 46
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2800,
+   "z0_vehicles": -0.00982001508980424,
+   "n_vehicles": 17,
+   "z0_walkers": 0.0034380178702505364,
+   "se_walkers": 0.001328017263376991,
+   "n_walkers": 19
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2825,
+   "z0_vehicles": -0.013295968193721648,
+   "n_vehicles": 14,
+   "z0_walkers": -0.0022001546369993024,
+   "se_walkers": 0.0026212275495157682,
+   "n_walkers": 22
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2850,
+   "z0_vehicles": -0.020993754113306375,
+   "n_vehicles": 12,
+   "z0_walkers": 0.009104857237563704,
+   "se_walkers": 3.8094427385198864e-08,
+   "n_walkers": 53
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2875,
+   "z0_vehicles": -0.01707557985831399,
+   "n_vehicles": 13,
+   "z0_walkers": -0.003242019710600511,
+   "se_walkers": 0.002353852679619172,
+   "n_walkers": 19
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2900,
+   "z0_vehicles": -0.016562963752875925,
+   "n_vehicles": 14,
+   "z0_walkers": -0.001206913066557361,
+   "se_walkers": 0.001607722971213989,
+   "n_walkers": 19
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2925,
+   "z0_vehicles": -0.01671965235885748,
+   "n_vehicles": 11,
+   "z0_walkers": 0.0033785700798034807,
+   "se_walkers": 0.0011083043744168706,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2950,
+   "z0_vehicles": -0.014357915075793119,
+   "n_vehicles": 9,
+   "z0_walkers": 0.004664127341508152,
+   "se_walkers": 0.0012445277135223433,
+   "n_walkers": 26
+  },
+  {
+   "town": "Town10HD",
+   "frame": 2975,
+   "z0_vehicles": -0.03049756646414879,
+   "n_vehicles": 18,
+   "z0_walkers": -0.009707883916972242,
+   "se_walkers": 0.00207768539388383,
+   "n_walkers": 67
+  },
+  {
+   "town": "Town04",
+   "frame": 0,
+   "z0_vehicles": 0.255548668786689,
+   "n_vehicles": 4,
+   "z0_walkers": 0.19751888185970262,
+   "se_walkers": 0.002117522197828921,
+   "n_walkers": 36
+  },
+  {
+   "town": "Town04",
+   "frame": 25,
+   "z0_vehicles": 0.17260846741666336,
+   "n_vehicles": 8,
+   "z0_walkers": 0.19710457402770518,
+   "se_walkers": 0.001247051224223794,
+   "n_walkers": 44
+  },
+  {
+   "town": "Town04",
+   "frame": 50,
+   "z0_vehicles": 0.12084564854987964,
+   "n_vehicles": 15,
+   "z0_walkers": 0.19960857279263106,
+   "se_walkers": 0.00120747946406897,
+   "n_walkers": 73
+  },
+  {
+   "town": "Town04",
+   "frame": 75,
+   "z0_vehicles": -0.008110354985991672,
+   "n_vehicles": 11,
+   "z0_walkers": 0.01981367160078577,
+   "se_walkers": 0.0011183464552526326,
+   "n_walkers": 68
+  },
+  {
+   "town": "Town04",
+   "frame": 100,
+   "z0_vehicles": -0.0011789618933843542,
+   "n_vehicles": 12,
+   "z0_walkers": 0.0233113403009006,
+   "se_walkers": 0.0011005487039508252,
+   "n_walkers": 70
+  },
+  {
+   "town": "Town04",
+   "frame": 125,
+   "z0_vehicles": -0.006353815567891926,
+   "n_vehicles": 11,
+   "z0_walkers": 0.02225309910273578,
+   "se_walkers": 0.0011213712653692885,
+   "n_walkers": 59
+  },
+  {
+   "town": "Town04",
+   "frame": 150,
+   "z0_vehicles": 0.013603484674993685,
+   "n_vehicles": 6,
+   "z0_walkers": 0.02628626676613476,
+   "se_walkers": 0.000693133525233896,
+   "n_walkers": 57
+  },
+  {
+   "town": "Town04",
+   "frame": 175,
+   "z0_vehicles": -0.005090496759521168,
+   "n_vehicles": 8,
+   "z0_walkers": 0.027197634733623296,
+   "se_walkers": 0.00046050144219397543,
+   "n_walkers": 48
+  },
+  {
+   "town": "Town04",
+   "frame": 200,
+   "z0_vehicles": -0.022125641504923504,
+   "n_vehicles": 6,
+   "z0_walkers": 0.026222946303845862,
+   "se_walkers": 0.0008293006451384796,
+   "n_walkers": 35
+  },
+  {
+   "town": "Town04",
+   "frame": 225,
+   "z0_vehicles": -0.03864550590515137,
+   "n_vehicles": 4,
+   "z0_walkers": 0.033960751333054616,
+   "se_walkers": 0.0017502761265751465,
+   "n_walkers": 35
+  },
+  {
+   "town": "Town04",
+   "frame": 250,
+   "z0_vehicles": -0.03136664327281382,
+   "n_vehicles": 3,
+   "z0_walkers": 0.032331552770402686,
+   "se_walkers": 0.0015668770213175082,
+   "n_walkers": 36
+  },
+  {
+   "town": "Town04",
+   "frame": 275,
+   "z0_vehicles": -0.003921993829134352,
+   "n_vehicles": 4,
+   "z0_walkers": 0.032091792151396244,
+   "se_walkers": 0.0016658279197504738,
+   "n_walkers": 41
+  },
+  {
+   "town": "Town04",
+   "frame": 300,
+   "z0_vehicles": 0.0099383421175816,
+   "n_vehicles": 1,
+   "z0_walkers": 0.03219000000364822,
+   "se_walkers": 0.0015460385939818416,
+   "n_walkers": 39
+  },
+  {
+   "town": "Town04",
+   "frame": 325,
+   "z0_vehicles": 0.009912384613183889,
+   "n_vehicles": 1,
+   "z0_walkers": 0.03157385453695517,
+   "se_walkers": 0.001676481779104153,
+   "n_walkers": 39
+  },
+  {
+   "town": "Town04",
+   "frame": 350,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": 0.03299238238166891,
+   "se_walkers": 0.0017091306464133702,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town04",
+   "frame": 375,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": 0.03193719234989278,
+   "se_walkers": 0.0017847838774327136,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town04",
+   "frame": 400,
+   "z0_vehicles": -0.028976111396344234,
+   "n_vehicles": 2,
+   "z0_walkers": 0.03579908449975712,
+   "se_walkers": 0.001536769391077858,
+   "n_walkers": 37
+  },
+  {
+   "town": "Town04",
+   "frame": 425,
+   "z0_vehicles": 0.006026564677955601,
+   "n_vehicles": 3,
+   "z0_walkers": 0.03576101771999353,
+   "se_walkers": 0.0013870752733935654,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town04",
+   "frame": 450,
+   "z0_vehicles": 0.004717932643385159,
+   "n_vehicles": 1,
+   "z0_walkers": 0.03631438637263252,
+   "se_walkers": 0.001584476381032357,
+   "n_walkers": 25
+  },
+  {
+   "town": "Town04",
+   "frame": 475,
+   "z0_vehicles": 0.16683516990288683,
+   "n_vehicles": 2,
+   "z0_walkers": 0.20994188487140666,
+   "se_walkers": 0.0006056362888232906,
+   "n_walkers": 14
+  },
+  {
+   "town": "Town04",
+   "frame": 500,
+   "z0_vehicles": 0.16977616126067552,
+   "n_vehicles": 2,
+   "z0_walkers": 0.2102230987174004,
+   "se_walkers": 0.0012644171613261587,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town04",
+   "frame": 525,
+   "z0_vehicles": -0.02858668005056031,
+   "n_vehicles": 2,
+   "z0_walkers": 0.01165771365037048,
+   "se_walkers": 0.0010448710315838071,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town04",
+   "frame": 550,
+   "z0_vehicles": -0.047870970170680316,
+   "n_vehicles": 2,
+   "z0_walkers": 0.004111353779300593,
+   "se_walkers": 0.002328598071870207,
+   "n_walkers": 16
+  },
+  {
+   "town": "Town04",
+   "frame": 575,
+   "z0_vehicles": -0.043964503617246464,
+   "n_vehicles": 2,
+   "z0_walkers": 0.010053071068840262,
+   "se_walkers": 0.000932423287481853,
+   "n_walkers": 18
+  },
+  {
+   "town": "Town04",
+   "frame": 600,
+   "z0_vehicles": -0.03845429181046933,
+   "n_vehicles": 2,
+   "z0_walkers": 0.012257822891743961,
+   "se_walkers": 4.7498424375570565e-05,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town04",
+   "frame": 625,
+   "z0_vehicles": -0.02604811415209618,
+   "n_vehicles": 2,
+   "z0_walkers": 0.01205511018926642,
+   "se_walkers": 0.00013965378855752535,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town04",
+   "frame": 650,
+   "z0_vehicles": -0.04250586499052791,
+   "n_vehicles": 4,
+   "z0_walkers": 0.011994188488836788,
+   "se_walkers": 0.0001391277687098386,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town04",
+   "frame": 675,
+   "z0_vehicles": -0.04052378790090716,
+   "n_vehicles": 4,
+   "z0_walkers": 0.012024186794211642,
+   "se_walkers": 0.00018496735006014162,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town04",
+   "frame": 700,
+   "z0_vehicles": -0.05090717317870534,
+   "n_vehicles": 6,
+   "z0_walkers": 0.0119792378643517,
+   "se_walkers": 0.00022272154954263305,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town04",
+   "frame": 725,
+   "z0_vehicles": -0.024730461604836496,
+   "n_vehicles": 4,
+   "z0_walkers": 0.011715479119816642,
+   "se_walkers": 0.00033670226135346234,
+   "n_walkers": 6
+  },
+  {
+   "town": "Town04",
+   "frame": 750,
+   "z0_vehicles": -0.03725529260916629,
+   "n_vehicles": 7,
+   "z0_walkers": 0.010182663442482158,
+   "se_walkers": 0.0009021248272675966,
+   "n_walkers": 8
+  },
+  {
+   "town": "Town04",
+   "frame": 775,
+   "z0_vehicles": -0.024333023520580414,
+   "n_vehicles": 10,
+   "z0_walkers": 0.009470002991812618,
+   "se_walkers": 0.0008495326035117559,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town04",
+   "frame": 800,
+   "z0_vehicles": -0.04538055638250506,
+   "n_vehicles": 9,
+   "z0_walkers": 0.010457576447684858,
+   "se_walkers": 0.0007277733742327504,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town04",
+   "frame": 825,
+   "z0_vehicles": -0.03816380087569808,
+   "n_vehicles": 5,
+   "z0_walkers": 0.01044325344106037,
+   "se_walkers": 0.0007997322992891075,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town04",
+   "frame": 850,
+   "z0_vehicles": -0.03705658917533973,
+   "n_vehicles": 5,
+   "z0_walkers": 0.010906124147327213,
+   "se_walkers": 0.0007400076800077529,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town04",
+   "frame": 875,
+   "z0_vehicles": -0.0456930011562701,
+   "n_vehicles": 11,
+   "z0_walkers": -0.014319248996805499,
+   "se_walkers": 0.0021063306482900506,
+   "n_walkers": 42
+  },
+  {
+   "town": "Town04",
+   "frame": 900,
+   "z0_vehicles": -0.028523788597941694,
+   "n_vehicles": 11,
+   "z0_walkers": 0.011513180122097143,
+   "se_walkers": 0.001843774587467129,
+   "n_walkers": 53
+  },
+  {
+   "town": "Town04",
+   "frame": 925,
+   "z0_vehicles": -0.016624128610125157,
+   "n_vehicles": 7,
+   "z0_walkers": 0.012012441902389003,
+   "se_walkers": 0.0020230062889837466,
+   "n_walkers": 62
+  },
+  {
+   "town": "Town04",
+   "frame": 950,
+   "z0_vehicles": 0.0018284532190441622,
+   "n_vehicles": 5,
+   "z0_walkers": 0.01698548790948901,
+   "se_walkers": 0.0012433064412018112,
+   "n_walkers": 69
+  },
+  {
+   "town": "Town04",
+   "frame": 975,
+   "z0_vehicles": -0.009755303595500153,
+   "n_vehicles": 10,
+   "z0_walkers": 0.019575430094188447,
+   "se_walkers": 0.0007966999377445383,
+   "n_walkers": 101
+  },
+  {
+   "town": "Town04",
+   "frame": 1000,
+   "z0_vehicles": 0.01429457046267048,
+   "n_vehicles": 8,
+   "z0_walkers": 0.023025923423044672,
+   "se_walkers": 0.0007791422958182913,
+   "n_walkers": 90
+  },
+  {
+   "town": "Town04",
+   "frame": 1025,
+   "z0_vehicles": 0.00818987068131083,
+   "n_vehicles": 10,
+   "z0_walkers": 0.025862885697017973,
+   "se_walkers": 0.0008232512782458607,
+   "n_walkers": 73
+  },
+  {
+   "town": "Town04",
+   "frame": 1050,
+   "z0_vehicles": -0.00035063842003157106,
+   "n_vehicles": 12,
+   "z0_walkers": 0.02660166499361758,
+   "se_walkers": 0.000887861773593776,
+   "n_walkers": 57
+  },
+  {
+   "town": "Town04",
+   "frame": 1075,
+   "z0_vehicles": -0.0026353224696696004,
+   "n_vehicles": 9,
+   "z0_walkers": 0.026031823562058406,
+   "se_walkers": 0.0009219811957739059,
+   "n_walkers": 29
+  },
+  {
+   "town": "Town04",
+   "frame": 1100,
+   "z0_vehicles": 0.11680514450403613,
+   "n_vehicles": 24,
+   "z0_walkers": 0.16759516894473883,
+   "se_walkers": 0.001529079128803404,
+   "n_walkers": 68
+  },
+  {
+   "town": "Town04",
+   "frame": 1125,
+   "z0_vehicles": 0.1666389306291274,
+   "n_vehicles": 39,
+   "z0_walkers": 0.20110551984111857,
+   "se_walkers": 0.0011249230715712584,
+   "n_walkers": 72
+  },
+  {
+   "town": "Town04",
+   "frame": 1150,
+   "z0_vehicles": 0.18818370900631368,
+   "n_vehicles": 42,
+   "z0_walkers": 0.2151460819276327,
+   "se_walkers": 0.0010696988608852515,
+   "n_walkers": 90
+  },
+  {
+   "town": "Town04",
+   "frame": 1175,
+   "z0_vehicles": 0.0031406438118529523,
+   "n_vehicles": 35,
+   "z0_walkers": 0.018273279760243327,
+   "se_walkers": 0.0008245645777648068,
+   "n_walkers": 94
+  },
+  {
+   "town": "Town04",
+   "frame": 1200,
+   "z0_vehicles": 0.007716851447871531,
+   "n_vehicles": 22,
+   "z0_walkers": 0.022907820659277076,
+   "se_walkers": 0.0007966810832638068,
+   "n_walkers": 101
+  },
+  {
+   "town": "Town04",
+   "frame": 1225,
+   "z0_vehicles": 0.14691249619837263,
+   "n_vehicles": 28,
+   "z0_walkers": 0.1643544061303939,
+   "se_walkers": 0.0005969553777669693,
+   "n_walkers": 64
+  },
+  {
+   "town": "Town04",
+   "frame": 1250,
+   "z0_vehicles": -0.012929599978391808,
+   "n_vehicles": 21,
+   "z0_walkers": 0.010594291346921672,
+   "se_walkers": 0.0007821270678074663,
+   "n_walkers": 34
+  },
+  {
+   "town": "Town04",
+   "frame": 1275,
+   "z0_vehicles": -0.02031406457086949,
+   "n_vehicles": 18,
+   "z0_walkers": 0.008200157819387124,
+   "se_walkers": 0.0013067548681894537,
+   "n_walkers": 15
+  },
+  {
+   "town": "Town04",
+   "frame": 1300,
+   "z0_vehicles": -0.031058820031273377,
+   "n_vehicles": 16,
+   "z0_walkers": 0.006751105767269247,
+   "se_walkers": 0.00022933600497399768,
+   "n_walkers": 6
+  },
+  {
+   "town": "Town04",
+   "frame": 1325,
+   "z0_vehicles": -0.022566309310539105,
+   "n_vehicles": 23,
+   "z0_walkers": 0.007201162584916912,
+   "se_walkers": 0.0017748782292707937,
+   "n_walkers": 14
+  },
+  {
+   "town": "Town04",
+   "frame": 1350,
+   "z0_vehicles": -0.026520557829781854,
+   "n_vehicles": 25,
+   "z0_walkers": 0.006700318736910151,
+   "se_walkers": 0.00145379381900135,
+   "n_walkers": 16
+  },
+  {
+   "town": "Town04",
+   "frame": 1375,
+   "z0_vehicles": -0.02064841370775049,
+   "n_vehicles": 23,
+   "z0_walkers": 0.0065994433482267755,
+   "se_walkers": 0.00012649445551049998,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town04",
+   "frame": 1400,
+   "z0_vehicles": 0.11989969865885279,
+   "n_vehicles": 10,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1425,
+   "z0_vehicles": -0.020784086885515682,
+   "n_vehicles": 8,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1450,
+   "z0_vehicles": -0.031128316638408295,
+   "n_vehicles": 5,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1475,
+   "z0_vehicles": -0.04585904610968524,
+   "n_vehicles": 4,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1500,
+   "z0_vehicles": -0.068162744869124,
+   "n_vehicles": 2,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1525,
+   "z0_vehicles": -0.053095476385650944,
+   "n_vehicles": 3,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1550,
+   "z0_vehicles": -0.06263133327568081,
+   "n_vehicles": 2,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1575,
+   "z0_vehicles": -0.04449917255192278,
+   "n_vehicles": 3,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1600,
+   "z0_vehicles": -0.03123062180018258,
+   "n_vehicles": 4,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1625,
+   "z0_vehicles": -0.018130592109016862,
+   "n_vehicles": 6,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1650,
+   "z0_vehicles": -0.020830775549028152,
+   "n_vehicles": 4,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1675,
+   "z0_vehicles": -0.01568832594191634,
+   "n_vehicles": 4,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1700,
+   "z0_vehicles": -0.011784624582245004,
+   "n_vehicles": 4,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 1725,
+   "z0_vehicles": -0.014060743996301195,
+   "n_vehicles": 6,
+   "z0_walkers": -0.007295918464660623,
+   "se_walkers": 0.008419970383995603,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town04",
+   "frame": 1750,
+   "z0_vehicles": -0.0894048864724886,
+   "n_vehicles": 6,
+   "z0_walkers": -0.010543679197629293,
+   "se_walkers": 0.0058831132408547785,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town04",
+   "frame": 1775,
+   "z0_vehicles": -0.07222033157740453,
+   "n_vehicles": 7,
+   "z0_walkers": 0.005266753539912329,
+   "se_walkers": 0.003932404545783098,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town04",
+   "frame": 1800,
+   "z0_vehicles": -0.07419871370500432,
+   "n_vehicles": 7,
+   "z0_walkers": 0.0038749590365503845,
+   "se_walkers": 0.004218893359815755,
+   "n_walkers": 14
+  },
+  {
+   "town": "Town04",
+   "frame": 1825,
+   "z0_vehicles": -0.05384916934653882,
+   "n_vehicles": 4,
+   "z0_walkers": 0.011217803963933614,
+   "se_walkers": 0.0009046408561250837,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town04",
+   "frame": 1850,
+   "z0_vehicles": -0.04136787654380323,
+   "n_vehicles": 6,
+   "z0_walkers": 0.011552348054792388,
+   "se_walkers": 0.0005045802872669311,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town04",
+   "frame": 1875,
+   "z0_vehicles": -0.03256190652201164,
+   "n_vehicles": 7,
+   "z0_walkers": 0.010946228301203606,
+   "se_walkers": 0.0004993213554743782,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town04",
+   "frame": 1900,
+   "z0_vehicles": -0.026513934128513262,
+   "n_vehicles": 6,
+   "z0_walkers": 0.010922332248993446,
+   "se_walkers": 0.0006023767417577979,
+   "n_walkers": 8
+  },
+  {
+   "town": "Town04",
+   "frame": 1925,
+   "z0_vehicles": -0.025911791331737245,
+   "n_vehicles": 4,
+   "z0_walkers": 0.011518153752436991,
+   "se_walkers": 0.00043632099596192765,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town04",
+   "frame": 1950,
+   "z0_vehicles": -0.027045069443374436,
+   "n_vehicles": 3,
+   "z0_walkers": 0.011156410138767241,
+   "se_walkers": 0.0006919453338326361,
+   "n_walkers": 8
+  },
+  {
+   "town": "Town04",
+   "frame": 1975,
+   "z0_vehicles": -0.025237040328317067,
+   "n_vehicles": 3,
+   "z0_walkers": 0.011156410138767331,
+   "se_walkers": 0.0006919453338326023,
+   "n_walkers": 8
+  },
+  {
+   "town": "Town04",
+   "frame": 2000,
+   "z0_vehicles": -0.024930495766061433,
+   "n_vehicles": 2,
+   "z0_walkers": 0.010659790142141077,
+   "se_walkers": 0.0006858848541005915,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town04",
+   "frame": 2025,
+   "z0_vehicles": -0.05315379179569622,
+   "n_vehicles": 2,
+   "z0_walkers": 0.010273167065211706,
+   "se_walkers": 0.0009210340725845306,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town04",
+   "frame": 2050,
+   "z0_vehicles": -0.0506379571476883,
+   "n_vehicles": 2,
+   "z0_walkers": 0.012248337268829346,
+   "se_walkers": 0.0010155145771468665,
+   "n_walkers": 4
+  },
+  {
+   "town": "Town04",
+   "frame": 2075,
+   "z0_vehicles": -0.02054984950236885,
+   "n_vehicles": 1,
+   "z0_walkers": 0.008676230907440186,
+   "se_walkers": NaN,
+   "n_walkers": 1
+  },
+  {
+   "town": "Town04",
+   "frame": 2100,
+   "z0_vehicles": -0.02063793684045201,
+   "n_vehicles": 1,
+   "z0_walkers": 0.008676230907440186,
+   "se_walkers": NaN,
+   "n_walkers": 1
+  },
+  {
+   "town": "Town04",
+   "frame": 2125,
+   "z0_vehicles": -0.02064222204397248,
+   "n_vehicles": 1,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2150,
+   "z0_vehicles": -0.02064064775647212,
+   "n_vehicles": 1,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2175,
+   "z0_vehicles": -0.0205547004842572,
+   "n_vehicles": 1,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2200,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2225,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2250,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2275,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2300,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2325,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2350,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2375,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2400,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2425,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2450,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2475,
+   "z0_vehicles": -0.04291806356663053,
+   "n_vehicles": 1,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2500,
+   "z0_vehicles": -0.061482056595704666,
+   "n_vehicles": 4,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2525,
+   "z0_vehicles": -0.050653970786918585,
+   "n_vehicles": 4,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2550,
+   "z0_vehicles": -0.044834803347573386,
+   "n_vehicles": 6,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2575,
+   "z0_vehicles": -0.036878813097126296,
+   "n_vehicles": 8,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2600,
+   "z0_vehicles": -0.03079514507058791,
+   "n_vehicles": 9,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2625,
+   "z0_vehicles": -0.022479943420266213,
+   "n_vehicles": 13,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2650,
+   "z0_vehicles": -0.01992503037130752,
+   "n_vehicles": 14,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2675,
+   "z0_vehicles": -0.016943896814285844,
+   "n_vehicles": 10,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2700,
+   "z0_vehicles": -0.01496043157748654,
+   "n_vehicles": 8,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2725,
+   "z0_vehicles": -0.01217801564962827,
+   "n_vehicles": 7,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2750,
+   "z0_vehicles": -0.012932656591534801,
+   "n_vehicles": 4,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2775,
+   "z0_vehicles": -0.00813515450421807,
+   "n_vehicles": 3,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2800,
+   "z0_vehicles": -0.008169657694591048,
+   "n_vehicles": 2,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2825,
+   "z0_vehicles": -0.008183370732150363,
+   "n_vehicles": 2,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2850,
+   "z0_vehicles": -0.003195585605200779,
+   "n_vehicles": 1,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2875,
+   "z0_vehicles": -0.0031962860027311413,
+   "n_vehicles": 1,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2900,
+   "z0_vehicles": -0.003196227646777433,
+   "n_vehicles": 1,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2925,
+   "z0_vehicles": -0.0031961844929668526,
+   "n_vehicles": 1,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2950,
+   "z0_vehicles": -0.003195877399204905,
+   "n_vehicles": 1,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town04",
+   "frame": 2975,
+   "z0_vehicles": -0.003194464365053773,
+   "n_vehicles": 1,
+   "z0_walkers": NaN,
+   "se_walkers": NaN,
+   "n_walkers": 0
+  },
+  {
+   "town": "Town05",
+   "frame": 0,
+   "z0_vehicles": -0.016434079114760674,
+   "n_vehicles": 15,
+   "z0_walkers": 0.009116664024840616,
+   "se_walkers": 0.0004245756705106622,
+   "n_walkers": 39
+  },
+  {
+   "town": "Town05",
+   "frame": 25,
+   "z0_vehicles": -0.018868172953330202,
+   "n_vehicles": 22,
+   "z0_walkers": 0.009314511238324214,
+   "se_walkers": 0.0008439852353142281,
+   "n_walkers": 43
+  },
+  {
+   "town": "Town05",
+   "frame": 50,
+   "z0_vehicles": -0.018296022460281683,
+   "n_vehicles": 19,
+   "z0_walkers": 0.008990244738567351,
+   "se_walkers": 0.0006237178614832896,
+   "n_walkers": 40
+  },
+  {
+   "town": "Town05",
+   "frame": 75,
+   "z0_vehicles": -0.017894102760020663,
+   "n_vehicles": 13,
+   "z0_walkers": 0.00880556410112849,
+   "se_walkers": 0.0017441367700093905,
+   "n_walkers": 40
+  },
+  {
+   "town": "Town05",
+   "frame": 100,
+   "z0_vehicles": -0.02007529946411869,
+   "n_vehicles": 14,
+   "z0_walkers": -0.0016911956672430962,
+   "se_walkers": 0.002218904527504071,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town05",
+   "frame": 125,
+   "z0_vehicles": -0.029478956549696,
+   "n_vehicles": 23,
+   "z0_walkers": -0.0022382670586999433,
+   "se_walkers": 0.002933770551426449,
+   "n_walkers": 17
+  },
+  {
+   "town": "Town05",
+   "frame": 150,
+   "z0_vehicles": -0.031300303342143634,
+   "n_vehicles": 27,
+   "z0_walkers": -0.003962910175323475,
+   "se_walkers": 0.0024875861753759676,
+   "n_walkers": 20
+  },
+  {
+   "town": "Town05",
+   "frame": 175,
+   "z0_vehicles": -0.028844433982540146,
+   "n_vehicles": 26,
+   "z0_walkers": -0.002312872249637857,
+   "se_walkers": 0.0016895202361218676,
+   "n_walkers": 24
+  },
+  {
+   "town": "Town05",
+   "frame": 200,
+   "z0_vehicles": -0.004646742532018177,
+   "n_vehicles": 25,
+   "z0_walkers": 0.01593493075496182,
+   "se_walkers": 0.0015645097880172608,
+   "n_walkers": 37
+  },
+  {
+   "town": "Town05",
+   "frame": 225,
+   "z0_vehicles": 0.03130075276039201,
+   "n_vehicles": 33,
+   "z0_walkers": 0.05664828680767901,
+   "se_walkers": 0.0012494750340078158,
+   "n_walkers": 85
+  },
+  {
+   "town": "Town05",
+   "frame": 250,
+   "z0_vehicles": 0.03313729925345795,
+   "n_vehicles": 26,
+   "z0_walkers": 0.06864973218289383,
+   "se_walkers": 0.0019935339630921256,
+   "n_walkers": 84
+  },
+  {
+   "town": "Town05",
+   "frame": 275,
+   "z0_vehicles": 0.04032271502763052,
+   "n_vehicles": 19,
+   "z0_walkers": 0.06679165509692331,
+   "se_walkers": 0.001083464119989849,
+   "n_walkers": 87
+  },
+  {
+   "town": "Town05",
+   "frame": 300,
+   "z0_vehicles": 0.011424692911279736,
+   "n_vehicles": 17,
+   "z0_walkers": 0.0378031955360527,
+   "se_walkers": 0.0012984898552494107,
+   "n_walkers": 54
+  },
+  {
+   "town": "Town05",
+   "frame": 325,
+   "z0_vehicles": 0.04270850353727014,
+   "n_vehicles": 8,
+   "z0_walkers": 0.06901250333549397,
+   "se_walkers": 0.0012202333296293733,
+   "n_walkers": 50
+  },
+  {
+   "town": "Town05",
+   "frame": 350,
+   "z0_vehicles": 0.049237702983228826,
+   "n_vehicles": 1,
+   "z0_walkers": 0.06210080132913053,
+   "se_walkers": 0.0017915118610985319,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town05",
+   "frame": 375,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": 0.06371338389005403,
+   "se_walkers": 0.0018428329820025981,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town05",
+   "frame": 400,
+   "z0_vehicles": 0.024372650851499505,
+   "n_vehicles": 2,
+   "z0_walkers": 0.04777776996081508,
+   "se_walkers": 0.0026058716570429123,
+   "n_walkers": 23
+  },
+  {
+   "town": "Town05",
+   "frame": 425,
+   "z0_vehicles": -0.03189479793009806,
+   "n_vehicles": 1,
+   "z0_walkers": -0.0031156715301886603,
+   "se_walkers": 0.0025033017044969147,
+   "n_walkers": 21
+  },
+  {
+   "town": "Town05",
+   "frame": 450,
+   "z0_vehicles": -0.018798639770005204,
+   "n_vehicles": 2,
+   "z0_walkers": -5.343965761020859e-05,
+   "se_walkers": 0.0017227782713601135,
+   "n_walkers": 30
+  },
+  {
+   "town": "Town05",
+   "frame": 475,
+   "z0_vehicles": -0.032114388078815836,
+   "n_vehicles": 6,
+   "z0_walkers": -0.0033111611844979733,
+   "se_walkers": 0.001704780181503055,
+   "n_walkers": 37
+  },
+  {
+   "town": "Town05",
+   "frame": 500,
+   "z0_vehicles": -0.03308753533345391,
+   "n_vehicles": 6,
+   "z0_walkers": -0.001346208129447767,
+   "se_walkers": 0.001714588447162885,
+   "n_walkers": 32
+  },
+  {
+   "town": "Town05",
+   "frame": 525,
+   "z0_vehicles": -0.02686164097182517,
+   "n_vehicles": 9,
+   "z0_walkers": 0.0006053380452358749,
+   "se_walkers": 0.0015000881505549584,
+   "n_walkers": 34
+  },
+  {
+   "town": "Town05",
+   "frame": 550,
+   "z0_vehicles": -0.022336218310976635,
+   "n_vehicles": 10,
+   "z0_walkers": 0.0023375888650117157,
+   "se_walkers": 0.0015409662660657657,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town05",
+   "frame": 575,
+   "z0_vehicles": -0.021261396844085095,
+   "n_vehicles": 10,
+   "z0_walkers": 0.0009647401512768233,
+   "se_walkers": 0.0023795776553519167,
+   "n_walkers": 28
+  },
+  {
+   "town": "Town05",
+   "frame": 600,
+   "z0_vehicles": -0.02361452682935967,
+   "n_vehicles": 11,
+   "z0_walkers": -0.0029403799519024366,
+   "se_walkers": 0.002053816860982987,
+   "n_walkers": 28
+  },
+  {
+   "town": "Town05",
+   "frame": 625,
+   "z0_vehicles": -0.016731100496833178,
+   "n_vehicles": 10,
+   "z0_walkers": -0.0015112578876074305,
+   "se_walkers": 0.0017220613198363046,
+   "n_walkers": 32
+  },
+  {
+   "town": "Town05",
+   "frame": 650,
+   "z0_vehicles": -0.01762483601400071,
+   "n_vehicles": 11,
+   "z0_walkers": 0.0018081750554512052,
+   "se_walkers": 0.0013751345739167905,
+   "n_walkers": 32
+  },
+  {
+   "town": "Town05",
+   "frame": 675,
+   "z0_vehicles": -0.02308792825855913,
+   "n_vehicles": 7,
+   "z0_walkers": 0.0045844105302962615,
+   "se_walkers": 0.0011338974350519084,
+   "n_walkers": 27
+  },
+  {
+   "town": "Town05",
+   "frame": 700,
+   "z0_vehicles": -0.024826765132915613,
+   "n_vehicles": 7,
+   "z0_walkers": 0.006588071608142349,
+   "se_walkers": 0.0022099864574469832,
+   "n_walkers": 14
+  },
+  {
+   "town": "Town05",
+   "frame": 725,
+   "z0_vehicles": 0.000985220583259718,
+   "n_vehicles": 8,
+   "z0_walkers": 0.021728546058962562,
+   "se_walkers": 0.002500513303389885,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town05",
+   "frame": 750,
+   "z0_vehicles": 0.04609148624425722,
+   "n_vehicles": 5,
+   "z0_walkers": 0.06154216903077378,
+   "se_walkers": 0.004037213572324402,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town05",
+   "frame": 775,
+   "z0_vehicles": 0.034600033597571266,
+   "n_vehicles": 6,
+   "z0_walkers": 0.05718289100317906,
+   "se_walkers": 0.0010973768171284185,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town05",
+   "frame": 800,
+   "z0_vehicles": 0.02858249893309054,
+   "n_vehicles": 6,
+   "z0_walkers": 0.05784480072746161,
+   "se_walkers": 0.0034041411515778517,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town05",
+   "frame": 825,
+   "z0_vehicles": 0.003470331546875118,
+   "n_vehicles": 9,
+   "z0_walkers": 0.016578366035812322,
+   "se_walkers": 0.001609490388185779,
+   "n_walkers": 28
+  },
+  {
+   "town": "Town05",
+   "frame": 850,
+   "z0_vehicles": -0.019651196224284684,
+   "n_vehicles": 12,
+   "z0_walkers": -0.006500961092149217,
+   "se_walkers": 0.002988867149129841,
+   "n_walkers": 25
+  },
+  {
+   "town": "Town05",
+   "frame": 875,
+   "z0_vehicles": -0.015228878377221578,
+   "n_vehicles": 9,
+   "z0_walkers": -0.0022370972060900243,
+   "se_walkers": 0.001859715159313579,
+   "n_walkers": 35
+  },
+  {
+   "town": "Town05",
+   "frame": 900,
+   "z0_vehicles": -0.04410458611476481,
+   "n_vehicles": 11,
+   "z0_walkers": -0.002900962740078746,
+   "se_walkers": 0.0018359863628462025,
+   "n_walkers": 33
+  },
+  {
+   "town": "Town05",
+   "frame": 925,
+   "z0_vehicles": -0.04488552868418286,
+   "n_vehicles": 15,
+   "z0_walkers": -0.0045251772081003495,
+   "se_walkers": 0.0037012596650077964,
+   "n_walkers": 63
+  },
+  {
+   "town": "Town05",
+   "frame": 950,
+   "z0_vehicles": -0.03520384822325534,
+   "n_vehicles": 27,
+   "z0_walkers": 0.0005431878965268538,
+   "se_walkers": 0.0017340192446210808,
+   "n_walkers": 61
+  },
+  {
+   "town": "Town05",
+   "frame": 975,
+   "z0_vehicles": -0.01959100460052649,
+   "n_vehicles": 28,
+   "z0_walkers": 0.007974289300599579,
+   "se_walkers": 0.002889965569692809,
+   "n_walkers": 23
+  },
+  {
+   "town": "Town05",
+   "frame": 1000,
+   "z0_vehicles": -0.020305565364666947,
+   "n_vehicles": 21,
+   "z0_walkers": 0.007737300308975386,
+   "se_walkers": 0.0015092815294300073,
+   "n_walkers": 48
+  },
+  {
+   "town": "Town05",
+   "frame": 1025,
+   "z0_vehicles": -0.02088153965657373,
+   "n_vehicles": 18,
+   "z0_walkers": 0.008776763784726933,
+   "se_walkers": 0.0006180391707751406,
+   "n_walkers": 43
+  },
+  {
+   "town": "Town05",
+   "frame": 1050,
+   "z0_vehicles": -0.021689322653726372,
+   "n_vehicles": 12,
+   "z0_walkers": 0.009230776376243552,
+   "se_walkers": 0.0005421336782993653,
+   "n_walkers": 38
+  },
+  {
+   "town": "Town05",
+   "frame": 1075,
+   "z0_vehicles": -0.020909178912255064,
+   "n_vehicles": 10,
+   "z0_walkers": 0.009321934520392332,
+   "se_walkers": 0.0004650210744269134,
+   "n_walkers": 36
+  },
+  {
+   "town": "Town05",
+   "frame": 1100,
+   "z0_vehicles": -0.01211607847994191,
+   "n_vehicles": 7,
+   "z0_walkers": 0.007268233890579878,
+   "se_walkers": 0.000854503038191354,
+   "n_walkers": 4
+  },
+  {
+   "town": "Town05",
+   "frame": 1125,
+   "z0_vehicles": -0.013828038106514147,
+   "n_vehicles": 5,
+   "z0_walkers": -0.004266631603240967,
+   "se_walkers": 0.004985017563225137,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town05",
+   "frame": 1150,
+   "z0_vehicles": -0.016491979152749383,
+   "n_vehicles": 3,
+   "z0_walkers": -0.009712636444576633,
+   "se_walkers": 0.0020518291440833995,
+   "n_walkers": 8
+  },
+  {
+   "town": "Town05",
+   "frame": 1175,
+   "z0_vehicles": -0.007092605577646728,
+   "n_vehicles": 3,
+   "z0_walkers": -0.006255791721175988,
+   "se_walkers": 0.0009826284180591974,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town05",
+   "frame": 1200,
+   "z0_vehicles": -0.0006387736239666375,
+   "n_vehicles": 1,
+   "z0_walkers": -0.005251583461356753,
+   "se_walkers": 0.006251870663409827,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town05",
+   "frame": 1225,
+   "z0_vehicles": -0.033935103543189765,
+   "n_vehicles": 3,
+   "z0_walkers": -0.0007761704125515211,
+   "se_walkers": 0.0037267369474785045,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town05",
+   "frame": 1250,
+   "z0_vehicles": -0.030664753033463103,
+   "n_vehicles": 4,
+   "z0_walkers": -0.0002738223040221343,
+   "se_walkers": 0.0031272714823881173,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town05",
+   "frame": 1275,
+   "z0_vehicles": -0.027456800772745094,
+   "n_vehicles": 4,
+   "z0_walkers": -0.003664638080159352,
+   "se_walkers": 0.0034110347431800243,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town05",
+   "frame": 1300,
+   "z0_vehicles": -0.025870363547403297,
+   "n_vehicles": 4,
+   "z0_walkers": -0.0059466748437873385,
+   "se_walkers": 0.0016852159042258913,
+   "n_walkers": 14
+  },
+  {
+   "town": "Town05",
+   "frame": 1325,
+   "z0_vehicles": -0.02348249712074584,
+   "n_vehicles": 8,
+   "z0_walkers": -0.007060230141675643,
+   "se_walkers": 0.0036931470283432318,
+   "n_walkers": 30
+  },
+  {
+   "town": "Town05",
+   "frame": 1350,
+   "z0_vehicles": -0.012029500903140913,
+   "n_vehicles": 9,
+   "z0_walkers": -0.005576363681330549,
+   "se_walkers": 0.0036086882456693617,
+   "n_walkers": 31
+  },
+  {
+   "town": "Town05",
+   "frame": 1375,
+   "z0_vehicles": -0.007746648886969994,
+   "n_vehicles": 6,
+   "z0_walkers": -0.0015245222332732863,
+   "se_walkers": 0.0031704427349193934,
+   "n_walkers": 26
+  },
+  {
+   "town": "Town05",
+   "frame": 1400,
+   "z0_vehicles": -0.007285539875559265,
+   "n_vehicles": 5,
+   "z0_walkers": -0.0009387634639427603,
+   "se_walkers": 0.0027000337563526716,
+   "n_walkers": 27
+  },
+  {
+   "town": "Town05",
+   "frame": 1425,
+   "z0_vehicles": -0.0019097145800453198,
+   "n_vehicles": 3,
+   "z0_walkers": -0.0016257325220500854,
+   "se_walkers": 0.0020440362452785075,
+   "n_walkers": 22
+  },
+  {
+   "town": "Town05",
+   "frame": 1450,
+   "z0_vehicles": -0.028417171128237467,
+   "n_vehicles": 2,
+   "z0_walkers": -0.0018570854841395185,
+   "se_walkers": 0.0021539698736104088,
+   "n_walkers": 21
+  },
+  {
+   "town": "Town05",
+   "frame": 1475,
+   "z0_vehicles": 0.029417052504594254,
+   "n_vehicles": 3,
+   "z0_walkers": 0.047920020426003615,
+   "se_walkers": 0.0016233689277928036,
+   "n_walkers": 19
+  },
+  {
+   "town": "Town05",
+   "frame": 1500,
+   "z0_vehicles": -0.013237411115775883,
+   "n_vehicles": 8,
+   "z0_walkers": 0.0019188174751565174,
+   "se_walkers": 0.0020192798131585333,
+   "n_walkers": 12
+  },
+  {
+   "town": "Town05",
+   "frame": 1525,
+   "z0_vehicles": -0.009468974150714536,
+   "n_vehicles": 8,
+   "z0_walkers": 0.006369612645654472,
+   "se_walkers": 0.0014512727381694374,
+   "n_walkers": 18
+  },
+  {
+   "town": "Town05",
+   "frame": 1550,
+   "z0_vehicles": -0.007384863148500289,
+   "n_vehicles": 5,
+   "z0_walkers": 0.008089896527783186,
+   "se_walkers": 0.0007389647964017418,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town05",
+   "frame": 1575,
+   "z0_vehicles": -0.0007389074038726823,
+   "n_vehicles": 3,
+   "z0_walkers": 0.01022748729276393,
+   "se_walkers": 0.0012247242263525625,
+   "n_walkers": 14
+  },
+  {
+   "town": "Town05",
+   "frame": 1600,
+   "z0_vehicles": -0.0006312704622183363,
+   "n_vehicles": 1,
+   "z0_walkers": 4.982586145401001,
+   "se_walkers": 1.7603090495982077,
+   "n_walkers": 8
+  },
+  {
+   "town": "Town05",
+   "frame": 1625,
+   "z0_vehicles": 0.036845441245514664,
+   "n_vehicles": 3,
+   "z0_walkers": 0.08274590202695557,
+   "se_walkers": 0.01628857540832213,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town05",
+   "frame": 1650,
+   "z0_vehicles": 0.03733067540716657,
+   "n_vehicles": 7,
+   "z0_walkers": 0.03947053852460139,
+   "se_walkers": 0.003472282765242189,
+   "n_walkers": 3
+  },
+  {
+   "town": "Town05",
+   "frame": 1675,
+   "z0_vehicles": 0.03518828582668407,
+   "n_vehicles": 8,
+   "z0_walkers": 0.04004373033725855,
+   "se_walkers": 0.00037705305115808577,
+   "n_walkers": 3
+  },
+  {
+   "town": "Town05",
+   "frame": 1700,
+   "z0_vehicles": 0.04139155523260476,
+   "n_vehicles": 8,
+   "z0_walkers": 0.06568338359015194,
+   "se_walkers": 0.0029107884183939485,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town05",
+   "frame": 1725,
+   "z0_vehicles": 0.037401299395581455,
+   "n_vehicles": 8,
+   "z0_walkers": 0.06376807762309233,
+   "se_walkers": 0.003158669380798608,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town05",
+   "frame": 1750,
+   "z0_vehicles": 0.044256466411329076,
+   "n_vehicles": 6,
+   "z0_walkers": 0.0684587618559658,
+   "se_walkers": 0.0013257600482624843,
+   "n_walkers": 8
+  },
+  {
+   "town": "Town05",
+   "frame": 1775,
+   "z0_vehicles": 0.0364028416237263,
+   "n_vehicles": 7,
+   "z0_walkers": 0.04975860227238047,
+   "se_walkers": 0.0052442413963620284,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town05",
+   "frame": 1800,
+   "z0_vehicles": 0.0425784418489304,
+   "n_vehicles": 5,
+   "z0_walkers": 0.060863970788300206,
+   "se_walkers": 0.0017457197541867085,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town05",
+   "frame": 1825,
+   "z0_vehicles": 0.03436589851623932,
+   "n_vehicles": 11,
+   "z0_walkers": 0.05412966622618501,
+   "se_walkers": 0.0030308495119647865,
+   "n_walkers": 23
+  },
+  {
+   "town": "Town05",
+   "frame": 1850,
+   "z0_vehicles": 0.04012148174603205,
+   "n_vehicles": 9,
+   "z0_walkers": 0.05948154375695625,
+   "se_walkers": 0.0024112606726709117,
+   "n_walkers": 23
+  },
+  {
+   "town": "Town05",
+   "frame": 1875,
+   "z0_vehicles": -0.0011643838099539537,
+   "n_vehicles": 8,
+   "z0_walkers": 0.020441072232912465,
+   "se_walkers": 0.002524202453171882,
+   "n_walkers": 27
+  },
+  {
+   "town": "Town05",
+   "frame": 1900,
+   "z0_vehicles": -0.02232775069366665,
+   "n_vehicles": 6,
+   "z0_walkers": -0.002142292157076986,
+   "se_walkers": 0.0013670452894190693,
+   "n_walkers": 37
+  },
+  {
+   "town": "Town05",
+   "frame": 1925,
+   "z0_vehicles": -0.018140417917935383,
+   "n_vehicles": 7,
+   "z0_walkers": 0.0025662159588658467,
+   "se_walkers": 0.0012537283974552622,
+   "n_walkers": 33
+  },
+  {
+   "town": "Town05",
+   "frame": 1950,
+   "z0_vehicles": -0.021019305107114614,
+   "n_vehicles": 10,
+   "z0_walkers": 0.004853605867185729,
+   "se_walkers": 0.0017191426127613045,
+   "n_walkers": 22
+  },
+  {
+   "town": "Town05",
+   "frame": 1975,
+   "z0_vehicles": -0.027508803571355843,
+   "n_vehicles": 13,
+   "z0_walkers": 0.0032960502020716064,
+   "se_walkers": 0.0019052135072223195,
+   "n_walkers": 25
+  },
+  {
+   "town": "Town05",
+   "frame": 2000,
+   "z0_vehicles": -0.020199208627190567,
+   "n_vehicles": 12,
+   "z0_walkers": -0.000584369765110489,
+   "se_walkers": 0.001774405749010195,
+   "n_walkers": 23
+  },
+  {
+   "town": "Town05",
+   "frame": 2025,
+   "z0_vehicles": 0.017168763998039634,
+   "n_vehicles": 11,
+   "z0_walkers": 0.04176355238097877,
+   "se_walkers": 0.001215022563407536,
+   "n_walkers": 20
+  },
+  {
+   "town": "Town05",
+   "frame": 2050,
+   "z0_vehicles": 0.021629230330504498,
+   "n_vehicles": 10,
+   "z0_walkers": 0.0413888910369443,
+   "se_walkers": 0.0013796025687480755,
+   "n_walkers": 15
+  },
+  {
+   "town": "Town05",
+   "frame": 2075,
+   "z0_vehicles": 0.04133583987057363,
+   "n_vehicles": 3,
+   "z0_walkers": 0.038601155674406994,
+   "se_walkers": 0.002801866458595784,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town05",
+   "frame": 2100,
+   "z0_vehicles": 0.04404818285081616,
+   "n_vehicles": 2,
+   "z0_walkers": 0.024045377969741835,
+   "se_walkers": 0.007759203127960648,
+   "n_walkers": 8
+  },
+  {
+   "town": "Town05",
+   "frame": 2125,
+   "z0_vehicles": 0.003579725351218477,
+   "n_vehicles": 2,
+   "z0_walkers": 0.02871290842692063,
+   "se_walkers": 0.0075969129304126444,
+   "n_walkers": 6
+  },
+  {
+   "town": "Town05",
+   "frame": 2150,
+   "z0_vehicles": 0.012932463616365405,
+   "n_vehicles": 5,
+   "z0_walkers": 0.027115845561444665,
+   "se_walkers": 0.0041720689354405255,
+   "n_walkers": 9
+  },
+  {
+   "town": "Town05",
+   "frame": 2175,
+   "z0_vehicles": 0.009629160837718436,
+   "n_vehicles": 6,
+   "z0_walkers": 0.022893676886853252,
+   "se_walkers": 0.00911430326292371,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town05",
+   "frame": 2200,
+   "z0_vehicles": 0.011687761691297581,
+   "n_vehicles": 6,
+   "z0_walkers": 0.04256085536768468,
+   "se_walkers": 0.005313676412403994,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town05",
+   "frame": 2225,
+   "z0_vehicles": 0.013844366208173753,
+   "n_vehicles": 5,
+   "z0_walkers": 0.05625384478538719,
+   "se_walkers": 0.008555825388201856,
+   "n_walkers": 16
+  },
+  {
+   "town": "Town05",
+   "frame": 2250,
+   "z0_vehicles": 0.015497867738836274,
+   "n_vehicles": 5,
+   "z0_walkers": 0.04788316456449001,
+   "se_walkers": 0.003877807940337793,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town05",
+   "frame": 2275,
+   "z0_vehicles": 0.018677437152478066,
+   "n_vehicles": 4,
+   "z0_walkers": 0.039747758292202846,
+   "se_walkers": 7.664851558951115e-05,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town05",
+   "frame": 2300,
+   "z0_vehicles": 0.01730348755890928,
+   "n_vehicles": 6,
+   "z0_walkers": 0.050000101281283495,
+   "se_walkers": 0.0036511736997209103,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town05",
+   "frame": 2325,
+   "z0_vehicles": 0.02217075975049571,
+   "n_vehicles": 6,
+   "z0_walkers": 0.029513359069824274,
+   "se_walkers": 0.012179350067986221,
+   "n_walkers": 4
+  },
+  {
+   "town": "Town05",
+   "frame": 2350,
+   "z0_vehicles": 0.027126197801000295,
+   "n_vehicles": 5,
+   "z0_walkers": 0.02771876255671187,
+   "se_walkers": 0.008491437273147872,
+   "n_walkers": 6
+  },
+  {
+   "town": "Town05",
+   "frame": 2375,
+   "z0_vehicles": 0.0305246441633564,
+   "n_vehicles": 4,
+   "z0_walkers": 0.025814104243983883,
+   "se_walkers": 0.005824030839267785,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town05",
+   "frame": 2400,
+   "z0_vehicles": 0.032222384647418445,
+   "n_vehicles": 4,
+   "z0_walkers": 0.028816239429735806,
+   "se_walkers": 0.004449539582568361,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town05",
+   "frame": 2425,
+   "z0_vehicles": 0.02235920951141246,
+   "n_vehicles": 5,
+   "z0_walkers": 0.0384951904416084,
+   "se_walkers": 0.0044631396147047624,
+   "n_walkers": 8
+  },
+  {
+   "town": "Town05",
+   "frame": 2450,
+   "z0_vehicles": 0.023546713946951788,
+   "n_vehicles": 7,
+   "z0_walkers": 0.05034010230059456,
+   "se_walkers": 0.0027305624299750007,
+   "n_walkers": 7
+  },
+  {
+   "town": "Town05",
+   "frame": 2475,
+   "z0_vehicles": 0.027701438641236063,
+   "n_vehicles": 6,
+   "z0_walkers": 0.052872918483948775,
+   "se_walkers": 0.0010310294230146033,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town05",
+   "frame": 2500,
+   "z0_vehicles": 0.030390141043456893,
+   "n_vehicles": 9,
+   "z0_walkers": 0.035957396030426046,
+   "se_walkers": 0.007706854190619003,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town05",
+   "frame": 2525,
+   "z0_vehicles": 0.022521575401133816,
+   "n_vehicles": 5,
+   "z0_walkers": 0.038240262598590466,
+   "se_walkers": 0.0008677979284713799,
+   "n_walkers": 6
+  },
+  {
+   "town": "Town05",
+   "frame": 2550,
+   "z0_vehicles": 0.0002414519577267349,
+   "n_vehicles": 3,
+   "z0_walkers": -0.002038807764776294,
+   "se_walkers": 0.001596952558361596,
+   "n_walkers": 6
+  },
+  {
+   "town": "Town05",
+   "frame": 2575,
+   "z0_vehicles": 0.01801704995738618,
+   "n_vehicles": 7,
+   "z0_walkers": 0.006219847322995809,
+   "se_walkers": 0.0016639810356661045,
+   "n_walkers": 5
+  },
+  {
+   "town": "Town05",
+   "frame": 2600,
+   "z0_vehicles": 0.09960426800326101,
+   "n_vehicles": 6,
+   "z0_walkers": 0.116210877895355,
+   "se_walkers": NaN,
+   "n_walkers": 1
+  },
+  {
+   "town": "Town05",
+   "frame": 2625,
+   "z0_vehicles": 1.7129677335298241,
+   "n_vehicles": 4,
+   "z0_walkers": 1.7190130765361349,
+   "se_walkers": 0.0057740674401150875,
+   "n_walkers": 4
+  },
+  {
+   "town": "Town05",
+   "frame": 2650,
+   "z0_vehicles": 4.459054839257475,
+   "n_vehicles": 6,
+   "z0_walkers": 4.466682553533723,
+   "se_walkers": 0.005858581394820876,
+   "n_walkers": 6
+  },
+  {
+   "town": "Town05",
+   "frame": 2675,
+   "z0_vehicles": 7.1836607697618415,
+   "n_vehicles": 6,
+   "z0_walkers": 7.199436068534851,
+   "se_walkers": 0.002727761721607626,
+   "n_walkers": 6
+  },
+  {
+   "town": "Town05",
+   "frame": 2700,
+   "z0_vehicles": 9.493246861155756,
+   "n_vehicles": 3,
+   "z0_walkers": 9.515622729859775,
+   "se_walkers": 0.0064149377296149925,
+   "n_walkers": 10
+  },
+  {
+   "town": "Town05",
+   "frame": 2725,
+   "z0_vehicles": 10.015728757641615,
+   "n_vehicles": 1,
+   "z0_walkers": 10.01778874505379,
+   "se_walkers": 0.0024059562483036406,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town05",
+   "frame": 2750,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": 10.019865535201474,
+   "se_walkers": 0.002270850673906656,
+   "n_walkers": 17
+  },
+  {
+   "town": "Town05",
+   "frame": 2775,
+   "z0_vehicles": NaN,
+   "n_vehicles": 0,
+   "z0_walkers": 10.021939953420816,
+   "se_walkers": 0.001522915712418927,
+   "n_walkers": 14
+  },
+  {
+   "town": "Town05",
+   "frame": 2800,
+   "z0_vehicles": 9.99054256062728,
+   "n_vehicles": 1,
+   "z0_walkers": 10.011555356243537,
+   "se_walkers": 0.0035273114921525314,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town05",
+   "frame": 2825,
+   "z0_vehicles": 9.990558514597458,
+   "n_vehicles": 1,
+   "z0_walkers": 10.010072398984605,
+   "se_walkers": 0.00314606890735505,
+   "n_walkers": 13
+  },
+  {
+   "town": "Town05",
+   "frame": 2850,
+   "z0_vehicles": 9.934288640205413,
+   "n_vehicles": 3,
+   "z0_walkers": 10.010268000948882,
+   "se_walkers": 0.002074785654634444,
+   "n_walkers": 11
+  },
+  {
+   "town": "Town05",
+   "frame": 2875,
+   "z0_vehicles": 9.922977639799887,
+   "n_vehicles": 6,
+   "z0_walkers": 9.994302342960308,
+   "se_walkers": 0.004202199113159855,
+   "n_walkers": 17
+  },
+  {
+   "town": "Town05",
+   "frame": 2900,
+   "z0_vehicles": 9.926249502603,
+   "n_vehicles": 6,
+   "z0_walkers": 9.988290321103245,
+   "se_walkers": 0.003661740069499425,
+   "n_walkers": 19
+  },
+  {
+   "town": "Town05",
+   "frame": 2925,
+   "z0_vehicles": 9.927007732072713,
+   "n_vehicles": 5,
+   "z0_walkers": 9.987894705196794,
+   "se_walkers": 0.0036328143282781415,
+   "n_walkers": 19
+  },
+  {
+   "town": "Town05",
+   "frame": 2950,
+   "z0_vehicles": 9.943043894173305,
+   "n_vehicles": 6,
+   "z0_walkers": 9.993164073042202,
+   "se_walkers": 0.00299108182993826,
+   "n_walkers": 20
+  },
+  {
+   "town": "Town05",
+   "frame": 2975,
+   "z0_vehicles": 9.960010564593274,
+   "n_vehicles": 8,
+   "z0_walkers": 9.999366305655705,
+   "se_walkers": 0.003465901707985144,
+   "n_walkers": 20
+  }
+ ]
+}

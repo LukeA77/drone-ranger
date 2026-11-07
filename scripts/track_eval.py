@@ -21,8 +21,11 @@ import numpy as np
 
 from aerialrange.detect.tiling import detect_tiled
 from aerialrange.track.evaluate import accumulate, read_ignored, read_rows, summarise
-from aerialrange.track.runner import run_sequence, run_sequence_custom
+from aerialrange.track.runner import run_sequence_custom
 from aerialrange.utils.config import REPO_ROOT, load_config
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # scripts/ultralytics_v1.py
+from ultralytics_v1 import make_tracker, run_sequence  # noqa: E402
 
 PREP = REPO_ROOT / "cache" / "visdrone" / "mot"
 
@@ -85,7 +88,9 @@ def main(argv: list[str] | None = None) -> int:
                     nms_ios=args.nms_ios,
                 )
 
-            rows, t = run_sequence_custom(detect, frames, str(REPO_ROOT / args.tracker), cmap)
+            rows, t = run_sequence_custom(
+                detect, frames, str(REPO_ROOT / args.tracker), cmap, build_tracker=make_tracker
+            )
         else:
             rows, t = run_sequence(
                 model,

@@ -22,14 +22,17 @@ import argparse
 import json
 import sys
 from datetime import UTC, datetime
+from pathlib import Path
 
 import cv2
 import numpy as np
 import pandas as pd
 
 from aerialrange.detect.evaluate import evaluate_detections
-from aerialrange.track.runner import run_sequence
 from aerialrange.utils.config import REPO_ROOT, load_config
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # scripts/ultralytics_v1.py
+from ultralytics_v1 import run_sequence  # noqa: E402
 
 AUAIR_TO_GROUP = {0: "person", 1: "vehicle", 2: "vehicle", 3: "vehicle", 6: "vehicle"}
 HEIGHT_BINS = [(0, 16), (16, 32), (32, 64), (64, 128), (128, 1e9)]

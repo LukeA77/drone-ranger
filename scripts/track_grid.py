@@ -24,6 +24,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # ultralytics_v1, also in workers
+
 HIGH = (0.15, 0.25, 0.35, 0.45, 0.55)
 NEW = (0.25, 0.35, 0.45, 0.55, 0.65)
 
@@ -47,11 +49,14 @@ def run_point(
     from aerialrange.track.evaluate import accumulate, read_ignored, read_rows, summarise
     from aerialrange.track.runner import run_sequence_custom
     from aerialrange.utils.config import REPO_ROOT
+    from ultralytics_v1 import make_tracker  # version 1's library trackers, or the project's
 
     cv2.setNumThreads(1)
     prep = REPO_ROOT / "cache" / "visdrone" / "mot" / "val"
     cache = REPO_ROOT / "cache" / "visdrone" / "dets" / dets_run / "val"
     groups = sorted(set(cmap.values()))
+    trk_ov = dict(overrides)
+    stride = int(trk_ov.pop("det_stride", 1))  # detection stride (D-610), not a tracker key
     accs: dict[str, dict] = {g: {} for g in groups}
     seconds = 0.0
     for seq in sorted(p for p in prep.iterdir() if p.is_dir()):
@@ -60,7 +65,15 @@ def run_point(
         replay = Replay(*load_sequence(cache / f"{seq.name}.npz"))
         if len(replay.dets) != len(frames):
             raise ValueError(f"{seq.name}: cache has {len(replay.dets)} frames, not {len(frames)}")
-        rows, t = run_sequence_custom(replay, frames, str(REPO_ROOT / tracker), cmap, overrides)
+        rows, t = run_sequence_custom(
+            replay,
+            frames,
+            str(REPO_ROOT / tracker),
+            cmap,
+            trk_ov,
+            det_stride=stride,
+            build_tracker=make_tracker,
+        )
         seconds += t["track_seconds"]
         ign = read_ignored(seq / "ignored.txt")
         for g in groups:

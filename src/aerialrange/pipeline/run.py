@@ -27,6 +27,7 @@ import cv2
 import numpy as np
 import pandas as pd
 
+from aerialrange.detect.factory import make_detector
 from aerialrange.pipeline.filterbank import TrackFilterBank
 from aerialrange.pipeline.overlay import draw_frame
 from aerialrange.pipeline.ranging import CameraPose, RangingModel, range_boxes
@@ -160,22 +161,19 @@ def run(
             xywh = np.column_stack([b[:, 0] + b[:, 2] / 2, b[:, 1] + b[:, 3] / 2, b[:, 2], b[:, 3]])
             return DetSet(xywh, g["score"].to_numpy(float), g["cls"].to_numpy(float))
     else:
-        from ultralytics import YOLO
-
-        yolo = YOLO(str(REPO_ROOT / det["weights"]), task="detect")
-        max_det = load_config("detector").require("max_det")
+        model_detect = make_detector(
+            det.get("kind", "yolo"),
+            REPO_ROOT / det["weights"],
+            int(det["imgsz"]),
+            float(det["score_floor"]),
+            int(load_config("detector").require("max_det")),
+            sorted(cmap),
+        )
 
         def detect(img: np.ndarray, k: int) -> DetSet:
-            r = yolo.predict(
-                img,
-                imgsz=int(det["imgsz"]),
-                classes=sorted(cmap),
-                max_det=max_det,
-                conf=float(det["score_floor"]),
-                verbose=False,
-            )[0]
-            b = r.boxes
-            return DetSet(b.xywh.cpu().numpy(), b.conf.cpu().numpy(), b.cls.cpu().numpy())
+            ltwh, score, cls = model_detect(img)
+            xywh = np.column_stack([ltwh[:, :2] + ltwh[:, 2:] / 2, ltwh[:, 2:]])
+            return DetSet(xywh, np.asarray(score, float), np.asarray(cls, float))
 
     tracker = make_tracker(
         str(REPO_ROOT / trk["config"]),

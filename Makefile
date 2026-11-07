@@ -7,7 +7,7 @@ PY ?= .venv/bin/python
 endif
 
 .PHONY: setup lint test data-check env midair-eval visdrone-prep \
-        demo docs pareto
+        demo docs pareto pi-benchmark containers platform-check
 
 setup:
 	python -m venv .venv
@@ -52,3 +52,27 @@ docs:
 # Final Pareto chart from the saved benchmark and accuracy records.
 pareto:
 	$(PY) scripts/pareto.py
+
+# Version 2 pipeline latency on a Raspberry Pi 5 (run on the device; needs only the runtime
+# dependencies and an ONNX model). FRAMES=<folder of JPEG frames> if the VisDrone validation
+# sequence is not on the device; NOTE="..." records anything else running.
+pi-benchmark:
+	$(PY) scripts/benchmark_v2.py --tag pi5 $(if $(FRAMES),--frames-dir $(FRAMES),) --note "$(NOTE)"
+
+# The runtime image for x86-64 and ARM64 (Raspberry Pi 5), built from docker/Dockerfile.
+# Needs Docker with buildx; ARM64 runs under QEMU emulation on an x86 machine.
+containers:
+	docker buildx build --platform linux/amd64 -f docker/Dockerfile -t aerialrange:amd64 --load .
+	docker buildx build --platform linux/arm64 -f docker/Dockerfile -t aerialrange:arm64 --load .
+
+# The whole pipeline in both images on the same frames and model, then the outputs compared
+# against the stated tolerances (scripts/platform_check.py). FRAMES=<folder of JPEG frames>,
+# for example a VisDrone MOT val sequence; the model is the one configs/run.yaml names.
+platform-check: containers
+	@test -n "$(FRAMES)" || { echo "FRAMES=<folder of JPEG frames> is required"; exit 1; }
+	for a in amd64 arm64; do \
+	  docker run --rm --platform linux/$$a -v "$(CURDIR)/weights:/app/weights:ro" \
+	    -v "$(abspath $(FRAMES)):/frames:ro" -v "$(CURDIR)/results/edge:/app/results/edge" \
+	    aerialrange:$$a python scripts/platform_check.py --tag $$a --frames /frames || exit 1; \
+	done
+	$(PY) scripts/platform_check.py --compare results/edge/platform_amd64.json results/edge/platform_arm64.json

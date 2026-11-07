@@ -1,0 +1,12 @@
+# Build context for docker/Dockerfile: nothing but what the image needs (the data, caches and
+# weights in this folder are hundreds of gigabytes).
+*
+!requirements-lock.txt
+!pyproject.toml
+!README.md
+!LICENSE
+!src/
+!configs/
+!scripts/
+**/__pycache__
+**/*.pyc

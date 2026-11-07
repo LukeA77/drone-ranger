@@ -12,6 +12,7 @@ tracks.csv, detections.csv (raw, before tracking) and timing.json.
 from __future__ import annotations
 
 import argparse
+import json
 import math
 import queue
 import sys
@@ -61,7 +62,19 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--config", default="run_accurate")
     ap.add_argument("--name", default="v1_accurate")
     ap.add_argument("--frames", type=int, default=N_FRAMES)
+    ap.add_argument("--allow-test", action="store_true")
+    ap.add_argument(
+        "--weights",
+        default=None,
+        help="detector weights replacing the config's (e.g. a fine-tuning fold's model)",
+    )
+    ap.add_argument("--kind", default=None, help="detector kind with --weights (yolo, rfdetr)")
+    ap.add_argument("--imgsz", type=int, default=None, help="detector input size with --weights")
     args = ap.parse_args(argv)
+    splits = json.loads((REPO_ROOT / "results" / "splits.json").read_text(encoding="utf-8"))
+    if args.town in splits["syndrone"]["splits"]["test"] and not args.allow_test:
+        print(f"{args.town} is a test town: run once, after freezing; pass --allow-test")
+        return 2
     d = load_config("data")
     store = MemberStore(
         REPO_ROOT / d.require("data_root") / d.require("syndrone_subdir"),
@@ -83,14 +96,35 @@ def main(argv: list[str] | None = None) -> int:
     cam = syndrone_camera()
     out = OUT / args.name / f"{args.town}_h{args.height}"
     dets: list[dict] = []
+    overrides: dict = {"camera": {"focal_px": cam.fx, "cx": cam.cx, "cy": cam.cy}}
+    if args.weights:
+        if not (REPO_ROOT / args.weights).is_file():
+            print(f"weights not found: {args.weights}")
+            return 1
+        overrides["detector"] = {"weights": args.weights}
+        if args.kind:
+            overrides["detector"]["kind"] = args.kind
+        if args.imgsz:
+            overrides["detector"]["imgsz"] = args.imgsz
     timing = run(
         stream_frames(store, seq, range(args.frames)),
         meta,
         out,
         config=args.config,
-        overrides={"camera": {"focal_px": cam.fx, "cx": cam.cx, "cy": cam.cy}},
+        overrides=overrides,
         detections_out=dets,
         write_video=False,
+    )
+    (out / "detector.json").write_text(
+        json.dumps(
+            {
+                "weights": args.weights or "config",
+                "kind": args.kind or "config",
+                "imgsz": args.imgsz or "config",
+                "config": args.config,
+            }
+        )
+        + "\n"
     )
     pd.DataFrame(dets, columns=["frame", "left", "top", "width", "height", "score", "cls"]).to_csv(
         out / "detections.csv", index=False

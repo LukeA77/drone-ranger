@@ -1,7 +1,8 @@
 """Run a detector once over VisDrone MOT sequences and save every frame's detections.
 
 Usage: python scripts/cache_detections.py --run B2_yolo26n_640 --weights <best.pt>
-       --class-map visdrone10 --imgsz 640 [--tiled --nms-ios 0.5] [--split val]
+       --class-map visdrone10 --imgsz 640 [--kind yolo|rfdetr] [--tiled --nms-ios 0.5]
+       [--split val]
 
 Detections go to cache/visdrone/dets/<run>/<split>/<sequence>.npz, for the tracker grid
 (scripts/track_grid.py). The score floor is the one `model.track` uses (0.1, the library's
@@ -15,12 +16,15 @@ import json
 import sys
 import time
 from datetime import UTC, datetime
+from pathlib import Path
 
-import numpy as np
-
+from aerialrange.detect.factory import KINDS
 from aerialrange.detect.tiling import detect_tiled
 from aerialrange.track.detcache import save_sequence
 from aerialrange.utils.config import REPO_ROOT, load_config
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # scripts/ultralytics_v1.py
+from ultralytics_v1 import library_version, make_detector  # noqa: E402
 
 PREP = REPO_ROOT / "cache" / "visdrone" / "mot"
 # Ultralytics 8.4.182 engine/model.py, Model.track: conf defaults to 0.1 because
@@ -34,6 +38,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--weights", required=True)
     ap.add_argument("--class-map", required=True)
     ap.add_argument("--imgsz", type=int, required=True)
+    ap.add_argument("--kind", default="yolo", choices=KINDS)
     ap.add_argument("--split", default="val", choices=["val", "test-dev"])
     ap.add_argument("--final", action="store_true")
     ap.add_argument("--tiled", action="store_true", help="B3: tiled detection (D-317)")
@@ -43,28 +48,11 @@ def main(argv: list[str] | None = None) -> int:
         print("test-dev runs once, after all settings are frozen. Use --final.")
         return 1
     import cv2
-    from ultralytics import YOLO
 
     det = load_config("detector")
     max_det = det.require("max_det")
     cmap = {int(k): v for k, v in det.require("class_maps")[args.class_map].items()}
-    model = YOLO(args.weights)
-
-    def predict(im: np.ndarray) -> tuple[np.ndarray, ...]:
-        r = model.predict(
-            im,
-            imgsz=args.imgsz,
-            classes=sorted(cmap),
-            max_det=max_det,
-            conf=TRACK_CONF,
-            verbose=False,
-        )[0]
-        xyxy = r.boxes.xyxy.cpu().numpy()
-        return (
-            np.column_stack([xyxy[:, :2], xyxy[:, 2:] - xyxy[:, :2]]),
-            r.boxes.conf.cpu().numpy(),
-            r.boxes.cls.cpu().numpy().astype(int),
-        )
+    predict = make_detector(args.kind, args.weights, args.imgsz, TRACK_CONF, max_det, sorted(cmap))
 
     tcfg = det.require("tiling") if args.tiled else None
     out_dir = REPO_ROOT / "cache" / "visdrone" / "dets" / args.run / args.split
@@ -98,8 +86,6 @@ def main(argv: list[str] | None = None) -> int:
             shapes.append(img.shape[:2])
         save_sequence(dest, dets, shapes)
         print(f"{seq.name}: {len(frames)} frames", flush=True)
-    import ultralytics
-
     meta = {
         "generated_utc": datetime.now(UTC).isoformat(timespec="seconds"),
         "run": args.run,
@@ -111,7 +97,8 @@ def main(argv: list[str] | None = None) -> int:
         "tiled": args.tiled,
         "tiling": tcfg,
         "nms_ios": args.nms_ios,
-        "ultralytics": ultralytics.__version__,
+        "kind": args.kind,
+        "library": library_version(args.kind, args.weights),
         "detect_seconds_this_call": seconds,
         "frames_this_call": n,
     }
