@@ -43,12 +43,20 @@ def _note(fig: plt.Figure, note: str | None) -> float:
     return 0.035 * len(text.splitlines()) + 0.01
 
 
-LABEL_GAP_PX = 12  # minimum vertical spacing between direct end labels
+LABEL_GAP_PX = 16  # minimum vertical spacing between direct end labels
+
+
+def _end_labels_fit(
+    fig: plt.Figure, ax: plt.Axes, ends: list[tuple[str, tuple[float, float]]]
+) -> bool:
+    """Whether every series end can carry a direct label without two labels touching."""
+    fig.canvas.draw()
+    ys = sorted(ax.transData.transform(xy)[1] for _, xy in ends)
+    return all(b - a >= LABEL_GAP_PX for a, b in zip(ys, ys[1:], strict=False))
 
 
 def _end_labels(fig: plt.Figure, ax: plt.Axes, ends: list[tuple[str, tuple[float, float]]]) -> None:
-    """Direct labels at series ends, skipping any that would collide with one already placed
-    (the legend still identifies every series, so nothing is lost)."""
+    """Direct labels at series ends, skipping any that would collide with one already placed."""
     fig.canvas.draw()
     placed: list[float] = []
     for label, (x, y) in ends:
@@ -90,6 +98,7 @@ def line_chart(
     logx: bool = False,
     logy: bool = False,
     note: str | None = None,
+    xticks: Sequence[float] | None = None,
 ) -> None:
     """Lines with optional shaded intervals. `series[name]` has x, y and optional lo, hi.
     At most three series (validated palette cap). Writes `path` (.png) and a .csv table."""
@@ -131,11 +140,16 @@ def line_chart(
         ax.set_xscale("log")
     if logy:
         ax.set_yscale("log")
+    if xticks is not None:
+        ax.set_xticks(list(xticks), [f"{v:g}" for v in xticks])
+        ax.minorticks_off()
     _style(ax, title, xlabel, ylabel)
     ax.margins(x=0.18)  # room for direct end labels
-    if len(series) >= 2:
+    # Direct labels when they all fit, otherwise a legend: never both, never overlapping.
+    if ends and _end_labels_fit(fig, ax, ends):
+        _end_labels(fig, ax, ends)
+    elif len(series) >= 2:
         ax.legend(frameon=False, fontsize=8, labelcolor=TEXT_2)
-    _end_labels(fig, ax, ends)
     bottom = _note(fig, note)
     fig.tight_layout(rect=(0, bottom, 1, 1))
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -224,25 +238,42 @@ def pareto_chart(
     ylabel: str,
     note: str | None = None,
     logx: bool = False,
+    reference: Sequence[int] = (),
+    label_all: bool = False,
 ) -> None:
     """Accuracy against latency. Frontier points in series slot 1, joined and
     directly labelled (a label that would collide with one already placed is skipped; the CSV
-    lists every point); dominated points muted and unlabelled. Budgets are dashed vertical
+    lists every point); dominated points muted and unlabelled unless `label_all`. Points in
+    `reference` (indices) are drawn hollow and labelled, and take no part in the frontier (for
+    options shown for comparison that cannot be chosen). Budgets are dashed vertical
     reference lines labelled in text colour."""
     fig, ax = plt.subplots(figsize=(6.4, 4.4), dpi=150)
     fig.patch.set_facecolor(SURFACE)
-    front = pareto_frontier(list(zip(x, y, strict=True)))
-    others = [i for i in range(len(x)) if i not in front]
-    ax.scatter(
-        [x[i] for i in others],
-        [y[i] for i in others],
-        s=MARKER_PT**2,
-        color=MUTED,
-        edgecolor=SURFACE,
-        linewidth=1.0,
-        zorder=2,
-        label="Dominated",
-    )
+    pool = [i for i in range(len(x)) if i not in reference]
+    front = [pool[k] for k in pareto_frontier([(x[i], y[i]) for i in pool])]
+    others = [i for i in pool if i not in front]
+    if reference:
+        ax.scatter(
+            [x[i] for i in reference],
+            [y[i] for i in reference],
+            s=MARKER_PT**2,
+            facecolor=SURFACE,
+            edgecolor=MUTED,
+            linewidth=1.4,
+            zorder=2,
+            label="Reference (not selectable)",
+        )
+    if others:
+        ax.scatter(
+            [x[i] for i in others],
+            [y[i] for i in others],
+            s=MARKER_PT**2,
+            color=MUTED,
+            edgecolor=SURFACE,
+            linewidth=1.0,
+            zorder=2,
+            label="Dominated",
+        )
     ax.plot(
         [x[i] for i in front],
         [y[i] for i in front],
@@ -271,16 +302,17 @@ def pareto_chart(
     if logx:
         ax.set_xscale("log")
         lo, hi = min([*x, *budgets.values()]) * 0.8, max(x) * 1.25
-        ticks = [t for t in (20, 33, 50, 100, 200, 500, 1000) if lo <= t <= hi]
+        ticks = [t for t in (20, 33, 50, 100, 200, 500, 1000, 2000, 5000, 10000) if lo <= t <= hi]
         ax.set_xlim(lo, hi)
         ax.set_xticks(ticks, [str(t) for t in ticks])
         ax.minorticks_off()
     else:
         ax.set_xlim(left=0)
-    ax.legend(frameon=False, fontsize=8, labelcolor=TEXT_2, loc="lower left")
+    ax.legend(frameon=False, fontsize=8, labelcolor=TEXT_2, loc="lower right")
     fig.canvas.draw()
     placed: list[tuple[float, float]] = []
-    for i in front:
+    labelled = [*front, *reference, *(others if label_all else [])]
+    for i in labelled:
         px, py = ax.transData.transform((x[i], y[i]))
         if any(abs(px - qx) < 120 and abs(py - qy) < 14 for qx, qy in placed):
             continue

@@ -1,0 +1,25 @@
+# The project's own tracker with the version 2 detector, D-FINE N at 640 (D-729): configs/
+# trackers/motion.yaml with the two confidence thresholds chosen for this detector on VisDrone
+# MOT validation by version 1's grid and rule (D-319;
+# results/visdrone/val/grid_dfine_n_640__motion.json). Frozen for the one-time test-dev run.
+tracker_type: motion
+high: 0.25          # validation grid, D-319
+low: 0.1            # also the detection score floor
+new: 0.65           # validation grid, D-319
+match_cost: 0.8
+second_cost: 0.5
+tentative_cost: 0.7
+fuse_score: true
+max_lost: 30        # frames
+duplicate_iou: 0.85
+cmc: true
+cmc_downscale: 8    # the pipeline's setting (D-609)
+cmc_corners: 400    # D-713
+cmc_min_distance_px: 6.0
+cmc_window_px: 21
+cmc_levels: 3
+cmc_check_back: false  # D-713: RANSAC alone rejects the outliers as well, at half the cost
+std_pos: 0.05       # DeepSORT, 1/20
+std_vel: 0.00625    # DeepSORT, 1/160
+class_groups: null
+iou_buffer: 0.0

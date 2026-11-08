@@ -1,0 +1,120 @@
+{
+ "generated_utc": "2026-11-08T09:36:24+00:00",
+ "tag": "cand_v1_960",
+ "config": "run",
+ "detector": {
+  "kind": "yolo",
+  "weights": "weights/B2_yolo26n_960_rect.onnx",
+  "imgsz": 960,
+  "score_floor": 0.1,
+  "runner": "YoloOnnx",
+  "input_hw": [
+   544,
+   960
+  ]
+ },
+ "tracker": {
+  "config": "configs/trackers/motion.yaml",
+  "gmc_downscale": 8,
+  "det_stride": 2
+ },
+ "frames": "MOT val uav0000086_00000_v (1344x756), in order; cycled per repeat",
+ "not_timed": "ranging and Kalman filter; overlay drawing",
+ "smoke": false,
+ "machine": {
+  "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+  "machine": "AMD64",
+  "logical_cores": 16,
+  "os": "Windows-11-10.0.26200-SP0",
+  "onnxruntime": "1.31.0",
+  "onnxruntime_threads": "default",
+  "opencv": "5.0.0"
+ },
+ "other_processes": "VS Code open; no other jobs",
+ "background_measured": {
+  "other_processes_cpu_percent_of_one_core": 45.9,
+  "busiest": [
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 13.6
+   },
+   {
+    "name": "System",
+    "cpu_percent": 4.9
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 3.9
+   },
+   {
+    "name": "EpicGamesLauncher.exe",
+    "cpu_percent": 3.6
+   },
+   {
+    "name": "EOSOverlayRenderer-Win64-Shipping.exe",
+    "cpu_percent": 2.9
+   }
+  ],
+  "window_s": 3.0
+ },
+ "stages": {
+  "read": {
+   "median_ms": 10.887999960687011,
+   "mean_ms": 14.527464667399828,
+   "p95_ms": 26.08737997652497,
+   "p99_ms": 30.717771960189566,
+   "max_ms": 35.387300013098866
+  },
+  "detect": {
+   "median_ms": 29.94490001583472,
+   "mean_ms": 35.35061044366254,
+   "p95_ms": 77.57014501839875,
+   "p99_ms": 80.79040397016797,
+   "max_ms": 85.59390000300482
+  },
+  "track": {
+   "median_ms": 5.884599988348782,
+   "mean_ms": 5.62310988885454,
+   "p95_ms": 7.510825025383383,
+   "p99_ms": 8.095317999250256,
+   "max_ms": 10.069400013890117
+  },
+  "end_to_end": {
+   "median_ms": 57.26970004616305,
+   "mean_ms": 55.50118499991691,
+   "p95_ms": 104.57966501999181,
+   "p99_ms": 109.08777906035539,
+   "max_ms": 121.3029000791721
+  }
+ },
+ "n_samples": 900,
+ "throughput_fps": 18.017633317225517,
+ "end_to_end_median_by_repeat_ms": [
+  59.4598000170663,
+  46.39854998094961,
+  46.06020002393052
+ ],
+ "peak_rss_mb": 241.5546875,
+ "protocol": {
+  "n_warmup": 20,
+  "n_timed": 300,
+  "n_repeats": 3
+ },
+ "detect_split_median_ms": {
+  "preprocess": 14.295799977844581,
+  "inference": 49.778199987486005,
+  "postprocess": 5.373149993829429
+ },
+ "budget": {
+  "30_fps": {
+   "budget_ms": 33.333333333333336,
+   "meets_at_median": false,
+   "meets_at_p99": false
+  },
+  "10_fps": {
+   "budget_ms": 100.0,
+   "meets_at_median": true,
+   "meets_at_p99": false
+  }
+ }
+}

@@ -1,12 +1,15 @@
 """INT8 quantisation of the exported detector with ONNX Runtime (D-608).
 
-Usage: python scripts/quantize_onnx.py --onnx weights/best_960_rect.onnx [--n-calib 100]
+Usage: python scripts/quantize_onnx.py --onnx weights/best_960_rect.onnx [--kind yolo]
+       [--n-calib 100]
 
 Writes, next to the FP32 model: `<stem>_int8dyn.onnx` (dynamic: INT8 weights, activations
 quantised at run time; no calibration data) and `<stem>_int8static.onnx` (static, QDQ format,
 per-channel INT8 weights and UINT8 activations, calibrated on `--n-calib` MOT val frames drawn
-with the project seed). Calibration frames get the same letterbox the library applies at
-inference (to the model's fixed input shape) and the same scaling to [0, 1]. Validation frames
+with the project seed). Calibration frames are prepared exactly as at inference: for YOLO the
+letterbox the library applies (to the model's fixed input shape) and scaling to [0, 1]; for
+RF-DETR and D-FINE the package runner's own preprocessing (resize, and for RF-DETR ImageNet
+normalisation; `aerialrange.detect.onnx_detectors`). Validation frames
 only; no test data. Accuracy and speed of each variant are measured separately
 (detect_eval.py, track_eval.py, benchmark_pipeline.py).
 """
@@ -42,6 +45,7 @@ def letterbox(img: np.ndarray, h: int, w: int) -> np.ndarray:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--onnx", required=True)
+    ap.add_argument("--kind", choices=["yolo", "rfdetr", "dfine"], default="yolo")
     ap.add_argument("--n-calib", type=int, default=100)
     ap.add_argument(
         "--head-fp32",
@@ -75,6 +79,17 @@ def main(argv: list[str] | None = None) -> int:
     rng = np.random.default_rng(load_config("project").require("seed"))
     pick = sorted(rng.choice(len(frames), size=min(args.n_calib, len(frames)), replace=False))
 
+    if args.kind == "yolo":
+
+        def prepare(img: np.ndarray) -> np.ndarray:
+            return letterbox(img, h, w)
+
+    else:
+        from aerialrange.detect.onnx_detectors import DFINEOnnx, RFDETROnnx
+
+        runner = (RFDETROnnx if args.kind == "rfdetr" else DFINEOnnx)(src, score_floor=0.0)
+        prepare = runner.preprocess
+
     class Reader(CalibrationDataReader):
         def __init__(self) -> None:
             self.it = iter(pick)
@@ -83,12 +98,29 @@ def main(argv: list[str] | None = None) -> int:
             k = next(self.it, None)
             if k is None:
                 return None
-            return {inp.name: letterbox(cv2.imread(str(frames[k])), h, w)}
+            return {inp.name: prepare(cv2.imread(str(frames[k])))}
 
-    dyn = src.with_name(src.stem + "_int8dyn.onnx")
-    quantize_dynamic(str(pre), str(dyn), weight_type=QuantType.QInt8)
     keep = [n.name for n in model.graph.node if args.head_fp32 and args.head_fp32 in n.name]
-    sta = src.with_name(src.stem + ("_int8static_headfp32.onnx" if keep else "_int8static.onnx"))
+    # With --head-fp32 the dynamic model keeps the same nodes in FP32, under its own name.
+    dyn = src.with_name(
+        src.stem + ("_int8dyn_headfp32.onnx" if args.head_fp32 else "_int8dyn.onnx")
+    )
+    quantize_dynamic(str(pre), str(dyn), weight_type=QuantType.QInt8, nodes_to_exclude=keep)
+    if args.kind != "yolo":
+        # Only products of an activation with a 2-D weight matrix are quantised. Attention
+        # products (two activations, or a tensor the pre-processing folded from constants,
+        # as in the first decoder layer's self-attention) cannot run on ONNX Runtime's CPU
+        # kernel with per-channel parameters, and attention is the part of a transformer most
+        # sensitive to 8-bit rounding, so they stay in FP32.
+        pre_model = onnx.load(str(pre))
+        dims = {t.name: len(t.dims) for t in pre_model.graph.initializer}
+        keep += [
+            n.name
+            for n in pre_model.graph.node
+            if n.op_type == "MatMul" and not any(dims.get(i) == 2 for i in n.input)
+        ]
+    tag = "_int8static_headfp32.onnx" if args.head_fp32 else "_int8static.onnx"
+    sta = src.with_name(src.stem + tag)
     quantize_static(
         str(pre),
         str(sta),
@@ -102,10 +134,12 @@ def main(argv: list[str] | None = None) -> int:
     pre.unlink(missing_ok=True)
     rec = {
         "fp32": src.name,
+        "kind": args.kind,
         "input": [int(h), int(w)],
         "int8_dynamic": dyn.name,
         "int8_static": sta.name,
-        "static_nodes_kept_fp32": len(keep),
+        "nodes_kept_fp32": len(keep),
+        "head_fp32": args.head_fp32,
         "calibration_frames": [
             str(Path(frames[k]).relative_to(REPO_ROOT).as_posix()) for k in pick
         ],

@@ -56,4 +56,4 @@ Ristani, E., Solera, F., Zou, R., Cucchiara, R. and Tomasi, C. (2016) 'Performan
 Zhang, Y., Sun, P., Jiang, Y. et al. (2022) 'ByteTrack: multi-object tracking by associating every detection box', *European Conference on Computer Vision (ECCV)*. arXiv:2110.06864.
 Zhu, P., Wen, L., Du, D., Bian, X., Fan, H., Hu, Q. and Ling, H. (2021) 'Detection and tracking meet drones challenge', *IEEE Transactions on Pattern Analysis and Machine Intelligence*, 44(11), pp. 7380-7399. arXiv:2001.06303.
 
-Datasets: VisDrone2019 (no stated licence; research evaluation only), Mid-Air (CC BY-NC-SA 4.0), AU-AIR (used as non-commercial, attributed). Software: Ultralytics (AGPL-3.0).
+Datasets: VisDrone2019 (no stated licence; research evaluation only), Mid-Air (CC BY-NC-SA 4.0), AU-AIR (used as non-commercial, attributed). Software: D-FINE (Apache-2.0) for version 2; Ultralytics (AGPL-3.0) for version 1. Code licence: Apache-2.0.

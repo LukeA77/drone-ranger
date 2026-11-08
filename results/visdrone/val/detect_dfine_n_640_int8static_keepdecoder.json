@@ -1,0 +1,107 @@
+{
+ "generated_utc": "2026-11-08T12:58:01+00:00",
+ "run": "dfine_n_640_int8static_headfp32",
+ "split": "val",
+ "weights": "weights/dfine_n_640_int8static_headfp32.onnx",
+ "class_map": "visdrone10",
+ "imgsz": 640,
+ "tiled": false,
+ "include_full": false,
+ "tile": null,
+ "overlap": null,
+ "frame_stride": 10,
+ "n_images": 288,
+ "iou_match": 0.5,
+ "max_det": 1000,
+ "kind": "dfine",
+ "conf_floor": 0.25,
+ "library": {
+  "onnxruntime": "1.31.0"
+ },
+ "seconds_per_image_wall": 0.1417546836811299,
+ "timing_note": "Wall time, not the latency benchmark protocol (D-601).",
+ "results": {
+  "person": {
+   "ap50": {
+    "ap": 0.4235174711152854,
+    "n_gt": 5096,
+    "n_det": 13731,
+    "max_recall": 0.6177394034536892
+   },
+   "ap50_95": 0.14747823124407264,
+   "by_height": {
+    "0-16": {
+     "ap": 0.02288228822882288,
+     "n_gt": 19,
+     "n_det": 130,
+     "max_recall": 0.21052631578947367
+    },
+    "16-32": {
+     "ap": 0.041332739945569796,
+     "n_gt": 392,
+     "n_det": 2597,
+     "max_recall": 0.28061224489795916
+    },
+    "32-64": {
+     "ap": 0.26980361897552674,
+     "n_gt": 2082,
+     "n_det": 5447,
+     "max_recall": 0.5024015369836695
+    },
+    "64-128": {
+     "ap": 0.6027112518149622,
+     "n_gt": 2366,
+     "n_det": 5240,
+     "max_recall": 0.760777683854607
+    },
+    "128-inf": {
+     "ap": 0.710153665536937,
+     "n_gt": 237,
+     "n_det": 317,
+     "max_recall": 0.7932489451476793
+    }
+   }
+  },
+  "vehicle": {
+   "ap50": {
+    "ap": 0.48066831216509814,
+    "n_gt": 4081,
+    "n_det": 6798,
+    "max_recall": 0.5697133055623622
+   },
+   "ap50_95": 0.2609177662773213,
+   "by_height": {
+    "0-16": {
+     "ap": 0.0,
+     "n_gt": 1,
+     "n_det": 201,
+     "max_recall": 0.0
+    },
+    "16-32": {
+     "ap": 0.2208839235542174,
+     "n_gt": 775,
+     "n_det": 1587,
+     "max_recall": 0.3935483870967742
+    },
+    "32-64": {
+     "ap": 0.3691034994878529,
+     "n_gt": 1674,
+     "n_det": 2504,
+     "max_recall": 0.46535244922341695
+    },
+    "64-128": {
+     "ap": 0.7065187129653896,
+     "n_gt": 1159,
+     "n_det": 1956,
+     "max_recall": 0.7860224331320104
+    },
+    "128-inf": {
+     "ap": 0.6715910659311733,
+     "n_gt": 472,
+     "n_det": 550,
+     "max_recall": 0.6991525423728814
+    }
+   }
+  }
+ }
+}

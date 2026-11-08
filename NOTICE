@@ -1,0 +1,16 @@
+Drone Ranger
+Copyright 2026 Luke Andrew
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It includes software developed by others:
+
+- src/aerialrange/track/hota.py: the HOTA metric, vendored from TrackEval
+  (https://github.com/JonathonLuiten/TrackEval), MIT License,
+  Copyright (c) 2020 Jonathon Luiten. The full MIT notice is reproduced in that file.
+
+Model weights and datasets are not part of this licence. Weights trained on VisDrone are for
+research and evaluation only; each dataset is used under its own terms (README, "Datasets and
+credits"). Version 1's reproduction scripts (scripts/ultralytics_v1.py and the scripts that
+import it) need Ultralytics, which is AGPL-3.0; installing it (requirements-v1.txt) and running
+those scripts is subject to AGPL-3.0 for that combination.

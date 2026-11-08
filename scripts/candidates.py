@@ -5,7 +5,8 @@ Usage: python scripts/candidates.py
 For each candidate in CANDIDATES that has been scored (scripts/queues/score_candidate.sh),
 collects from saved results only:
 - detection AP50 and AP50:95 per group on MOT val frames (results/visdrone/val/detect_*.json,
-  same protocol and score floor for every detector, D-719);
+  same protocol and score floor for every detector, D-719), and small-person detection: AP50
+  and recall at the score floor for people 16 to 32 px tall;
 - tracking with the project's tracker tuned for that detector on version 1's grid and rule
   (results/visdrone/val/grid_<dets>__motion.json, D-319): mean IDF1 and MOTA, per group, and
   person recall at the selected thresholds;
@@ -105,6 +106,11 @@ def main() -> int:
                 "ap50": {g: res[g]["ap50"]["ap"] for g in groups},
                 "ap50_95": {g: res[g]["ap50_95"] for g in groups},
                 "det_max_recall": {g: res[g]["ap50"]["max_recall"] for g in groups},
+                "person_16_32px": {
+                    "ap50": res["person"]["by_height"]["16-32"]["ap"],
+                    "recall": res["person"]["by_height"]["16-32"]["max_recall"],
+                    "n_gt": res["person"]["by_height"]["16-32"]["n_gt"],
+                },
                 "tracker_thresholds": sel,
                 "mean_idf1": point["mean_idf1"],
                 "mean_mota": point["mean_mota"],
@@ -148,13 +154,19 @@ def main() -> int:
             "Mean IDF1 on VisDrone val",
             note="Estimated, not measured: laptop timings scaled by a published Pi 5 timing of a "
             "reference model (D-723); range 0.75 to 1.5 times. Detector network only. "
-            "Accuracy: development numbers, the project's tracker tuned per detector.",
+            "Accuracy: development numbers, the project's tracker tuned per detector. "
+            "Version 1's detector is AGPL-licensed and shown for reference only.",
+            logx=True,
+            reference=[i for i, r in enumerate(timed) if r["kind"] == "yolo"],
+            label_all=True,
         )
     for r in rows:
         pi_ms = f"{r['pi5_estimate_ms']:.0f}" if r["pi5_estimate_ms"] else "-"
         print(
             f"{r['label']:24s} person AP50 {r['ap50']['person']:.3f}  vehicle AP50 "
-            f"{r['ap50']['vehicle']:.3f}  mean IDF1 {r['mean_idf1']:.3f}  Pi 5 ~{pi_ms} ms"
+            f"{r['ap50']['vehicle']:.3f}  person 16-32 px recall "
+            f"{r['person_16_32px']['recall']:.3f}  mean IDF1 {r['mean_idf1']:.3f}  "
+            f"Pi 5 ~{pi_ms} ms"
         )
     return 0
 

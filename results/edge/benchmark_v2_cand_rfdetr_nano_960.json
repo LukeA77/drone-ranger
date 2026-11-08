@@ -1,0 +1,120 @@
+{
+ "generated_utc": "2026-11-08T09:55:05+00:00",
+ "tag": "cand_rfdetr_nano_960",
+ "config": "run",
+ "detector": {
+  "kind": "rfdetr",
+  "weights": "weights/rfdetr_nano_960.onnx",
+  "imgsz": 960,
+  "score_floor": 0.1,
+  "runner": "RFDETROnnx",
+  "input_hw": [
+   960,
+   960
+  ]
+ },
+ "tracker": {
+  "config": "configs/trackers/motion.yaml",
+  "gmc_downscale": 8,
+  "det_stride": 2
+ },
+ "frames": "MOT val uav0000086_00000_v (1344x756), in order; cycled per repeat",
+ "not_timed": "ranging and Kalman filter; overlay drawing",
+ "smoke": false,
+ "machine": {
+  "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+  "machine": "AMD64",
+  "logical_cores": 16,
+  "os": "Windows-11-10.0.26200-SP0",
+  "onnxruntime": "1.31.0",
+  "onnxruntime_threads": "default",
+  "opencv": "5.0.0"
+ },
+ "other_processes": "VS Code open; no other jobs",
+ "background_measured": {
+  "other_processes_cpu_percent_of_one_core": 65.3,
+  "busiest": [
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 11.3
+   },
+   {
+    "name": "System",
+    "cpu_percent": 9.8
+   },
+   {
+    "name": "MsMpEng.exe",
+    "cpu_percent": 7.8
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 6.5
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 4.9
+   }
+  ],
+  "window_s": 3.0
+ },
+ "stages": {
+  "read": {
+   "median_ms": 9.836650016950443,
+   "mean_ms": 10.220033334464663,
+   "p95_ms": 11.757955007487908,
+   "p99_ms": 12.146883995155804,
+   "max_ms": 13.52259999839589
+  },
+  "detect": {
+   "median_ms": 772.1031499968376,
+   "mean_ms": 835.0532392229393,
+   "p95_ms": 1744.502455019392,
+   "p99_ms": 1829.4654000090668,
+   "max_ms": 1899.2132999701425
+  },
+  "track": {
+   "median_ms": 6.532800005516037,
+   "mean_ms": 6.308277778961282,
+   "p95_ms": 9.01101003109943,
+   "p99_ms": 9.636812975513749,
+   "max_ms": 12.942000001203269
+  },
+  "end_to_end": {
+   "median_ms": 791.2373500003014,
+   "mean_ms": 851.5815503363652,
+   "p95_ms": 1761.7502000270179,
+   "p99_ms": 1849.0909269481199,
+   "max_ms": 1917.2324999817647
+  }
+ },
+ "n_samples": 900,
+ "throughput_fps": 1.1742856566173976,
+ "end_to_end_median_by_repeat_ms": [
+  794.2831000545993,
+  795.7993999880273,
+  790.4695500328671
+ ],
+ "peak_rss_mb": 993.02734375,
+ "protocol": {
+  "n_warmup": 20,
+  "n_timed": 300,
+  "n_repeats": 3
+ },
+ "detect_split_median_ms": {
+  "preprocess": 73.87655001366511,
+  "inference": 1591.4959000074305,
+  "postprocess": 0.5722000205423683
+ },
+ "budget": {
+  "30_fps": {
+   "budget_ms": 33.333333333333336,
+   "meets_at_median": false,
+   "meets_at_p99": false
+  },
+  "10_fps": {
+   "budget_ms": 100.0,
+   "meets_at_median": false,
+   "meets_at_p99": false
+  }
+ }
+}

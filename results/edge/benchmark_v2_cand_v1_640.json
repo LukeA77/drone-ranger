@@ -1,0 +1,120 @@
+{
+ "generated_utc": "2026-11-08T09:37:05+00:00",
+ "tag": "cand_v1_640",
+ "config": "run",
+ "detector": {
+  "kind": "yolo",
+  "weights": "weights/B2_yolo26n_960w_640_rect.onnx",
+  "imgsz": 640,
+  "score_floor": 0.1,
+  "runner": "YoloOnnx",
+  "input_hw": [
+   384,
+   640
+  ]
+ },
+ "tracker": {
+  "config": "configs/trackers/motion.yaml",
+  "gmc_downscale": 8,
+  "det_stride": 2
+ },
+ "frames": "MOT val uav0000086_00000_v (1344x756), in order; cycled per repeat",
+ "not_timed": "ranging and Kalman filter; overlay drawing",
+ "smoke": false,
+ "machine": {
+  "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+  "machine": "AMD64",
+  "logical_cores": 16,
+  "os": "Windows-11-10.0.26200-SP0",
+  "onnxruntime": "1.31.0",
+  "onnxruntime_threads": "default",
+  "opencv": "5.0.0"
+ },
+ "other_processes": "VS Code open; no other jobs",
+ "background_measured": {
+  "other_processes_cpu_percent_of_one_core": 86.9,
+  "busiest": [
+   {
+    "name": "chrome.exe",
+    "cpu_percent": 14.3
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 13.6
+   },
+   {
+    "name": "chrome.exe",
+    "cpu_percent": 11.4
+   },
+   {
+    "name": "System",
+    "cpu_percent": 5.8
+   },
+   {
+    "name": "svchost.exe",
+    "cpu_percent": 4.9
+   }
+  ],
+  "window_s": 3.0
+ },
+ "stages": {
+  "read": {
+   "median_ms": 9.57044999813661,
+   "mean_ms": 9.896897332574655,
+   "p95_ms": 11.270934966159984,
+   "p99_ms": 12.042468019062653,
+   "max_ms": 12.847600039094687
+  },
+  "detect": {
+   "median_ms": 13.079199998173863,
+   "mean_ms": 18.09456277755089,
+   "p95_ms": 39.774560046498664,
+   "p99_ms": 41.289998046122484,
+   "max_ms": 43.992599996272475
+  },
+  "track": {
+   "median_ms": 4.9932500114664435,
+   "mean_ms": 5.273917111076622,
+   "p95_ms": 6.954209983814508,
+   "p99_ms": 7.440421017818153,
+   "max_ms": 8.695000025909394
+  },
+  "end_to_end": {
+   "median_ms": 27.523400000063702,
+   "mean_ms": 33.265377221202165,
+   "p95_ms": 56.97685494669713,
+   "p99_ms": 58.92355005489662,
+   "max_ms": 61.5251999697648
+  }
+ },
+ "n_samples": 900,
+ "throughput_fps": 30.06128544253019,
+ "end_to_end_median_by_repeat_ms": [
+  31.800100055988878,
+  27.523400000063702,
+  31.15295001771301
+ ],
+ "peak_rss_mb": 184.43359375,
+ "protocol": {
+  "n_warmup": 20,
+  "n_timed": 300,
+  "n_repeats": 3
+ },
+ "detect_split_median_ms": {
+  "preprocess": 6.731400033459067,
+  "inference": 24.837200006004423,
+  "postprocess": 4.712800000561401
+ },
+ "budget": {
+  "30_fps": {
+   "budget_ms": 33.333333333333336,
+   "meets_at_median": true,
+   "meets_at_p99": false
+  },
+  "10_fps": {
+   "budget_ms": 100.0,
+   "meets_at_median": true,
+   "meets_at_p99": true
+  }
+ }
+}

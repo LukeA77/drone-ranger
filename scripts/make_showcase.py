@@ -5,9 +5,11 @@ story and the dataset credits in the post).
 Usage: python scripts/make_showcase.py [--only 1 3]
 
 Writes to cache/video/showcase/ (dataset imagery, not committed, D-323):
-  01_tracking.mp4        fine-tuned detector + tuned BoT-SORT on four VisDrone test-dev clips
-                         (saved tracks of the one-time test run);
+  01_tracking.mp4        version 1: fine-tuned detector + tuned BoT-SORT on four VisDrone
+                         test-dev clips (saved tracks of the one-time test run);
                          a box and identity number per track, one colour per identity
+  06_tracking_v2.mp4     version 2: D-FINE N and the project's tracker on the same four clips
+                         (saved tracks of version 2's one-time test run, D-730)
   02_before_after.mp4    two validation clips side by side: pretrained (left), fine-tuned (right);
                          validation, because the pretrained baseline was never run on test-dev
   03_ranging_oblique.mp4 AU-AIR held-out clip 20 (frames 40-158): range +/- sigma per vehicle,
@@ -69,6 +71,7 @@ VIS_RUNS = ("B0_yolo26n_640_botsort_cmc", "B2_yolo26n_960_tuned")
 # Clip 01 uses the saved tracks of the one-time test-dev run (frozen settings; nothing is re-run
 # on test data). Chosen for clarity, not typicality: the README quotes the test-set scores.
 TEST_RUN = "B2_yolo26n_960_tuned_botsort_cmc"
+TEST_RUN_V2 = "dfine_n_640__motion_dfine_n_640"
 TEST_CLIPS = [
     ("uav0000297_02761_v", 1, 200),
     ("uav0000073_00600_v", 1, 200),
@@ -154,9 +157,9 @@ def frame_paths(seq: str, split: str = "val") -> list:
     return sorted((REPO_ROOT / info["frame_dir"]).glob("*.jpg"))
 
 
-def clip_tracking(wr: v.Writer) -> dict:
+def clip_tracking(wr: v.Writer, run: str = TEST_RUN) -> dict:
     for n, (seq, a, b) in enumerate(TEST_CLIPS):
-        tr, paths = vis_tracks(TEST_RUN, seq, "test-dev"), frame_paths(seq, "test-dev")
+        tr, paths = vis_tracks(run, seq, "test-dev"), frame_paths(seq, "test-dev")
         for f in range(a, b + 1):
             src = cv2.imread(str(paths[f - 1]))
             s = HD[0] / src.shape[1]
@@ -165,7 +168,7 @@ def clip_tracking(wr: v.Writer) -> dict:
             if f == a and n:
                 wr.crossfade(img, 0.5)
             wr.write(img)
-    return {"run": TEST_RUN, "split": "test-dev", "clips": TEST_CLIPS}
+    return {"run": run, "split": "test-dev", "clips": TEST_CLIPS}
 
 
 def clip_before_after(wr: v.Writer) -> dict:
@@ -297,6 +300,7 @@ CLIPS = {
     3: ("03_ranging_oblique", HD, lambda wr: clip_ranging(wr, 3)),
     4: ("04_ranging_overhead", HD, lambda wr: clip_ranging(wr, 4)),
     5: ("05_range_flag", (HD[1], HD[1]), clip_flag),
+    6: ("06_tracking_v2", HD, lambda wr: clip_tracking(wr, TEST_RUN_V2)),
 }
 
 

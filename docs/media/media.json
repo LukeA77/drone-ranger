@@ -46,5 +46,13 @@
   "width": 800,
   "fps": 10,
   "size_mb": 1.46
+ },
+ "tracking_v2_hero": {
+  "source": "cache/video/showcase/06_tracking_v2.mp4",
+  "start_s": 0.2,
+  "seconds": 7.0,
+  "width": 900,
+  "fps": 12,
+  "size_mb": 5.86
  }
 }

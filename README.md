@@ -3,19 +3,29 @@
 
 # Drone Ranger
 
-**Detect and track people and vehicles from a single drone camera, estimate how far away each one is with an error bar, and run on a laptop CPU.**
+**Detect and track people and vehicles from a single drone camera, estimate how far away each one is with an error bar; built to run on a Raspberry Pi 5 with no GPU.**
 
 **[Luke Andrew](https://lukeandrew.dev)**
 
 ![Python 3.12](https://img.shields.io/badge/python-3.12-3776ab)
-![Licence AGPL-3.0](https://img.shields.io/badge/licence-AGPL--3.0--only-2a78d6)
-![Runs on CPU](https://img.shields.io/badge/runs%20on-laptop%20CPU-1baf7a)
+![Licence Apache-2.0](https://img.shields.io/badge/licence-Apache--2.0-2a78d6)
+![Raspberry Pi 5, ARM64](https://img.shields.io/badge/target-Raspberry%20Pi%205%20%C2%B7%20ARM64-c51a4a)
+![CPU only](https://img.shields.io/badge/runs%20on-CPU%20only-1baf7a)
 
-<img src="docs/media/tracking_hero.webp" width="900" alt="Busy city crossing seen from a drone: every car and pedestrian has a coloured box with an identity number that stays with it as it moves">
+<img src="docs/media/tracking_v2_hero.webp" width="900" alt="Busy city street and footbridge seen from a drone: every car and pedestrian has a coloured box with an identity number that stays with it as it moves">
 
-<sub>VisDrone test-dev, the held-out test set, never used for training or tuning: the fine-tuned detector and tuned tracker, each colour and number one identity kept across frames. Clips chosen for clarity; across the whole test set, identity F1 is 0.760 for vehicles and 0.436 for people.</sub>
+<sub>Version 2 on VisDrone test-dev, the held-out test set, replayed from its one-time test run: the D-FINE N detector and the project's own tracker, each colour and number one identity kept across frames. Clips chosen for clarity; across the whole test set, identity F1 is 0.692 for vehicles and 0.321 for people.</sub>
 
 </div>
+
+## What is new in version 2
+
+| Change | What it means |
+|---|---|
+| **Permissive from end to end** | Detector (D-FINE N, Apache-2.0), tracker and pipeline contain no copyleft code; the repository is Apache-2.0 |
+| **Built for a Raspberry Pi 5** | One container image for x86-64 and ARM64; on ARM64 it gives the same detections, tracks and ranges as on x86. Pi speed is estimated until measured on a device |
+| **More small people detected** | The detector finds 38% of people 16 to 32 pixels tall, against 27% for version 1; the tracker does not yet keep most of them (see below) |
+| **Its own tracker** | Two-stage association with camera-motion compensation, written for this project, no appearance features |
 
 ## Results at a glance
 
@@ -26,16 +36,16 @@ Every number on this page is generated from a results file in [`results/`](resul
 | **Distance accuracy** | Median error **2.4%** (95 % interval 1.6% to 3.9%) against 14.7% for flat ground given the true height, on the same samples; 90th percentile 35% against 64% | Mid-Air, 9 synthetic test flights with exact truth; the 78% of samples where both methods give an answer |
 | **With realistic errors** | With assumed typical navigation errors the median rises to **11.7%** (flat ground: 40%); ranging a detected car's box rather than a ground point adds a 3% short bias, 5.6% end to end even with exact poses | Mid-Air, 11 development flights; simulated boxes |
 | **Error bars** | After calibration, nominal 90 % intervals contain the truth **84%** of the time (74% before): short of 90 %, a sign that flights differ more than calibration assumes | Mid-Air test |
-| **Tracking** | Identity F1 **0.760** for vehicles, 0.436 for people; only 16% of people 16 to 32 pixels tall are tracked | VisDrone test-dev; a standard detector and tracker, fine-tuned |
-| **Real footage** | Parked vehicles' positions repeat to **7.6%** of their distance (repeatability, not accuracy); the detector reaches AP50 only **0.21** for vehicles and 0.02 for people here | AU-AIR, held-out flights |
-| **Speed** | **9.6 frames per second** at full accuracy; 33.4 with detection on every second frame. Mean IDF1 on validation 0.617 and 0.536 (not comparable with the test-set tracking row) | AMD Ryzen 7 5700U with Radeon Graphics, no GPU |
+| **Tracking** | Identity F1 **0.692** for vehicles, 0.321 for people, with a detector and tracker that contain no copyleft code; 38% of people 16 to 32 pixels tall are detected but only 6% tracked. Version 1 reached 0.760 and 0.436 at higher input resolution, with AGPL-licensed code ([version 1 results](#version-1-results)) | VisDrone test-dev, run once |
+| **Real footage** | Parked vehicles' positions repeat to **7.6%** of their distance (repeatability, not accuracy); version 1's detector reaches AP50 only **0.21** for vehicles and 0.02 for people here | AU-AIR, held-out flights |
+| **Speed** | **12.7 frames per second** on a laptop CPU with detection on every second frame. On a Raspberry Pi 5 the detector is *estimated* (not measured) at about 285 ms per frame; the same program runs on ARM64 with outputs matching x86 | AMD Ryzen 7 5700U with Radeon Graphics, no GPU; ARM64 under emulation |
 
 ## How it works
 
 ```mermaid
 flowchart LR
-    A[Video frame] --> B[Detector<br/>YOLO26n, fine-tuned on drone imagery]
-    B --> C[Tracker<br/>BoT-SORT with camera-motion compensation]
+    A[Video frame] --> B[Detector<br/>D-FINE N, trained on drone imagery]
+    B --> C[Tracker<br/>own two-stage tracker with camera-motion compensation]
     C --> D[Ranging<br/>ray from the camera to the ground]
     G[Drone pose and height] --> D
     H[Terrain from motion<br/>local ground surface] --> D
@@ -48,17 +58,20 @@ A camera gives direction, not distance. Each tracked box's ground-contact point 
 
 ## 1. Detect and track
 
-<p align="center">
-  <img src="docs/media/tracking.webp" width="860" alt="Road junction at night seen from a drone: cars and pedestrians each carry a coloured box with an identity number">
-</p>
+<table>
+<tr>
+<td width="50%"><img src="results/edge/figures/candidates.png" alt="Chart: mean IDF1 on VisDrone validation against estimated Raspberry Pi 5 detector time; D-FINE N at about 285 ms, RF-DETR Nano at 1.8 and 5.5 s, version 1 shown hollow as a reference"></td>
+<td width="50%"><img src="results/visdrone/test-dev/figures/people_by_size_v1_v2.png" alt="Chart: share of people found by box height on VisDrone test-dev; version 2 detects the most people at every size, but tracks fewer small people than version 1"></td>
+</tr>
+<tr>
+<td><sub>Choosing the detector: accuracy against estimated Pi 5 time, validation data.</sub></td>
+<td><sub>People found by size on the test set: detected in single frames, and kept by a track.</sub></td>
+</tr>
+</table>
 
-A YOLO26n detector fine-tuned on VisDrone, with the BoT-SORT tracker and camera-motion compensation, its thresholds tuned on validation data. Each colour and number is one identity kept across frames. The clip above is from test-dev (night, held out), replayed from the saved one-time test run.
+Version 2 replaces version 1's detector and tracker, which came from an AGPL-licensed library, with code that can go into a closed product: a D-FINE N detector (Apache-2.0) trained on VisDrone, and the project's own two-stage tracker with camera-motion compensation and no appearance features. Candidates were trained with the same budget and compared on validation with the tracker tuned for each. RF-DETR Nano tracks best (mean IDF1 0.670 at 640 pixels, 0.692 at 960) but is estimated at 1,790 ms per frame or more on a Raspberry Pi 5 CPU, because its vision-transformer backbone costs about 115 billion operations per frame at 640. D-FINE N (0.572, about 285 ms) is the only candidate near live speed on the Pi without an add-on accelerator, so it was chosen ([decision D-729](docs/decisions.md)). On validation it matches version 1's live 640-pixel setting (0.566) and detects 44% of people 16 to 32 pixels tall against 19%.
 
-<p align="center">
-  <img src="docs/media/before_after.webp" width="860" alt="Side by side on the same top-down crossroads: on the left an off-the-shelf detector boxes almost nothing; on the right the fine-tuned detector boxes nearly every vehicle">
-</p>
-
-**Left:** the off-the-shelf detector. **Right:** after fine-tuning and tuning. This comparison is on a validation clip, the data the thresholds were tuned on, because the off-the-shelf baseline was never run on test-dev. Mean identity F1 on validation rises from 0.32 to 0.62. On the test set, vehicles reach IDF1 0.760 (MOTA 0.635) and people 0.436. This is a standard detector-and-tracker design, and most of the gain comes from fine-tuning on drone imagery; it is not compared with published VisDrone tracking results, whose protocol (classes and test split) differs. Small people are the weak point: 16% are found at 16 to 32 pixels tall, against 91% above 128.
+On the held-out test set, run once after every setting was frozen, version 2 reaches identity F1 0.692 for vehicles (MOTA 0.538) and 0.321 for people (MOTA 0.171). That is below version 1's published test result, which used its slower 960-pixel model. Small people are the clearest weakness: the detector finds 38% of people 16 to 32 pixels tall in single frames (version 1: 27%), but only 6% are tracked (84% above 128 pixels), because the tracker thresholds, chosen for the best mean IDF1, start a track only on confident detections. These numbers are not compared with published VisDrone tracking results, whose protocol (classes and test split) differs.
 
 ## 2. Range with honest uncertainty
 
@@ -103,7 +116,9 @@ AU-AIR records real flights with GPS and altitude but no camera calibration and 
   <img src="results/edge/figures/pareto.png" width="720" alt="Chart: tracking accuracy against time per frame for every measured setting, with the best trade-offs joined and the 30 fps and 10 fps budgets marked">
 </p>
 
-Every setting was measured on the same laptop CPU (AMD Ryzen 7 5700U with Radeon Graphics). At full accuracy (ONNX, 960-pixel input, detection on every frame) the pipeline runs at **9.6 frames per second** (mean IDF1 on validation 0.617). To reach video rate, a 640-pixel input, detection on every second frame (the tracker predicts in between) and detection overlapped with tracking give 33.4 frames per second, at the cost of mean validation IDF1 0.536. Each frame's result then arrives 47 ms after capture (median), so 30 fps is met in throughput, not in per-frame delay.
+Every setting was measured on the same laptop CPU (AMD Ryzen 7 5700U with Radeon Graphics). At full accuracy (ONNX, 960-pixel input, detection on every frame) the pipeline runs at **9.6 frames per second** (mean IDF1 on validation 0.617). To reach video rate, a 640-pixel input, detection on every second frame (the tracker predicts in between) and detection overlapped with tracking give 33.4 frames per second, at the cost of mean validation IDF1 0.536. Each frame's result then arrives 47 ms after capture (median), so 30 fps is met in throughput, not in per-frame delay. These figures are for version 1's detector and tracker.
+
+**Version 2 and the Raspberry Pi 5.** With the D-FINE N detector the pipeline runs at 12.7 frames per second on the same laptop (detection on every second frame). No Pi 5 was available, so its speed is *estimated, not measured*: a published Pi 5 timing of a reference model, timed the same way on the laptop, scales each laptop timing (D-723), giving about 285 ms per frame for the detector alone, with an assumed range of 0.75 to 1.5 times that. The package's container image builds for x86-64 and ARM64; run under emulation on the same frames, the ARM64 image's detections, tracks and ranges match the x86 image's within stated tolerances ([platform check](scripts/platform_check.py)). `make pi-benchmark` measures the real speed on a device.
 
 ## Quick start
 
@@ -121,9 +136,20 @@ On Windows, use `py -3.12 -m venv .venv` and `.venv\Scripts\` in place of `.venv
 
 The demo runs tracking, ranging, the Kalman filter and the overlay on a synthetic flight whose boxes are supplied directly (the detector is not run), writes `tracks.csv`, `annotated.mp4` and `timing.json`, and checks every distance and speed against the synthetic truth.
 
+### On a Raspberry Pi 5, or anywhere with Docker
+
+The runtime image holds the package and its pinned dependencies only (no PyTorch); weights and frames are mounted at run time.
+
+```bash
+docker buildx build --platform linux/arm64 -f docker/Dockerfile -t aerialrange:arm64 --load .
+docker run --rm -v "$PWD/weights:/app/weights:ro" -v "$PWD/cache:/app/cache" aerialrange:arm64 \
+    aerialrange demo --out cache/demo
+make pi-benchmark        # on the Pi itself: measured speed, replacing the estimate
+```
+
 ### Model weights
 
-The fine-tuned detector is published as ONNX files on the [Releases page](../../releases/latest): `B2_yolo26n_960w_640_rect.onnx` (the default, faster setting) and `B2_yolo26n_960_rect.onnx` (the most accurate). Download them into a `weights/` folder at the repository root. They were trained on VisDrone, which is licensed for research only, so **the weights are for research and evaluation only**.
+The detector is published as ONNX files on the [Releases page](../../releases/latest): `dfine_n_640.onnx` (version 2, the default in `configs/run.yaml`) and version 1's `B2_yolo26n_960w_640_rect.onnx` and `B2_yolo26n_960_rect.onnx` (reference only). Download them into a `weights/` folder at the repository root. They were trained on VisDrone, which is licensed for research only, so **the weights are for research and evaluation only**.
 
 With the weights in place, run on a real flight (frames or a video, plus a flight-data CSV with position, height, heading and camera tilt per frame):
 
@@ -156,6 +182,20 @@ With the weights in place, run on a real flight (frames or a video, plus a fligh
 | `results/` | Every number and figure quoted in the documents |
 
 
+## Version 1 results
+
+Version 1 used a YOLO26n detector fine-tuned on VisDrone with Ultralytics' BoT-SORT tracker. On VisDrone test-dev (run once) it reached identity F1 0.760 for vehicles (MOTA 0.635) and 0.436 for people, with 16% of people 16 to 32 pixels tall tracked (91% above 128). Fine-tuning on drone imagery raised mean validation IDF1 from 0.32 to 0.62. On the laptop CPU it ran at 9.6 frames per second at full accuracy and 33.4 in its fastest setting.
+
+<p align="center">
+  <img src="docs/media/tracking.webp" width="860" alt="Road junction at night seen from a drone: cars and pedestrians each carry a coloured box with an identity number">
+</p>
+
+<p align="center">
+  <img src="docs/media/before_after.webp" width="860" alt="Side by side on the same top-down crossroads: on the left an off-the-shelf detector boxes almost nothing; on the right the fine-tuned detector boxes nearly every vehicle">
+</p>
+
+Version 1's test-dev run (night clip, held out) and, on a validation clip, the off-the-shelf detector (left) against the fine-tuned one (right).
+
 ## The main gap
 
 No single test runs detect, track and range end to end against known object distances. Tracking is scored on VisDrone (boxes, no distances), ranging on Mid-Air (distances, no objects; exact poses) and real footage on AU-AIR (neither true distances nor a well-transferred detector). The box-to-ground simulation and the pose-noise sweep narrow the gap but are still separate pieces. The most valuable next step is one setup where every object's distance is known: a drone flown past a car carrying a GPS logger, or a simulator with vehicles and people (for example CARLA), scored through the whole pipeline.
@@ -171,11 +211,12 @@ No datasets or model weights are stored in this repository; the short clips in `
 - **VisDrone2019**: P. Zhu, L. Wen, D. Du et al., "Detection and tracking meet drones challenge", *IEEE TPAMI*, 2021. Research use.
 - **Mid-Air**: M. Fonder and M. Van Droogenbroeck, "Mid-Air: a multi-modal dataset for extremely low altitude drone flights", *CVPR Workshops*, 2019. CC BY-NC-SA 4.0.
 - **AU-AIR**: I. Bozcan and E. Kayacan, "AU-AIR: a multi-modal unmanned aerial vehicle dataset for low altitude traffic surveillance", *ICRA*, 2020. CC BY 4.0.
-- Detector and trackers: [Ultralytics](https://github.com/ultralytics/ultralytics) (AGPL-3.0).
+- **D-FINE**: Y. Peng, H. Li, P. Wu, Y. Zhang, X. Sun and F. Wu, "D-FINE: redefine regression task in DETRs as fine-grained distribution refinement", *ICLR*, 2025. Code and COCO weights Apache-2.0.
+- Version 1's detector and trackers: [Ultralytics](https://github.com/ultralytics/ultralytics) (AGPL-3.0), used only by version 1's scripts in a separate environment.
 
 ## Licence
 
-[GNU Affero General Public License v3.0 only](LICENSE). The detector and trackers come from Ultralytics, which is AGPL-3.0, so code combined with it must be released under the same terms; in practice, it cannot go into a closed product as it stands. Only two modules use Ultralytics (`src/aerialrange/track/runner.py` and `src/aerialrange/pipeline/run.py`). The ranging, uncertainty and evaluation code (`src/aerialrange/geometry/`, `src/aerialrange/evaluate/`) does not, and I am happy to discuss a permissive licence for those parts.
+[Apache License 2.0](LICENSE), from version 2 onwards; see [NOTICE](NOTICE) for the vendored HOTA metric (MIT). Earlier commits, built on Ultralytics, remain available under AGPL-3.0. The package does not import Ultralytics: the detector runs through ONNX Runtime in the project's own code and the tracker is the project's own. Version 1's reproduction scripts still need Ultralytics (AGPL-3.0) from a separate environment (`requirements-v1.txt`), and running them is subject to AGPL-3.0 for that combination. The licence covers the code, not the model weights or the datasets, which keep their own terms.
 
 ## How this was built
 

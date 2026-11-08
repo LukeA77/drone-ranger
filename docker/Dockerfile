@@ -18,7 +18,7 @@ WORKDIR /app
 COPY requirements-lock.txt .
 RUN python -m pip install -r requirements-lock.txt
 
-COPY pyproject.toml README.md LICENSE ./
+COPY pyproject.toml README.md LICENSE NOTICE ./
 COPY src src
 COPY configs configs
 COPY scripts scripts

@@ -1,6 +1,6 @@
 {
  "label": "ESTIMATED, NOT MEASURED",
- "generated_utc": "2026-11-07T00:55:38+00:00",
+ "generated_utc": "2026-11-08T09:35:16+00:00",
  "method": "laptop median x (published Pi 5 time / laptop median) of the same reference",
  "reference": {
   "onnx": "weights/yolo26n_640.onnx",
@@ -14,11 +14,11 @@
    640,
    640
   ],
-  "median_ms": 45.430650003254414,
-  "p90_ms": 49.898329997085966,
+  "median_ms": 46.666599984746426,
+  "p90_ms": 55.39800999104045,
   "repeats": 200
  },
- "ratio_pi5_over_laptop": 2.7932684210089347,
+ "ratio_pi5_over_laptop": 2.719289599873976,
  "range_factor": [
   0.75,
   1.5
@@ -30,7 +30,7 @@
  "laptop_logical_cpus": 16,
  "onnxruntime": "1.31.0",
  "models": {
-  "v1_yolo26n_960": {
+  "v1_960": {
    "onnx": "weights/B2_yolo26n_960_rect.onnx",
    "laptop": {
     "input_shape": [
@@ -39,18 +39,18 @@
      544,
      960
     ],
-    "median_ms": 56.72229999618139,
-    "p90_ms": 58.64980999613181,
+    "median_ms": 58.80294999224134,
+    "p90_ms": 68.64543999545276,
     "repeats": 200
    },
-   "pi5_estimate_ms": 158.4406093463287,
+   "pi5_estimate_ms": 159.90225035581136,
    "pi5_estimate_range_ms": [
-    118.83045700974652,
-    237.66091401949305
+    119.92668776685852,
+    239.85337553371704
    ],
-   "pi5_estimate_fps": 6.311513217007023
+   "pi5_estimate_fps": 6.253820679664105
   },
-  "v1_yolo26n_640": {
+  "v1_640": {
    "onnx": "weights/B2_yolo26n_960w_640_rect.onnx",
    "laptop": {
     "input_shape": [
@@ -59,16 +59,116 @@
      384,
      640
     ],
-    "median_ms": 26.533399999607354,
-    "p90_ms": 27.731350000249222,
+    "median_ms": 27.031649980926886,
+    "p90_ms": 29.92730002151802,
     "repeats": 200
    },
-   "pi5_estimate_ms": 74.1149083209017,
+   "pi5_estimate_ms": 73.50688466056805,
    "pi5_estimate_range_ms": [
-    55.58618124067628,
-    111.17236248135256
+    55.13016349542603,
+    110.26032699085206
    ],
-   "pi5_estimate_fps": 13.492562058772492
+   "pi5_estimate_fps": 13.604167890092054
+  },
+  "rfdetr_nano_640": {
+   "onnx": "weights/rfdetr_nano_640.onnx",
+   "laptop": {
+    "input_shape": [
+     1,
+     3,
+     640,
+     640
+    ],
+    "median_ms": 658.3548499911558,
+    "p90_ms": 699.0751900302712,
+    "repeats": 200
+   },
+   "pi5_estimate_ms": 1790.2574966075415,
+   "pi5_estimate_range_ms": [
+    1342.693122455656,
+    2685.386244911312
+   ],
+   "pi5_estimate_fps": 0.5585788647135709
+  },
+  "rfdetr_nano_960": {
+   "onnx": "weights/rfdetr_nano_960.onnx",
+   "laptop": {
+    "input_shape": [
+     1,
+     3,
+     960,
+     960
+    ],
+    "median_ms": 2030.070800014073,
+    "p90_ms": 2055.6114299979527,
+    "repeats": 200
+   },
+   "pi5_estimate_ms": 5520.350413486111,
+   "pi5_estimate_range_ms": [
+    4140.262810114584,
+    8280.525620229168
+   ],
+   "pi5_estimate_fps": 0.18114792089230766
+  },
+  "dfine_n_640": {
+   "onnx": "weights/dfine_n_640.onnx",
+   "laptop": {
+    "input_shape": [
+     1,
+     3,
+     640,
+     640
+    ],
+    "median_ms": 104.98720000032336,
+    "p90_ms": 110.6469000398647,
+    "repeats": 200
+   },
+   "pi5_estimate_ms": 285.4906010807684,
+   "pi5_estimate_range_ms": [
+    214.1179508105763,
+    428.2359016211526
+   ],
+   "pi5_estimate_fps": 3.5027422836841104
+  },
+  "rfdetr_nano_640_int8dyn": {
+   "onnx": "weights/rfdetr_nano_640_int8dyn.onnx",
+   "laptop": {
+    "input_shape": [
+     1,
+     3,
+     640,
+     640
+    ],
+    "median_ms": 1009.9234000081196,
+    "p90_ms": 1034.567660005996,
+    "repeats": 200
+   },
+   "pi5_estimate_ms": 2746.274198311445,
+   "pi5_estimate_range_ms": [
+    2059.705648733584,
+    4119.411297467168
+   ],
+   "pi5_estimate_fps": 0.3641297000186117
+  },
+  "rfdetr_nano_960_int8dyn": {
+   "onnx": "weights/rfdetr_nano_960_int8dyn.onnx",
+   "laptop": {
+    "input_shape": [
+     1,
+     3,
+     960,
+     960
+    ],
+    "median_ms": 2754.1607500170358,
+    "p90_ms": 2791.6808299545664,
+    "repeats": 200
+   },
+   "pi5_estimate_ms": 7489.360683902435,
+   "pi5_estimate_range_ms": [
+    5617.020512926826,
+    11234.041025853652
+   ],
+   "pi5_estimate_fps": 0.13352274542597356
   }
  }
 }

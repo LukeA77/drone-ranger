@@ -1,0 +1,263 @@
+{
+ "generated_utc": "2026-11-08T14:19:04+00:00",
+ "accuracy": "VisDrone MOT val: detection AP on every 10th frame; tracking with the project's tracker tuned per detector (D-319). Development numbers.",
+ "speed": "laptop: version 2 pipeline benchmark (read, detect, track; run configuration's stride); Pi 5: ESTIMATED detector inference only (D-723)",
+ "pi5_frontier": [
+  "v1_640",
+  "v1_960",
+  "rfdetr_nano_640",
+  "rfdetr_nano_960"
+ ],
+ "candidates": [
+  {
+   "name": "v1_960",
+   "label": "Version 1 YOLO26n 960",
+   "kind": "yolo",
+   "onnx": "weights/B2_yolo26n_960_rect.onnx",
+   "imgsz": 960,
+   "ap50": {
+    "person": 0.5109447564922848,
+    "vehicle": 0.6245929957513192
+   },
+   "ap50_95": {
+    "person": 0.20440620437208615,
+    "vehicle": 0.3770515667547178
+   },
+   "det_max_recall": {
+    "person": 0.6187205651491365,
+    "vehicle": 0.6787552070570938
+   },
+   "person_16_32px": {
+    "ap50": 0.08929237091804527,
+    "recall": 0.3086734693877551,
+    "n_gt": 392
+   },
+   "tracker_thresholds": {
+    "track_high_thresh": 0.45,
+    "new_track_thresh": 0.55
+   },
+   "mean_idf1": 0.6187241778720856,
+   "mean_mota": 0.4132423536635934,
+   "idf1": {
+    "person": 0.5407998150716598,
+    "vehicle": 0.6966485406725114
+   },
+   "mota": {
+    "person": 0.3396406423914772,
+    "vehicle": 0.48684406493570964
+   },
+   "track_recall": {
+    "person": 0.5312052790586739,
+    "vehicle": 0.6385841235168545
+   },
+   "laptop_ms_median": 57.26970004616305,
+   "laptop_fps": 18.017633317225517,
+   "laptop_detect_inference_ms": 49.778199987486005,
+   "pi5_estimate_ms": 159.90225035581136,
+   "pi5_estimate_range_ms": [
+    119.92668776685852,
+    239.85337553371704
+   ]
+  },
+  {
+   "name": "v1_640",
+   "label": "Version 1 YOLO26n 640",
+   "kind": "yolo",
+   "onnx": "weights/B2_yolo26n_960w_640_rect.onnx",
+   "imgsz": 640,
+   "ap50": {
+    "person": 0.43169663488587623,
+    "vehicle": 0.5916795237562196
+   },
+   "ap50_95": {
+    "person": 0.15995526852905445,
+    "vehicle": 0.3530980595983991
+   },
+   "det_max_recall": {
+    "person": 0.5168759811616954,
+    "vehicle": 0.6346483704974271
+   },
+   "person_16_32px": {
+    "ap50": 0.05020085597434132,
+    "recall": 0.18622448979591838,
+    "n_gt": 392
+   },
+   "tracker_thresholds": {
+    "track_high_thresh": 0.25,
+    "new_track_thresh": 0.55
+   },
+   "mean_idf1": 0.5662724771717222,
+   "mean_mota": 0.3860236440749326,
+   "idf1": {
+    "person": 0.4621967867268718,
+    "vehicle": 0.6703481676165727
+   },
+   "mota": {
+    "person": 0.2883805056447766,
+    "vehicle": 0.48366678250508865
+   },
+   "track_recall": {
+    "person": 0.4026276037525839,
+    "vehicle": 0.5832299061708782
+   },
+   "laptop_ms_median": 27.523400000063702,
+   "laptop_fps": 30.06128544253019,
+   "laptop_detect_inference_ms": 24.837200006004423,
+   "pi5_estimate_ms": 73.50688466056805,
+   "pi5_estimate_range_ms": [
+    55.13016349542603,
+    110.26032699085206
+   ]
+  },
+  {
+   "name": "rfdetr_nano_640",
+   "label": "RF-DETR Nano 640",
+   "kind": "rfdetr",
+   "onnx": "weights/rfdetr_nano_640.onnx",
+   "imgsz": 640,
+   "ap50": {
+    "person": 0.6037175145107044,
+    "vehicle": 0.7175400450604925
+   },
+   "ap50_95": {
+    "person": 0.24392931700452083,
+    "vehicle": 0.4113213845851712
+   },
+   "det_max_recall": {
+    "person": 0.7219387755102041,
+    "vehicle": 0.79073756432247
+   },
+   "person_16_32px": {
+    "ap50": 0.17717123149652705,
+    "recall": 0.49744897959183676,
+    "n_gt": 392
+   },
+   "tracker_thresholds": {
+    "track_high_thresh": 0.15,
+    "new_track_thresh": 0.65
+   },
+   "mean_idf1": 0.6701458605271549,
+   "mean_mota": 0.46345935157991486,
+   "idf1": {
+    "person": 0.6137034344125573,
+    "vehicle": 0.7265882866417523
+   },
+   "mota": {
+    "person": 0.39139767848624585,
+    "vehicle": 0.5355210246735839
+   },
+   "track_recall": {
+    "person": 0.626788837653045,
+    "vehicle": 0.6784739115325423
+   },
+   "laptop_ms_median": 265.9599499893375,
+   "laptop_fps": 3.341298918183912,
+   "laptop_detect_inference_ms": 517.424950026907,
+   "pi5_estimate_ms": 1790.2574966075415,
+   "pi5_estimate_range_ms": [
+    1342.693122455656,
+    2685.386244911312
+   ]
+  },
+  {
+   "name": "rfdetr_nano_960",
+   "label": "RF-DETR Nano 960",
+   "kind": "rfdetr",
+   "onnx": "weights/rfdetr_nano_960.onnx",
+   "imgsz": 960,
+   "ap50": {
+    "person": 0.640018351749102,
+    "vehicle": 0.7579357762537864
+   },
+   "ap50_95": {
+    "person": 0.2669616074145095,
+    "vehicle": 0.43177352202046004
+   },
+   "det_max_recall": {
+    "person": 0.7551020408163265,
+    "vehicle": 0.8350894388630238
+   },
+   "person_16_32px": {
+    "ap50": 0.17499804670204205,
+    "recall": 0.5102040816326531,
+    "n_gt": 392
+   },
+   "tracker_thresholds": {
+    "track_high_thresh": 0.05,
+    "new_track_thresh": 0.65
+   },
+   "mean_idf1": 0.6918912130962446,
+   "mean_mota": 0.4599090288030975,
+   "idf1": {
+    "person": 0.6273886299722755,
+    "vehicle": 0.7563937962202136
+   },
+   "mota": {
+    "person": 0.36786452536174274,
+    "vehicle": 0.5519535322444522
+   },
+   "track_recall": {
+    "person": 0.6858801081252981,
+    "vehicle": 0.7432358635754356
+   },
+   "laptop_ms_median": 791.2373500003014,
+   "laptop_fps": 1.1742856566173976,
+   "laptop_detect_inference_ms": 1591.4959000074305,
+   "pi5_estimate_ms": 5520.350413486111,
+   "pi5_estimate_range_ms": [
+    4140.262810114584,
+    8280.525620229168
+   ]
+  },
+  {
+   "name": "dfine_n_640",
+   "label": "D-FINE N 640",
+   "kind": "dfine",
+   "onnx": "weights/dfine_n_640.onnx",
+   "imgsz": 640,
+   "ap50": {
+    "person": 0.5235686163465495,
+    "vehicle": 0.6319516860235762
+   },
+   "ap50_95": {
+    "person": 0.19629184320304877,
+    "vehicle": 0.3829012184344272
+   },
+   "det_max_recall": {
+    "person": 0.7036891679748822,
+    "vehicle": 0.7044841950502327
+   },
+   "person_16_32px": {
+    "ap50": 0.10847055705827316,
+    "recall": 0.4362244897959184,
+    "n_gt": 392
+   },
+   "tracker_thresholds": {
+    "track_high_thresh": 0.25,
+    "new_track_thresh": 0.65
+   },
+   "mean_idf1": 0.5718272232415812,
+   "mean_mota": 0.3622040615198406,
+   "idf1": {
+    "person": 0.48650389436896907,
+    "vehicle": 0.6571505521141934
+   },
+   "mota": {
+    "person": 0.2776276037525839,
+    "vehicle": 0.4467805192870973
+   },
+   "track_recall": {
+    "person": 0.47354507870885676,
+    "vehicle": 0.5999851064886065
+   },
+   "laptop_ms_median": 71.90485004684888,
+   "laptop_fps": 12.671309504716103,
+   "laptop_detect_inference_ms": 97.69824997056276,
+   "pi5_estimate_ms": 285.4906010807684,
+   "pi5_estimate_range_ms": [
+    214.1179508105763,
+    428.2359016211526
+   ]
+  }
+ ]
+}

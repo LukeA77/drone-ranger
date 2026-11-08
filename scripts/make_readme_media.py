@@ -1,7 +1,7 @@
 """Short looping animated WebP clips for the README, cut from the showcase clips
 (scripts/make_showcase.py).
 
-Usage: python scripts/make_readme_media.py
+Usage: python scripts/make_readme_media.py [clip name ...]
 
 GitHub shows animated images inline in a README but does not play video files from the
 repository, so each stage gets a looping clip of a few seconds. Animated WebP is used rather than
@@ -24,6 +24,7 @@ MAX_MB = 8.0
 # name: (source clip, start s, duration s, width px, fps)
 CLIPS = {
     "tracking_hero": ("01_tracking.mp4", 0.2, 7.0, 900, 12),
+    "tracking_v2_hero": ("06_tracking_v2.mp4", 0.2, 7.0, 900, 12),
     "ranging_real_late": ("03_ranging_oblique.mp4", 13.0, 8.0, 900, 10),
     "tracking": ("01_tracking.mp4", 17.3, 6.0, 900, 12),
     "before_after": ("02_before_after.mp4", 0.0, 6.0, 900, 12),
@@ -44,8 +45,12 @@ def make(name: str, src: str, start: float, dur: float, width: int, fps: int) ->
 
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
-    rec, ok = {}, True
+    only = set(sys.argv[1:]) or set(CLIPS)  # optional clip names: rebuild only those
+    path = OUT / "media.json"
+    rec, ok = (json.loads(path.read_text()) if path.exists() else {}), True
     for name, spec in CLIPS.items():
+        if name not in only:
+            continue
         mb = make(name, *spec)
         rec[name] = {
             "source": f"cache/video/showcase/{spec[0]}",

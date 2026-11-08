@@ -142,6 +142,40 @@ def main() -> int:
         "person_recall_128": bd["person"]["by_box_height"]["128-inf"]["recall"],
         "vehicle_recall_16_32": bd["vehicle"]["by_box_height"]["16-32"]["recall"],
     }
+    # --- Version 2 (Phase 8): permissive detector, own tracker, one-time test-dev run
+    v2 = load("visdrone/test-dev/dfine_n_640__motion_dfine_n_640.json")
+    v2t = v2["metrics"]
+    v2d = load("visdrone/test-dev/detect_dfine_n_640.json")["results"]
+    v2b = load("visdrone/test-dev/breakdowns_dfine_n_640__motion_dfine_n_640.json")["groups"]
+    cand = {c["name"]: c for c in load("edge/candidates.json")["candidates"]}
+    plat = load("edge/platform_compare_amd64_arm64.json")
+    h["v2"] = {
+        "_source": "results/visdrone/test-dev/*dfine_n_640*, results/edge/candidates.json, "
+        "results/edge/platform_compare_amd64_arm64.json",
+        **{
+            f"test_{g}_{k}": v2t[g]["OVERALL"][m]
+            for g in ("person", "vehicle")
+            for k, m in (("idf1", "idf1"), ("mota", "mota"), ("idsw", "num_switches"))
+        },
+        "test_mean_idf1": v2["mean_idf1"],
+        "test_person_ap50": v2d["person"]["ap50"]["ap"],
+        "test_vehicle_ap50": v2d["vehicle"]["ap50"]["ap"],
+        "test_person_det_recall_16_32": v2d["person"]["by_height"]["16-32"]["max_recall"],
+        "test_v1_person_det_recall_16_32": tdr["person"]["by_height"]["16-32"]["max_recall"],
+        "test_person_recall_16_32": v2b["person"]["by_box_height"]["16-32"]["recall"],
+        "test_person_recall_128": v2b["person"]["by_box_height"]["128-inf"]["recall"],
+        **{
+            f"val_{n}_{k}": cand[n][src] if k != "p16" else cand[n]["person_16_32px"]["recall"]
+            for n in ("dfine_n_640", "rfdetr_nano_640", "rfdetr_nano_960", "v1_640", "v1_960")
+            for k, src in (
+                ("idf1", "mean_idf1"),
+                ("p16", None),
+                ("pi_ms", "pi5_estimate_ms"),
+                ("laptop_fps", "laptop_fps"),
+            )
+        },
+        "platform_passed": plat["passed"],
+    }
     # --- VisDrone val (development): the H1 baselines
     gs = {
         (r["dets"], r["tracker"], r["point"]): r

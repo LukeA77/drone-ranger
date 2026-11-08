@@ -111,8 +111,43 @@
     1462
    ],
    "points_per_second": 40
+  },
+  "06_tracking_v2": {
+   "file": "cache/video/showcase/06_tracking_v2.mp4",
+   "seconds": 33.44,
+   "size_mb": 18.15,
+   "size": [
+    1920,
+    1080
+   ],
+   "encoding": "two-pass 4306 kbps",
+   "within_size_limit": true,
+   "run": "dfine_n_640__motion_dfine_n_640",
+   "split": "test-dev",
+   "clips": [
+    [
+     "uav0000297_02761_v",
+     1,
+     200
+    ],
+    [
+     "uav0000073_00600_v",
+     1,
+     200
+    ],
+    [
+     "uav0000120_04775_v",
+     1,
+     200
+    ],
+    [
+     "uav0000077_00720_v",
+     1,
+     200
+    ]
+   ]
   }
  },
- "generated_utc": "2026-10-27T19:21:34+00:00",
+ "generated_utc": "2026-11-08T14:16:33+00:00",
  "max_video_mb": 20.0
 }
