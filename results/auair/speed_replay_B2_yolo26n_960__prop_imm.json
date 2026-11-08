@@ -1,0 +1,163 @@
+{
+ "generated_utc": "2026-11-08T18:15:28+00:00",
+ "decision": "D-735",
+ "run": "B2_yolo26n_960",
+ "variant": "prop_imm",
+ "config": "run_accurate",
+ "overrides": {
+  "kalman": {
+   "meas_model": "propagated",
+   "meas_sigma": {
+    "kappa_u": {
+     "person": 0.10745,
+     "vehicle": 0.03846
+    },
+    "kappa_v": {
+     "person": 0.07897,
+     "vehicle": 0.05319
+    },
+    "tilt_deg": NaN,
+    "h_m": 1.816,
+    "yaw_deg": 0.0
+   },
+   "motion_model": "imm",
+   "imm": {
+    "person": {
+     "gate_prob": 0.99,
+     "mode0": [
+      0.15238258315163858,
+      0.7175603018230383,
+      0.130057115025323
+     ],
+     "q_ct": 0.01172430196797225,
+     "q_cv": 0.017990842802531246,
+     "q_stationary": 0.3,
+     "q_turn": 0.018152591608392214,
+     "reset_after": 2,
+     "switch_rates": [
+      [
+       0.0,
+       0.08727332657454054,
+       0.0
+      ],
+      [
+       0.016491936980649827,
+       0.0,
+       0.4404566834767764
+      ],
+      [
+       0.0002925738895358028,
+       2.429826152594842,
+       0.0
+      ]
+     ],
+     "turn_rate_sigma0": 0.35068928615794004
+    },
+    "vehicle": {
+     "gate_prob": 0.99,
+     "mode0": [
+      0.5429308303518455,
+      0.3067555629247164,
+      0.15031360672343796
+     ],
+     "q_ct": 0.14611607330008894,
+     "q_cv": 0.6128719158025165,
+     "q_stationary": 0.3,
+     "q_turn": 0.01417480056139466,
+     "reset_after": 2,
+     "switch_rates": [
+      [
+       0.0,
+       0.15877939088837725,
+       0.00041752657258401225
+      ],
+      [
+       0.2769085895503163,
+       0.0,
+       0.24587117997052482
+      ],
+      [
+       0.0019389865563598755,
+       0.5013357462943812,
+       0.0
+      ]
+     ],
+     "turn_rate_sigma0": 0.21954245569470646
+    }
+   }
+  }
+ },
+ "all": {
+  "tracks": 1065,
+  "share_above_70_kmh": 0.02535211267605634,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 216,
+    "share_above_70_kmh": 0.09722222222222222
+   },
+   "10-20": {
+    "tracks": 503,
+    "share_above_70_kmh": 0.009940357852882704
+   },
+   "20-40": {
+    "tracks": 278,
+    "share_above_70_kmh": 0.0035971223021582736
+   },
+   "40-91": {
+    "tracks": 68,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "calibration": {
+  "tracks": 277,
+  "share_above_70_kmh": 0.07220216606498195,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 58,
+    "share_above_70_kmh": 0.2413793103448276
+   },
+   "10-20": {
+    "tracks": 102,
+    "share_above_70_kmh": 0.049019607843137254
+   },
+   "20-40": {
+    "tracks": 65,
+    "share_above_70_kmh": 0.015384615384615385
+   },
+   "40-91": {
+    "tracks": 52,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "held_out": {
+  "tracks": 788,
+  "share_above_70_kmh": 0.008883248730964468,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 158,
+    "share_above_70_kmh": 0.04430379746835443
+   },
+   "10-20": {
+    "tracks": 401,
+    "share_above_70_kmh": 0.0
+   },
+   "20-40": {
+    "tracks": 213,
+    "share_above_70_kmh": 0.0
+   },
+   "40-91": {
+    "tracks": 16,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "note": "No ground-truth speeds: plausibility only."
+}

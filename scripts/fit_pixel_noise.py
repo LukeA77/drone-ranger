@@ -2,6 +2,13 @@
 
 Usage: python scripts/fit_pixel_noise.py --weights cache/train/B2_yolo26n_640/weights/best.pt
        --class-map visdrone10 --imgsz 640 [--frame-stride 10]
+       python scripts/fit_pixel_noise.py --dets dfine_n_640 --class-map visdrone10
+       --name pixel_noise_dfine_n_640 [--frame-stride 10] [--min-score 0.25]
+
+With `--weights`, version 1's detector runs through its library (score threshold: the
+library's predict default, 0.25). With `--dets`, the cached detections of any detector are
+read instead (cache/visdrone/dets/<run>/val/, scripts/cache_detections.py; score floor 0.1),
+keeping scores >= `--min-score` (default 0.25, as the library run), so the two are comparable.
 
 Detections on VisDrone MOT val (every `frame-stride`-th frame) are matched one-to-one to ground
 truth at IoU >= `{{IOU_MATCH}}` per evaluation group. For each match, the error of the
@@ -25,6 +32,7 @@ import numpy as np
 
 from aerialrange.data.visdrone import outside_ignored
 from aerialrange.detect.evaluate import match_image
+from aerialrange.track.detcache import load_sequence
 from aerialrange.track.evaluate import read_ignored, read_rows
 from aerialrange.utils.config import REPO_ROOT, load_config
 
@@ -38,38 +46,57 @@ def robust_sigma(x: np.ndarray) -> float:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--weights", required=True)
+    src = ap.add_mutually_exclusive_group(required=True)
+    src.add_argument("--weights")
+    src.add_argument("--dets", help="cached detections run name (any detector)")
     ap.add_argument("--class-map", required=True)
-    ap.add_argument("--imgsz", type=int, required=True)
+    ap.add_argument("--imgsz", type=int)
+    ap.add_argument("--min-score", type=float, default=0.25, help="with --dets only")
     ap.add_argument("--frame-stride", type=int, default=10)
     ap.add_argument("--name", default="pixel_noise", help="output file stem")
     args = ap.parse_args(argv)
-    from ultralytics import YOLO
-
+    if args.weights and args.imgsz is None:
+        ap.error("--weights needs --imgsz")
     det_cfg = load_config("detector")
     iou = det_cfg.require("iou_match")
     cmap = {int(k): v for k, v in det_cfg.require("class_maps")[args.class_map].items()}
     groups = sorted(set(cmap.values()))
-    model = YOLO(REPO_ROOT / args.weights)
+    if args.weights:
+        from ultralytics import YOLO
+
+        model = YOLO(REPO_ROOT / args.weights)
     rows: dict[str, list] = {g: [] for g in groups}
     for seq in sorted(p for p in PREP.iterdir() if p.is_dir()):
         info = json.loads((seq / "seqinfo.json").read_text())
         frames = sorted((REPO_ROOT / info["frame_dir"]).glob("*.jpg"))
         ign = read_ignored(seq / "ignored.txt")
         gts = {g: read_rows(seq / f"gt_{g}.txt", 6) for g in groups}
+        cached = (
+            load_sequence(
+                REPO_ROOT / "cache/visdrone/dets" / args.dets / "val" / f"{seq.name}.npz"
+            )[0]
+            if args.dets
+            else None
+        )
         for k in range(0, len(frames), args.frame_stride):
             fnum = k + 1
-            r = model.predict(
-                cv2.imread(str(frames[k])),
-                imgsz=args.imgsz,
-                classes=sorted(cmap),
-                max_det=det_cfg.require("max_det"),
-                verbose=False,
-            )[0]
-            xyxy = r.boxes.xyxy.cpu().numpy()
-            b = np.column_stack([xyxy[:, :2], xyxy[:, 2:] - xyxy[:, :2]])
-            s = r.boxes.conf.cpu().numpy()
-            c = r.boxes.cls.cpu().numpy().astype(int)
+            if cached is not None:
+                b, s, c = cached[k]
+                c = np.asarray(c).astype(int)
+                keep = (s >= args.min_score) & np.isin(c, sorted(cmap))
+                b, s, c = np.asarray(b, float)[keep], np.asarray(s)[keep], c[keep]
+            else:
+                r = model.predict(
+                    cv2.imread(str(frames[k])),
+                    imgsz=args.imgsz,
+                    classes=sorted(cmap),
+                    max_det=det_cfg.require("max_det"),
+                    verbose=False,
+                )[0]
+                xyxy = r.boxes.xyxy.cpu().numpy()
+                b = np.column_stack([xyxy[:, :2], xyxy[:, 2:] - xyxy[:, :2]])
+                s = r.boxes.conf.cpu().numpy()
+                c = r.boxes.cls.cpu().numpy().astype(int)
             if fnum in ign and len(b):
                 keep = outside_ignored(b, ign[fnum])
                 b, s, c = b[keep], s[keep], c[keep]
@@ -90,6 +117,8 @@ def main(argv: list[str] | None = None) -> int:
     out = {
         "generated_utc": datetime.now(UTC).isoformat(timespec="seconds"),
         "weights": args.weights,
+        "dets": args.dets,
+        "min_score": args.min_score if args.dets else None,
         "imgsz": args.imgsz,
         "frame_stride": args.frame_stride,
         "iou_match": iou,

@@ -1,0 +1,98 @@
+{
+ "generated_utc": "2026-11-08T17:09:36+00:00",
+ "decision": "D-735",
+ "run": "B2_yolo26n_960",
+ "variant": "prop_cv",
+ "config": "run_accurate",
+ "overrides": {
+  "kalman": {
+   "meas_model": "propagated",
+   "meas_sigma": {
+    "kappa_u": {
+     "person": 0.10745,
+     "vehicle": 0.03846
+    },
+    "kappa_v": {
+     "person": 0.07897,
+     "vehicle": 0.05319
+    },
+    "tilt_deg": NaN,
+    "h_m": 1.816,
+    "yaw_deg": 0.0
+   }
+  }
+ },
+ "all": {
+  "tracks": 1068,
+  "share_above_70_kmh": 0.0599250936329588,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 215,
+    "share_above_70_kmh": 0.19069767441860466
+   },
+   "10-20": {
+    "tracks": 505,
+    "share_above_70_kmh": 0.03762376237623762
+   },
+   "20-40": {
+    "tracks": 280,
+    "share_above_70_kmh": 0.014285714285714285
+   },
+   "40-91": {
+    "tracks": 68,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "calibration": {
+  "tracks": 278,
+  "share_above_70_kmh": 0.12949640287769784,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 58,
+    "share_above_70_kmh": 0.43103448275862066
+   },
+   "10-20": {
+    "tracks": 103,
+    "share_above_70_kmh": 0.08737864077669903
+   },
+   "20-40": {
+    "tracks": 65,
+    "share_above_70_kmh": 0.03076923076923077
+   },
+   "40-91": {
+    "tracks": 52,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "held_out": {
+  "tracks": 790,
+  "share_above_70_kmh": 0.035443037974683546,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 157,
+    "share_above_70_kmh": 0.10191082802547771
+   },
+   "10-20": {
+    "tracks": 402,
+    "share_above_70_kmh": 0.024875621890547265
+   },
+   "20-40": {
+    "tracks": 215,
+    "share_above_70_kmh": 0.009302325581395349
+   },
+   "40-91": {
+    "tracks": 16,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "note": "No ground-truth speeds: plausibility only."
+}

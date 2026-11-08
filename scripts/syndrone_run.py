@@ -5,7 +5,9 @@ ahead in merged spans by a background thread. The pipeline gets the CARLA camera
 horizontal field of view) and, per frame, the camera's Unreal x, y as north, east, its
 heading (yaw), tilt (-pitch) and height above the floor `h` (20, 50 or 80 m; SynDrone's
 base height z0 is the floor height, `data_handling.py` keyframes_loader). That is version 1's
-flat-ground ranging given the true height. Writes `cache/syndrone/runs/<name>/<town>_h<h>/`:
+flat-ground ranging given the true height. With propagated measurement errors (D-735) the
+pose error terms (tilt, height, heading) are set to zero, since the poses are exact.
+Writes `cache/syndrone/runs/<name>/<town>_h<h>/`:
 tracks.csv, detections.csv (raw, before tracking) and timing.json.
 """
 
@@ -24,6 +26,7 @@ import pandas as pd
 
 from aerialrange.data.syndrone import FPS, N_FRAMES, SynDroneSequence, decode_rgb, syndrone_camera
 from aerialrange.data.syndrone_archive import MemberStore
+from aerialrange.pipeline.range_speed import exact_pose_overrides
 from aerialrange.pipeline.run import run
 from aerialrange.utils.config import REPO_ROOT, load_config
 
@@ -97,6 +100,7 @@ def main(argv: list[str] | None = None) -> int:
     out = OUT / args.name / f"{args.town}_h{args.height}"
     dets: list[dict] = []
     overrides: dict = {"camera": {"focal_px": cam.fx, "cx": cam.cx, "cy": cam.cy}}
+    overrides |= exact_pose_overrides(load_config(args.config).require("kalman"))
     if args.weights:
         if not (REPO_ROOT / args.weights).is_file():
             print(f"weights not found: {args.weights}")

@@ -16,8 +16,10 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from aerialrange.pipeline.range_speed import exact_pose_overrides
 from aerialrange.pipeline.run import run
 from aerialrange.pipeline.synthetic import make_flight
+from aerialrange.utils.config import load_config
 
 SPEED_TOL_MS = (
     0.5  # same tolerance as the display fit (D-706 / scripts/syndrone_speed_display_fit.py)
@@ -28,13 +30,20 @@ def demo(
     out: Path, n_frames: int = 60, speed_display: dict[str, Any] | None = None
 ) -> dict[str, Any]:
     """`speed_display` overrides the configured display rule (tests; the configured rule is
-    used otherwise, and shows nothing while `sigma_max_ms` is unset (D-710))."""
+    used otherwise, and shows nothing while `sigma_max_ms` is unset (D-710)). With propagated
+    measurement errors, the scene's boxes carry the configured vehicle box noise, so the speed
+    filter sees the noise it assumes; the poses are exact."""
     out = Path(out)
-    scene = make_flight(out / "flight", n_frames=n_frames)
+    km = load_config("run").require("kalman")
+    ms = km.get("meas_sigma") if km.get("meas_model") == "propagated" else None
+    noise = (ms["kappa_u"]["vehicle"], ms["kappa_v"]["vehicle"]) if ms else None
+    scene = make_flight(out / "flight", n_frames=n_frames, box_noise=noise)
     overrides = {
         "camera": {"focal_px": scene["focal_px"], "cx": scene["cx"], "cy": scene["cy"]},
         "detector": {"kind": "boxes"},
         "overlay": {"font_scale": 0.45},
+        # the synthetic flight's poses are exact
+        **exact_pose_overrides(km),
     }
     if speed_display is not None:
         overrides["speed_display"] = speed_display

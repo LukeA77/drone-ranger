@@ -99,7 +99,7 @@ def evaluate_sequence(town: str, h: int, name: str, rules: TruthRules, cmap: dic
         g_ids, t_ids, sims = [], [], []
         gid_map: dict[int, int] = {}
         tid_map: dict[int, int] = {}
-        rng_rows, spd_rows = [], []
+        rng_rows, spd_rows, pair_rows = [], [], []
         for f in frames:
             v = valid_by_f.get(f)
             vb = mask_ltwh(v) if v is not None else np.zeros((0, 4))
@@ -142,8 +142,12 @@ def evaluate_sequence(town: str, h: int, name: str, rules: TruthRules, cmap: dic
                         )
                     )
                 key = (int(trow["id"]), int(f))
-                if key in sp.index and np.isfinite(prow["speed_ms"]):
-                    st = sp.loc[key]
+                st = sp.loc[key] if key in sp.index else None
+                if st is not None and np.isfinite(st["speed_ms"]):
+                    pair_rows.append(
+                        (f, trow["id"], prow["track_id"], st["speed_ms"], trow["depression_deg"])
+                    )
+                if st is not None and np.isfinite(prow["speed_ms"]):
                     if np.isfinite(st["speed_ms"]):
                         spd_rows.append(
                             (
@@ -155,6 +159,8 @@ def evaluate_sequence(town: str, h: int, name: str, rules: TruthRules, cmap: dic
                                 prow["nis_mean"],
                                 prow["track_id"],
                                 trow["depression_deg"],
+                                f,
+                                trow["id"],
                             )
                         )
         pieces = {"all": ap_pieces(gt_img, det_img, 0.5)}
@@ -179,7 +185,8 @@ def evaluate_sequence(town: str, h: int, name: str, rules: TruthRules, cmap: dic
             "mot": {k: float(m[k]) for k in m.index},
             "hota": hota_sequence(g_ids, t_ids, sims),
             "range": np.array(rng_rows, float).reshape(-1, 6),
-            "speed": np.array(spd_rows, float).reshape(-1, 8),
+            "speed": np.array(spd_rows, float).reshape(-1, 10),
+            "pairs": np.array(pair_rows, float).reshape(-1, 5),
             "n_valid_truth": int((tg["status"] == "valid").sum()),
         }
     return out
@@ -345,15 +352,24 @@ def main(argv: list[str] | None = None) -> int:
         "nis_mean",
         "track_id",
         "depression_deg",
+        "frame",
+        "truth_id",
     ]
-    frames = []
+    pair_cols = ["frame", "truth_id", "track_id", "truth_ms", "depression_deg"]
+    frames, pairs = [], []
     for s in seqs:
         for g in GROUPS:
             df = pd.DataFrame(s[g]["speed"], columns=cols)
             df["town"], df["height"], df["group"] = s["town"], s["height"], g
             frames.append(df)
+            pf = pd.DataFrame(s[g]["pairs"], columns=pair_cols)
+            pf["town"], pf["height"], pf["group"] = s["town"], s["height"], g
+            pairs.append(pf)
     RUNS.joinpath(args.name).mkdir(parents=True, exist_ok=True)
     pd.concat(frames).to_csv(RUNS / args.name / f"speed_matches_{args.split}.csv.gz", index=False)
+    # every matched truth-track pair with a true speed, whatever the filter output: the common
+    # rows on which ranging and filter settings are compared (scripts/syndrone_speed_compare.py)
+    pd.concat(pairs).to_csv(RUNS / args.name / f"speed_pairs_{args.split}.csv.gz", index=False)
     (out / f"eval_{args.name}.json").write_text(
         json.dumps(result, indent=1, default=float) + "\n", encoding="utf-8"
     )

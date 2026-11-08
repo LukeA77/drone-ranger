@@ -8,7 +8,7 @@ uses IoU >= `{{IOU_MATCH}}`.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -101,3 +101,34 @@ def summarise(accs: Mapping[str, mm.MOTAccumulator]) -> dict[str, dict[str, Any]
         [accs[n] for n in names], metrics=METRICS, names=names, generate_overall=True
     )
     return {str(idx): {k: float(v) for k, v in row.items()} for idx, row in df.iterrows()}
+
+
+HEIGHT_BINS = ((0, 16), (16, 32), (32, 64), (64, 128), (128, 1e9))  # px, used throughout
+
+
+def height_key(lo: float, hi: float) -> str:
+    return f"{lo:g}-{hi:g}" if hi < 1e9 else f"{lo:g}-inf"
+
+
+def counts_by_height(
+    acc: mm.MOTAccumulator, gt: NDArray, bins: Sequence[tuple[float, float]] = HEIGHT_BINS
+) -> NDArray:
+    """Ground-truth object-frames per height bin: rows (total, matched, switches), one column
+    per bin. Matched counts matches and identity switches; objects in ignored regions are
+    already out of `acc`. `gt` rows are (frame, id, left, top, width, height)."""
+    out = np.zeros((3, len(bins)))
+    ev = acc.mot_events.reset_index()
+    ev = ev[ev["Type"].isin(["MATCH", "SWITCH", "MISS"])]
+    if not len(gt) or not len(ev):
+        return out
+    hmap = {(int(f), int(o)): h for f, o, h in zip(gt[:, 0], gt[:, 1], gt[:, 5], strict=True)}
+    hs = np.array(
+        [hmap.get((int(f), int(o)), np.nan) for f, o in zip(ev["FrameId"], ev["OId"], strict=True)]
+    )
+    typ = ev["Type"].to_numpy()
+    for b, (lo, hi) in enumerate(bins):
+        m = (hs >= lo) & (hs < hi)
+        out[0, b] = m.sum()
+        out[1, b] = (m & np.isin(typ, ["MATCH", "SWITCH"])).sum()
+        out[2, b] = (m & (typ == "SWITCH")).sum()
+    return out

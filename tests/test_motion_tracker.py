@@ -171,6 +171,19 @@ def test_a_single_detection_is_tentative_and_low_scores_do_not_start_tracks():
         assert len(t2.update(dets([[50, 50, 10, 10]], conf=0.3), BLANK)) == 0
 
 
+def test_per_class_thresholds_start_and_match_tracks_by_class():
+    s = TrackerSettings(**{**NO_CMC.__dict__, "high_by_class": {0: 0.2}, "new_by_class": {0: 0.25}})
+    np.testing.assert_allclose(s.thresholds(np.array([0, 3]))[0], [0.2, NO_CMC.high])
+    np.testing.assert_allclose(s.thresholds(np.array([0, 3]))[1], [0.25, NO_CMC.new])
+    for cls, n_out in ((0, 1), (3, 0)):  # a 0.4 person starts a track; a 0.4 vehicle does not
+        t = MotionTracker(s)
+        t.update(dets([]), BLANK)
+        t.update(dets([[50, 50, 10, 10]], conf=0.4, cls=cls), BLANK)
+        assert len(t.update(dets([[50, 50, 10, 10]], conf=0.4, cls=cls), BLANK)) == n_out
+    m = TrackerSettings.from_mapping({"high_by_class": {"1": 0.1}, "new_by_class": None})
+    assert m.high_by_class == {1: 0.1} and m.new_by_class is None
+
+
 def test_weak_detections_extend_a_track_in_stage_two():
     t = MotionTracker(NO_CMC)
     for k in range(5):

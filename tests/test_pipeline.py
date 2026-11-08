@@ -97,7 +97,7 @@ def test_demo_checks_displayed_speed(tmp_path):
     """The demo's check covers the speed shown on the overlay."""
     from aerialrange.pipeline.demo import demo
 
-    rule = {"sigma_max_ms": 1.0, "min_age": 5, "nis_window": 10, "nis_conf": 0.95}
+    rule = {"sigma_max_ms": 1.5, "min_age": 5, "nis_window": 10, "nis_conf": 0.95}  # test values
     s = demo(tmp_path, n_frames=60, speed_display=rule)
     d = s["displayed_speed"]
     assert d["n_shown"] > 0  # the synthetic cars are tracked long enough to qualify

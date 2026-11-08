@@ -7,6 +7,10 @@ image is rendered by projecting the ground into the camera (`project_ground`), s
 exact by construction. Writes frames/, boxes.csv (per-frame axis-aligned boxes of the projected
 footprints, class 3 = car in the detector's VisDrone ids), metadata.csv (camera pose per frame)
 and truth.csv (true footprint centres). Synthetic data, labelled as such.
+
+`box_noise` = (kappa_u, kappa_v) shifts each written box by Gaussian errors of kappa_u x width
+and kappa_v x height (a detector's measured box noise, as the speed filter assumes, D-735), from
+a generator separate from the image texture's, so the images do not change.
 """
 
 from __future__ import annotations
@@ -22,10 +26,17 @@ from aerialrange.evaluate.auair_world import project_ground
 W, H, F = 960, 540, 630.0  # half-size frames; focal scaled with them
 
 
-def make_flight(out: Path, n_frames: int = 60, fps: float = 5.0, seed: int = 0) -> dict:
+def make_flight(
+    out: Path,
+    n_frames: int = 60,
+    fps: float = 5.0,
+    seed: int = 0,
+    box_noise: tuple[float, float] | None = None,
+) -> dict:
     out = Path(out)
     (out / "frames").mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(seed)
+    box_rng = np.random.default_rng([seed, 1])
     # tileable ground texture: noise blurred by circular (FFT) convolution, so it wraps cleanly
     fy, fx = np.meshgrid(np.fft.fftfreq(800), np.fft.fftfreq(800), indexing="ij")
     blur = np.exp(-2 * (np.pi * 3) ** 2 * (fx**2 + fy**2))
@@ -71,7 +82,11 @@ def make_flight(out: Path, n_frames: int = 60, fps: float = 5.0, seed: int = 0) 
             x0, y0, x1, y1 = u.min(), v.min(), u.max(), v.max()
             if x1 < 0 or y1 < 0 or x0 > W or y0 > H:
                 continue
-            boxes.append((k + 1, x0, y0, x1 - x0, y1 - y0, 0.9, 3))
+            bw, bh = x1 - x0, y1 - y0
+            if box_noise is not None:
+                du, dv = box_rng.normal(size=2) * np.array(box_noise) * (bw, bh)
+                x0, y0 = x0 + du, y0 + dv
+            boxes.append((k + 1, x0, y0, bw, bh, 0.9, 3))
             truth.append((k + 1, cid, cn, ce))
         cv2.imwrite(str(out / "frames" / f"{k + 1:06d}.jpg"), img)
         meta.append((k + 1, t, cam_n, 0.0, h, yaw, tilt))

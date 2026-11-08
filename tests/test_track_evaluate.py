@@ -75,3 +75,27 @@ def test_iou_distance_values_and_threshold():
     assert np.isnan(d[0, 2])
     assert np.isnan(iou_distance(a, b[1:2], 0.5)[0, 0])  # IoU 1/3 < 0.5
     assert iou_distance(a, np.zeros((0, 4)), 0.5).shape == (1, 0)
+
+
+def test_counts_by_height_bins_matches_misses_and_switches():
+    from aerialrange.track.evaluate import accumulate, counts_by_height
+
+    # object 1 is 20 px tall (bin 16-32), object 2 is 70 px tall (bin 64-128)
+    gt = np.array(
+        [[f, 1, 10, 10, 10, 20] for f in (1, 2, 3)] + [[f, 2, 100, 100, 30, 70] for f in (1, 2, 3)],
+        float,
+    )
+    # object 1 tracked as id 7 then id 8 (one switch); object 2 matched in frame 1 only
+    pred = np.array(
+        [
+            [1, 7, 10, 10, 10, 20],
+            [2, 7, 10, 10, 10, 20],
+            [3, 8, 10, 10, 10, 20],
+            [1, 9, 100, 100, 30, 70],
+        ],
+        float,
+    )
+    c = counts_by_height(accumulate(gt, pred, {}, 0.5), gt)
+    np.testing.assert_array_equal(c[:, 1], [3, 3, 1])  # 16-32: total, matched, switches
+    np.testing.assert_array_equal(c[:, 3], [3, 1, 0])  # 64-128
+    assert c[0, [0, 2, 4]].sum() == 0

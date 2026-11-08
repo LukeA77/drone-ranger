@@ -1,0 +1,28 @@
+# The project's own tracker with the version 2 detector, D-FINE N at 640 (D-729), with
+# thresholds chosen per class group on VisDrone MOT validation (D-733): people for recall
+# (highest F2), vehicles for identity (highest IDF1). Ids are the detector's visdrone10 classes
+# (configs/detector.yaml). Grids: results/visdrone/val/grid_dfine_n_640__motion_dfine_n_640__
+# person.json, __vehicle.json and __vehicle__ext_high.json.
+tracker_type: motion
+high: 0.65          # vehicles: validation grid per group, D-733
+low: 0.1            # also the detection score floor
+new: 0.65           # vehicles: validation grid per group, D-733
+match_cost: 0.8
+second_cost: 0.5
+tentative_cost: 0.7
+fuse_score: true
+max_lost: 30        # frames
+duplicate_iou: 0.85
+cmc: true
+cmc_downscale: 8    # the pipeline's setting (D-609)
+cmc_corners: 400    # D-713
+cmc_min_distance_px: 6.0
+cmc_window_px: 21
+cmc_levels: 3
+cmc_check_back: false  # D-713: RANSAC alone rejects the outliers as well, at half the cost
+std_pos: 0.05       # DeepSORT, 1/20
+std_vel: 0.00625    # DeepSORT, 1/160
+class_groups: null
+iou_buffer: 0.0
+high_by_class: {0: 0.35, 1: 0.35}  # people (VisDrone pedestrian, people): D-733
+new_by_class: {0: 0.45, 1: 0.45}

@@ -28,10 +28,8 @@ import numpy as np
 import pandas as pd
 
 from aerialrange.detect.factory import make_detector
-from aerialrange.pipeline.filterbank import TrackFilterBank
 from aerialrange.pipeline.overlay import draw_frame
-from aerialrange.pipeline.ranging import CameraPose, RangingModel, range_boxes
-from aerialrange.pipeline.speed_display import SpeedDisplayRule
+from aerialrange.pipeline.range_speed import DEFAULT_DT_S, RangeSpeedStage, pose_of
 from aerialrange.track.runner import DetSet, coast, make_tracker
 from aerialrange.utils.config import REPO_ROOT, load_config
 
@@ -118,33 +116,14 @@ def run(
             else (overrides or {}).get(k, cfg.require(k))
         )
 
-    det, trk, cam = get("detector"), get("tracker"), get("camera")
-    rs, km, ov = get("range_sigma_rel_by_depression"), get("kalman"), get("overlay")
-    model = RangingModel(
-        float(cam["focal_px"]),
-        float(cam["cx"]),
-        float(cam["cy"]),
-        np.array(rs["edges_deg"], float),
-        np.array(rs["rel"], float),
-        float(get("reliable_max_rel_sigma")),
-    )
-    meas_rel = np.array(km["meas_rel"] if "meas_rel" in km else km["meas_rel_sigma"], float)
+    det, trk, ov = get("detector"), get("tracker"), get("overlay")
+    stage = RangeSpeedStage.from_config(get)
+    model = stage.model
     cmap = {
         int(k): v for k, v in load_config("detector").require("class_maps")["visdrone10"].items()
     }
     meta = (metadata if isinstance(metadata, pd.DataFrame) else pd.read_csv(metadata)).set_index(
         "frame"
-    )
-    sd = get("speed_display")
-    rule = (
-        SpeedDisplayRule(
-            float(sd["sigma_max_ms"]),
-            int(sd["min_age"]),
-            int(sd["nis_window"]),
-            float(sd["nis_conf"]),
-        )
-        if sd.get("sigma_max_ms") is not None and sd.get("min_age") is not None
-        else None
     )
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
@@ -180,9 +159,6 @@ def run(
         {"gmc_downscale": trk["gmc_downscale"]} if trk.get("gmc_downscale") else None,
     )
     stride = int(trk.get("det_stride", 1))
-    bank = TrackFilterBank(
-        float(km["q"]), int(km["max_unseen_frames"]), nis_window=int(sd["nis_window"])
-    )
     times: dict[str, list[float]] = {
         k: [] for k in ("read", "detect", "track", "range_filter", "end_to_end", "overlay")
     }
@@ -220,75 +196,12 @@ def run(
             t2 = time.perf_counter()
             tracked = [(int(s.track_id), int(s.cls), *s.tlwh) for s in coast(tracker, img)]
         t3 = time.perf_counter()
-        m = meta.loc[k] if k in meta.index else None
-        pose = (
-            CameraPose(*(float(m[c]) for c in ("n_m", "e_m", "h_m", "yaw_rad", "tilt_deg")))
-            if m is not None
-            else CameraPose(np.nan, np.nan, np.nan, 0.0, np.nan)
-        )
-        t_s = float(m["t_s"]) if m is not None else np.nan
-        tracked = [t for t in tracked if t[1] in cmap]
-        boxes = np.array([t[2:] for t in tracked], float).reshape(-1, 4)
-        rg = range_boxes(boxes, pose, model)
-        dt = (t_s - t_prev) if t_prev is not None and np.isfinite(t_s) else 0.2
+        pose, t_s, tilt_sigma = pose_of(meta, k)
+        tracked = [(t[0], cmap[t[1]], *t[2:]) for t in tracked if t[1] in cmap]
+        frame_rows = stage.step(k, t_s, pose, tracked, tilt_sigma)
+        dt = (t_s - t_prev) if t_prev is not None and np.isfinite(t_s) else DEFAULT_DT_S
         t_prev = t_s
-        valid = rg["valid"]
-        msig = meas_rel[model.band(np.nan_to_num(rg["depression_deg"]))] * np.nan_to_num(
-            rg["range_m"]
-        )
-        ids = np.array([t[0] for t in tracked], int)
-        fb = bank.step(
-            max(dt, 1e-3),
-            ids[valid],
-            np.column_stack([rg["ground_n_m"], rg["ground_e_m"]])[valid],
-            msig[valid],
-        )
-        speed = {
-            int(i): (
-                fb["speed_ms"][j],
-                fb["speed_sigma_ms"][j],
-                fb["heading_deg"][j],
-                fb["heading_sigma_deg"][j],
-                int(fb["age"][j]),
-                fb["nis_mean"][j],
-                int(fb["nis_n"][j]),
-            )
-            for j, i in enumerate(fb["id"])
-        }
         t4 = time.perf_counter()
-        frame_rows = []
-        for j, (tid, cls, x, y, w, h) in enumerate(tracked):
-            sp, ss, hd, hs, age, nis_m, nis_n = speed.get(
-                tid, (np.nan, np.nan, np.nan, np.nan, 0, np.nan, 0)
-            )
-            shown = bool(rule is not None and valid[j] and rule.ok(ss, age, nis_m, nis_n))
-            frame_rows.append(
-                {
-                    "frame": k,
-                    "t_s": t_s,
-                    "track_id": tid,
-                    "class": cmap[cls],
-                    "left": x,
-                    "top": y,
-                    "width": w,
-                    "height": h,
-                    "range_m": rg["range_m"][j],
-                    "range_sigma_m": rg["range_sigma_m"][j],
-                    "azimuth_deg": rg["azimuth_deg"][j],
-                    "relative_azimuth_deg": rg["relative_azimuth_deg"][j],
-                    "depression_deg": rg["depression_deg"][j],
-                    "speed_ms": sp,
-                    "speed_sigma_ms": ss,
-                    "valid": bool(valid[j]),
-                    "reason": rg["reason"][j],
-                    "flag": rg["flag"][j],
-                    "heading_deg": hd,
-                    "heading_sigma_deg": hs,
-                    "track_age": age,
-                    "nis_mean": nis_m,
-                    "speed_shown": shown,
-                }
-            )
         rows_all += frame_rows
         for name, a, b in (
             ("read", t0, t1),
@@ -334,7 +247,9 @@ def run(
         "frames": k,
         "det_stride": stride,
         "stages": {n: _stats(v) for n, v in times.items()},
-        "speed_display": "unresolved: no speed is displayed" if rule is None else vars(rule),
+        "speed_display": "unresolved: no speed is displayed"
+        if stage.rule is None
+        else vars(stage.rule),
         "note": "Sequential run on this machine; overlay drawing excluded from end_to_end (10.1). "
         "detect is near zero on frames between detections. For the protocol benchmark see "
         "scripts/benchmark_pipeline.py and scripts/benchmark_threaded.py.",

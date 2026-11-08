@@ -1,0 +1,313 @@
+{
+ "overrides": {},
+ "mean_idf1": 0.5222651454493419,
+ "mean_mota": 0.13322553558798111,
+ "f2": {
+  "person": 0.5817387066977955,
+  "vehicle": 0.6092142251334873
+ },
+ "by_height": {
+  "person": {
+   "0-16": {
+    "gt_object_frames": 192,
+    "matched": 33,
+    "switches": 0
+   },
+   "16-32": {
+    "gt_object_frames": 3865,
+    "matched": 1441,
+    "switches": 36
+   },
+   "32-64": {
+    "gt_object_frames": 20449,
+    "matched": 10757,
+    "switches": 300
+   },
+   "64-128": {
+    "gt_object_frames": 23438,
+    "matched": 17855,
+    "switches": 565
+   },
+   "128-inf": {
+    "gt_object_frames": 2368,
+    "matched": 1908,
+    "switches": 64
+   }
+  },
+  "vehicle": {
+   "0-16": {
+    "gt_object_frames": 21,
+    "matched": 1,
+    "switches": 0
+   },
+   "16-32": {
+    "gt_object_frames": 7735,
+    "matched": 2036,
+    "switches": 3
+   },
+   "32-64": {
+    "gt_object_frames": 16507,
+    "matched": 7431,
+    "switches": 16
+   },
+   "64-128": {
+    "gt_object_frames": 11320,
+    "matched": 8928,
+    "switches": 22
+   },
+   "128-inf": {
+    "gt_object_frames": 4703,
+    "matched": 4446,
+    "switches": 2
+   }
+  }
+ },
+ "tracker_seconds": 42.103774098912254,
+ "metrics": {
+  "person": {
+   "uav0000086_00000_v": {
+    "mota": 0.11277038646031312,
+    "idf1": 0.455993582397433,
+    "idp": 0.3945072377553044,
+    "idr": 0.5401846320934022,
+    "precision": 0.546467050036354,
+    "recall": 0.7482577608833378,
+    "num_switches": 320.0,
+    "num_fragmentations": 512.0,
+    "mostly_tracked": 40.0,
+    "mostly_lost": 6.0,
+    "num_objects": 22098.0,
+    "num_false_positives": 13723.0,
+    "num_misses": 5563.0
+   },
+   "uav0000117_02622_v": {
+    "mota": -0.10672182006204767,
+    "idf1": 0.3105100309412117,
+    "idp": 0.30005787037037035,
+    "idr": 0.32171664943123063,
+    "precision": 0.4615162037037037,
+    "recall": 0.4948293691830403,
+    "num_switches": 234.0,
+    "num_fragmentations": 399.0,
+    "mostly_tracked": 19.0,
+    "mostly_lost": 45.0,
+    "num_objects": 9670.0,
+    "num_false_positives": 5583.0,
+    "num_misses": 4885.0
+   },
+   "uav0000137_00458_v": {
+    "mota": -0.2759436498548231,
+    "idf1": 0.4345588521969667,
+    "idp": 0.34085626911314987,
+    "idr": 0.5993117539520378,
+    "precision": 0.4290519877675841,
+    "recall": 0.754382191633509,
+    "num_switches": 246.0,
+    "num_fragmentations": 330.0,
+    "mostly_tracked": 41.0,
+    "mostly_lost": 9.0,
+    "num_objects": 9299.0,
+    "num_false_positives": 9335.0,
+    "num_misses": 2284.0
+   },
+   "uav0000182_00000_v": {
+    "mota": -4.709787234042553,
+    "idf1": 0.11806098514464425,
+    "idp": 0.0697030312355747,
+    "idr": 0.38553191489361704,
+    "precision": 0.07585782428065856,
+    "recall": 0.4195744680851064,
+    "num_switches": 21.0,
+    "num_fragmentations": 53.0,
+    "mostly_tracked": 5.0,
+    "mostly_lost": 9.0,
+    "num_objects": 1175.0,
+    "num_false_positives": 6006.0,
+    "num_misses": 682.0
+   },
+   "uav0000268_05773_v": {
+    "mota": -0.008568548387096753,
+    "idf1": 0.0,
+    "idp": 0.0,
+    "idr": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "num_switches": 0.0,
+    "num_fragmentations": 0.0,
+    "mostly_tracked": 0.0,
+    "mostly_lost": 6.0,
+    "num_objects": 1984.0,
+    "num_false_positives": 17.0,
+    "num_misses": 1984.0
+   },
+   "uav0000305_00000_v": {
+    "mota": -5.703150912106136,
+    "idf1": 0.10361806893598802,
+    "idp": 0.059488692232055065,
+    "idr": 0.4013266998341625,
+    "precision": 0.07841691248770895,
+    "recall": 0.5290215588723052,
+    "num_switches": 9.0,
+    "num_fragmentations": 23.0,
+    "mostly_tracked": 0.0,
+    "mostly_lost": 1.0,
+    "num_objects": 603.0,
+    "num_false_positives": 3749.0,
+    "num_misses": 284.0
+   },
+   "uav0000339_00001_v": {
+    "mota": -0.11289440087543312,
+    "idf1": 0.3792127604836635,
+    "idp": 0.35788280997086436,
+    "idr": 0.40324639795732264,
+    "precision": 0.4608287471673681,
+    "recall": 0.5192412912639066,
+    "num_switches": 135.0,
+    "num_fragmentations": 173.0,
+    "mostly_tracked": 7.0,
+    "mostly_lost": 8.0,
+    "num_objects": 5483.0,
+    "num_false_positives": 3331.0,
+    "num_misses": 2636.0
+   },
+   "OVERALL": {
+    "mota": -0.21297106058196857,
+    "idf1": 0.37931479242241034,
+    "idp": 0.3190620846781849,
+    "idr": 0.46762203847988554,
+    "precision": 0.4338875478043885,
+    "recall": 0.6359119096835745,
+    "num_switches": 965.0,
+    "num_fragmentations": 1490.0,
+    "mostly_tracked": 112.0,
+    "mostly_lost": 84.0,
+    "num_objects": 50312.0,
+    "num_false_positives": 41744.0,
+    "num_misses": 18318.0
+   }
+  },
+  "vehicle": {
+   "uav0000086_00000_v": {
+    "mota": -Infinity,
+    "idf1": 0.0,
+    "idp": 0.0,
+    "idr": NaN,
+    "precision": 0.0,
+    "recall": NaN,
+    "num_switches": 0.0,
+    "num_fragmentations": 0.0,
+    "mostly_tracked": 0.0,
+    "mostly_lost": 0.0,
+    "num_objects": 0.0,
+    "num_false_positives": 143.0,
+    "num_misses": 0.0
+   },
+   "uav0000117_02622_v": {
+    "mota": 0.4497729336966394,
+    "idf1": 0.6928429423459245,
+    "idp": 0.7650933040614709,
+    "idr": 0.6330608537693007,
+    "precision": 0.7721185510428101,
+    "recall": 0.6388737511353315,
+    "num_switches": 3.0,
+    "num_fragmentations": 50.0,
+    "mostly_tracked": 14.0,
+    "mostly_lost": 7.0,
+    "num_objects": 5505.0,
+    "num_false_positives": 1038.0,
+    "num_misses": 1988.0
+   },
+   "uav0000137_00458_v": {
+    "mota": 0.6601983002832861,
+    "idf1": 0.7759063201796599,
+    "idp": 0.8944156804733728,
+    "idr": 0.6851274787535411,
+    "precision": 0.932137573964497,
+    "recall": 0.7140226628895184,
+    "num_switches": 13.0,
+    "num_fragmentations": 48.0,
+    "mostly_tracked": 29.0,
+    "mostly_lost": 10.0,
+    "num_objects": 7060.0,
+    "num_false_positives": 367.0,
+    "num_misses": 2019.0
+   },
+   "uav0000182_00000_v": {
+    "mota": 0.48514124984713225,
+    "idf1": 0.6828427853553481,
+    "idp": 0.8266991135059969,
+    "idr": 0.5816314051608169,
+    "precision": 0.8452981053363463,
+    "recall": 0.5947168888345359,
+    "num_switches": 6.0,
+    "num_fragmentations": 71.0,
+    "mostly_tracked": 26.0,
+    "mostly_lost": 17.0,
+    "num_objects": 8177.0,
+    "num_false_positives": 890.0,
+    "num_misses": 3314.0
+   },
+   "uav0000268_05773_v": {
+    "mota": 0.23069289065319376,
+    "idf1": 0.38684884713919726,
+    "idp": 0.9157681940700808,
+    "idr": 0.24521833273186575,
+    "precision": 0.9309299191374663,
+    "recall": 0.24927823890292314,
+    "num_switches": 1.0,
+    "num_fragmentations": 15.0,
+    "mostly_tracked": 5.0,
+    "mostly_lost": 32.0,
+    "num_objects": 11084.0,
+    "num_false_positives": 205.0,
+    "num_misses": 8321.0
+   },
+   "uav0000305_00000_v": {
+    "mota": 0.784,
+    "idf1": 0.8563212034067028,
+    "idp": 0.8524554062981722,
+    "idr": 0.8602222222222222,
+    "precision": 0.8901123100638626,
+    "recall": 0.8982222222222223,
+    "num_switches": 15.0,
+    "num_fragmentations": 19.0,
+    "mostly_tracked": 39.0,
+    "mostly_lost": 2.0,
+    "num_objects": 4500.0,
+    "num_false_positives": 499.0,
+    "num_misses": 458.0
+   },
+   "uav0000339_00001_v": {
+    "mota": 0.5727272727272728,
+    "idf1": 0.7194681312328371,
+    "idp": 0.8411625549172017,
+    "idr": 0.6285353535353535,
+    "precision": 0.8840824602906387,
+    "recall": 0.6606060606060606,
+    "num_switches": 5.0,
+    "num_fragmentations": 17.0,
+    "mostly_tracked": 16.0,
+    "mostly_lost": 6.0,
+    "num_objects": 3960.0,
+    "num_false_positives": 343.0,
+    "num_misses": 1344.0
+   },
+   "OVERALL": {
+    "mota": 0.4794221317579308,
+    "idf1": 0.6652154984762734,
+    "idp": 0.841569491396665,
+    "idr": 0.549967730725314,
+    "precision": 0.867626391157367,
+    "recall": 0.5669959787519238,
+    "num_switches": 43.0,
+    "num_fragmentations": 220.0,
+    "mostly_tracked": 129.0,
+    "mostly_lost": 74.0,
+    "num_objects": 40286.0,
+    "num_false_positives": 3485.0,
+    "num_misses": 17444.0
+   }
+  }
+ },
+ "config": "configs/trackers/motion_dfine_n_640_by_group.yaml"
+}

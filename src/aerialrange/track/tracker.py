@@ -25,7 +25,9 @@ Options beyond the papers, each off by default and chosen on validation only:
 `class_groups` forbids matching across groups (a person track never takes a vehicle
 detection); `iou_buffer` enlarges both boxes by that fraction of their size on each side
 before IoU (buffered IoU, Yang et al. 2023), so small fast objects that no longer overlap
-their prediction can still match.
+their prediction can still match. `high_by_class` and `new_by_class` give a class its own
+`high` and `new` thresholds (classes not listed use `high` and `new`), so that people and
+vehicles can be tuned to different aims.
 
 Output per frame: confirmed tracks matched in this frame, with the filtered box.
 """
@@ -68,6 +70,8 @@ class TrackerSettings:
     std_vel: float = 1 / 160
     class_groups: tuple[tuple[int, ...], ...] | None = None
     iou_buffer: float = 0.0
+    high_by_class: Mapping[int, float] | None = None
+    new_by_class: Mapping[int, float] | None = None
 
     @classmethod
     def from_mapping(cls, m: Mapping[str, Any]) -> TrackerSettings:
@@ -78,7 +82,19 @@ class TrackerSettings:
         kw = dict(m)
         if kw.get("class_groups") is not None:
             kw["class_groups"] = tuple(tuple(int(c) for c in g) for g in kw["class_groups"])
+        for key in ("high_by_class", "new_by_class"):
+            if kw.get(key) is not None:
+                kw[key] = {int(c): float(v) for c, v in kw[key].items()}
         return cls(**kw)
+
+    def thresholds(self, cls: NDArray) -> tuple[NDArray, NDArray]:
+        """Per-detection `high` and `new` thresholds for an array of class ids."""
+        hi = np.full(len(cls), self.high, float)
+        new = np.full(len(cls), self.new, float)
+        for table, out in ((self.high_by_class, hi), (self.new_by_class, new)):
+            for c, v in (table or {}).items():
+                out[cls == c] = v
+        return hi, new
 
 
 @dataclass(eq=False)  # identity, not field, comparison
@@ -256,8 +272,9 @@ class MotionTracker:
         xyxy = np.column_stack([xywh[:, :2] - xywh[:, 2:] / 2, xywh[:, :2] + xywh[:, 2:] / 2])
         self._advance(img, xyxy)
 
-        hi = np.flatnonzero(conf >= self.s.high)
-        lo = np.flatnonzero((conf > self.s.low) & (conf < self.s.high))
+        t_high, t_new = self.s.thresholds(cls)
+        hi = np.flatnonzero(conf >= t_high)
+        lo = np.flatnonzero((conf > self.s.low) & (conf < t_high))
         confirmed = [t for t in self.tracks if t.confirmed]
         tentative = [t for t in self.tracks if not t.confirmed]
         pool = confirmed + self.lost
@@ -299,7 +316,7 @@ class MotionTracker:
         # new tracks
         born = []
         for k in left[u_left]:
-            if conf[k] < self.s.new:
+            if conf[k] < t_new[k]:
                 continue
             mean, cov = self.kf.initiate(xywh[k][None])
             born.append(

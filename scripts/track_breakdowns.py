@@ -26,11 +26,16 @@ import cv2
 import numpy as np
 import pandas as pd
 
-from aerialrange.track.evaluate import accumulate, read_ignored, read_rows, summarise
+from aerialrange.track.evaluate import (
+    HEIGHT_BINS,
+    accumulate,
+    counts_by_height,
+    read_ignored,
+    read_rows,
+    summarise,
+)
 from aerialrange.utils.config import REPO_ROOT, load_config
 from aerialrange.viz.plots import line_chart
-
-HEIGHT_BINS = [(0, 16), (16, 32), (32, 64), (64, 128), (128, 1e9)]
 
 
 def camera_shift(frames: list) -> float:
@@ -87,24 +92,9 @@ def main(argv: list[str] | None = None) -> int:
             )
             acc = accumulate(gt, pr, read_ignored(seq / "ignored.txt"), iou)
             per_seq[seq.name] = acc
-            ev = acc.mot_events.reset_index()
-            ev = ev[ev["Type"].isin(["MATCH", "SWITCH", "MISS"])]
-            if not len(gt) or not len(ev):
-                continue
-            hmap = {
-                (int(f), int(o)): h for f, o, h in zip(gt[:, 0], gt[:, 1], gt[:, 5], strict=True)
-            }
-            hs = np.array(
-                [
-                    hmap.get((int(f), int(o)), np.nan)
-                    for f, o in zip(ev["FrameId"], ev["OId"], strict=True)
-                ]
-            )
-            for b, (lo, hi) in enumerate(HEIGHT_BINS):
-                m = (hs >= lo) & (hs < hi)
-                size_tot[b] += m.sum()
-                size_match[b] += (m & ev["Type"].isin(["MATCH", "SWITCH"]).to_numpy()).sum()
-                size_sw[b] += (m & (ev["Type"] == "SWITCH").to_numpy()).sum()
+            size_tot, size_match, size_sw = np.array(
+                [size_tot, size_match, size_sw]
+            ) + counts_by_height(acc, gt, HEIGHT_BINS)
         metrics = summarise(per_seq)
         sizes = {}
         for b, (lo, hi) in enumerate(HEIGHT_BINS):

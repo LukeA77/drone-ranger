@@ -1,0 +1,81 @@
+{
+ "generated_utc": "2026-11-08T17:08:04+00:00",
+ "decision": "D-735",
+ "run": "B2_yolo26n_960",
+ "variant": "v1_relative_cv",
+ "config": "run_accurate",
+ "overrides": {},
+ "all": {
+  "tracks": 1068,
+  "share_above_70_kmh": 0.08895131086142322,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 215,
+    "share_above_70_kmh": 0.3116279069767442
+   },
+   "10-20": {
+    "tracks": 505,
+    "share_above_70_kmh": 0.05148514851485148
+   },
+   "20-40": {
+    "tracks": 280,
+    "share_above_70_kmh": 0.007142857142857143
+   },
+   "40-91": {
+    "tracks": 68,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "calibration": {
+  "tracks": 278,
+  "share_above_70_kmh": 0.20863309352517986,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 58,
+    "share_above_70_kmh": 0.6724137931034483
+   },
+   "10-20": {
+    "tracks": 103,
+    "share_above_70_kmh": 0.1650485436893204
+   },
+   "20-40": {
+    "tracks": 65,
+    "share_above_70_kmh": 0.03076923076923077
+   },
+   "40-91": {
+    "tracks": 52,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "held_out": {
+  "tracks": 790,
+  "share_above_70_kmh": 0.04683544303797468,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 157,
+    "share_above_70_kmh": 0.17834394904458598
+   },
+   "10-20": {
+    "tracks": 402,
+    "share_above_70_kmh": 0.022388059701492536
+   },
+   "20-40": {
+    "tracks": 215,
+    "share_above_70_kmh": 0.0
+   },
+   "40-91": {
+    "tracks": 16,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "note": "No ground-truth speeds: plausibility only."
+}

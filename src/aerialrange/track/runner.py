@@ -56,11 +56,13 @@ LIBRARY_KEYS = {
 def make_tracker(tracker_cfg: str, overrides: Mapping[str, Any] | None = None) -> Any:
     """The project's tracker (`track/tracker.py`) from a tracker YAML with
     `tracker_type: motion`; its keys are `TrackerSettings` fields. `overrides` replace YAML
-    values (the validation grid, `{{TRACKER_GRID}}`); unknown keys are refused. Version 1's
-    library tracker names are accepted as overrides so the validation grid tunes every
+    values (the validation grid, `{{TRACKER_GRID}}`); keys that are not settings are refused.
+    Version 1's library tracker names are accepted as overrides so the validation grid tunes every
     tracker the same way: `gmc_downscale` sets `cmc_downscale`, `track_high_thresh` sets
     `high`, `track_low_thresh` sets `low` and `new_track_thresh` sets `new`. Other tracker
     types (version 1's ByteTrack and BoT-SORT) are built by scripts/ultralytics_v1.py."""
+    from dataclasses import fields
+
     import yaml
 
     from aerialrange.track.tracker import MotionTracker, TrackerSettings
@@ -76,9 +78,10 @@ def make_tracker(tracker_cfg: str, overrides: Mapping[str, Any] | None = None) -
     for lib_key, own_key in LIBRARY_KEYS.items():
         if lib_key in ov:
             ov[own_key] = ov.pop(lib_key)
-    unknown = set(ov) - set(raw)
+    names = {f.name for f in fields(TrackerSettings)}
+    unknown = set(ov) - names
     if unknown:
-        raise KeyError(f"tracker overrides not in {tracker_cfg}: {sorted(unknown)}")
+        raise KeyError(f"tracker overrides are not tracker settings: {sorted(unknown)}")
     merged = {k: v for k, v in {**raw, **ov}.items() if k != "tracker_type"}
     return MotionTracker(TrackerSettings.from_mapping(merged))
 

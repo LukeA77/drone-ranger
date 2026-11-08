@@ -1,0 +1,407 @@
+{
+ "generated_utc": "2026-11-08T15:25:55+00:00",
+ "run": "B2_yolo26n_960",
+ "truth_run": "truth",
+ "fast_kmh": 70.0,
+ "detector_tracks": {
+  "frames+tilt": {
+   "tracks": 1106,
+   "share_above_70_kmh": 0.1057866184448463
+  },
+  "stamps+tilt": {
+   "tracks": 1106,
+   "share_above_70_kmh": 0.09674502712477397
+  },
+  "frames+tilt_fixed": {
+   "tracks": 1103,
+   "share_above_70_kmh": 0.0770625566636446
+  },
+  "stamps+tilt_fixed": {
+   "tracks": 1103,
+   "share_above_70_kmh": 0.07162284678150499
+  },
+  "frames+noise_only": {
+   "tracks": 1106,
+   "share_above_70_kmh": 0.0
+  },
+  "stamps+noise_only": {
+   "tracks": 1106,
+   "share_above_70_kmh": 0.0
+  },
+  "frames+cut": {
+   "tracks": 1634,
+   "share_above_70_kmh": 0.1364749082007344
+  },
+  "stamps+cut": {
+   "tracks": 1634,
+   "share_above_70_kmh": 0.1303549571603427
+  },
+  "fast_v1_whose_still_twin_is_fast": 0.0,
+  "by_depression": {
+   "0-20": {
+    "tracks": 693,
+    "share_fast_v1": 0.16305916305916307,
+    "share_fast_timestamps": 0.15007215007215008,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 94.47920586349497
+   },
+   "20-40": {
+    "tracks": 331,
+    "share_fast_v1": 0.012084592145015106,
+    "share_fast_timestamps": 0.00906344410876133,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 58.56613421651888
+   },
+   "40-60": {
+    "tracks": 34,
+    "share_fast_v1": 0.0,
+    "share_fast_timestamps": 0.0,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 43.41452552931543
+   },
+   "60-91": {
+    "tracks": 42,
+    "share_fast_v1": 0.0,
+    "share_fast_timestamps": 0.0,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 24.5085727352748
+   }
+  },
+  "by_dropped_frames": {
+   "none": {
+    "tracks": 674,
+    "share_fast_v1": 0.1201780415430267,
+    "share_fast_timestamps": 0.1201780415430267,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 71.34758680523056
+   },
+   "some": {
+    "tracks": 432,
+    "share_fast_v1": 0.08333333333333333,
+    "share_fast_timestamps": 0.06018518518518518,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 77.60018628421099
+   }
+  },
+  "by_switches": {
+   "none": {
+    "tracks": 251,
+    "share_fast_v1": 0.13147410358565736,
+    "share_fast_timestamps": 0.11952191235059761,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 84.92095999172463
+   },
+   "some": {
+    "tracks": 855,
+    "share_fast_v1": 0.09824561403508772,
+    "share_fast_timestamps": 0.09005847953216374,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 72.02235776320572
+   }
+  },
+  "by_parked_in_image": {
+   "mostly_parked": {
+    "tracks": 329,
+    "share_fast_v1": 0.07598784194528875,
+    "share_fast_timestamps": 0.06382978723404255,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 92.34413748895449
+   },
+   "moving_or_unknown": {
+    "tracks": 777,
+    "share_fast_v1": 0.11840411840411841,
+    "share_fast_timestamps": 0.11068211068211069,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 68.71751103638613
+   }
+  },
+  "by_yaw_rate_p90_deg_s": {
+   "quartile_edges": [
+    0.7586892263950185,
+    1.0304416762310145,
+    1.4688081042996446
+   ],
+   "q1": {
+    "tracks": 277,
+    "share_fast_v1": 0.1263537906137184,
+    "share_fast_timestamps": 0.11552346570397112,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 75.180382762258
+   },
+   "q2": {
+    "tracks": 276,
+    "share_fast_v1": 0.09782608695652174,
+    "share_fast_timestamps": 0.09420289855072464,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 75.82105129349331
+   },
+   "q3": {
+    "tracks": 276,
+    "share_fast_v1": 0.10144927536231885,
+    "share_fast_timestamps": 0.09420289855072464,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 79.44092119125251
+   },
+   "q4": {
+    "tracks": 277,
+    "share_fast_v1": 0.09747292418772563,
+    "share_fast_timestamps": 0.08303249097472924,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 65.03208794861966
+   }
+  },
+  "by_drone_speed_median_ms": {
+   "quartile_edges": [
+    0.035336890288337745,
+    0.05765471273819486,
+    0.08913925274828255
+   ],
+   "q1": {
+    "tracks": 279,
+    "share_fast_v1": 0.16487455197132617,
+    "share_fast_timestamps": 0.16129032258064516,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 75.66525119693972
+   },
+   "q2": {
+    "tracks": 274,
+    "share_fast_v1": 0.11313868613138686,
+    "share_fast_timestamps": 0.10583941605839416,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 84.97424588885093
+   },
+   "q3": {
+    "tracks": 276,
+    "share_fast_v1": 0.08695652173913043,
+    "share_fast_timestamps": 0.07246376811594203,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 74.685018442641
+   },
+   "q4": {
+    "tracks": 277,
+    "share_fast_v1": 0.05776173285198556,
+    "share_fast_timestamps": 0.04693140794223827,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 63.461223559001084
+   }
+  },
+  "by_max_tilt_step": {
+   "median_deg": 0.8243167998144365,
+   "below_median": {
+    "tracks": 554,
+    "share_fast_v1": 0.06678700361010831,
+    "share_fast_timestamps": 0.061371841155234655,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 71.0168425879894
+   },
+   "above_median": {
+    "tracks": 552,
+    "share_fast_v1": 0.14492753623188406,
+    "share_fast_timestamps": 0.1322463768115942,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 77.80616518990718
+   }
+  }
+ },
+ "annotation_tracks": {
+  "frames+tilt": {
+   "tracks": 613,
+   "share_above_70_kmh": 0.08972267536704731
+  },
+  "stamps+tilt": {
+   "tracks": 613,
+   "share_above_70_kmh": 0.08972267536704731
+  },
+  "frames+tilt_fixed": {
+   "tracks": 613,
+   "share_above_70_kmh": 0.06851549755301795
+  },
+  "stamps+tilt_fixed": {
+   "tracks": 613,
+   "share_above_70_kmh": 0.06851549755301795
+  },
+  "frames+noise_only": {
+   "tracks": 613,
+   "share_above_70_kmh": 0.0
+  },
+  "stamps+noise_only": {
+   "tracks": 613,
+   "share_above_70_kmh": 0.0
+  },
+  "frames+cut": {
+   "tracks": 613,
+   "share_above_70_kmh": 0.08972267536704731
+  },
+  "stamps+cut": {
+   "tracks": 613,
+   "share_above_70_kmh": 0.08972267536704731
+  },
+  "fast_v1_whose_still_twin_is_fast": 0.0,
+  "by_depression": {
+   "0-20": {
+    "tracks": 305,
+    "share_fast_v1": 0.1737704918032787,
+    "share_fast_timestamps": 0.1737704918032787,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 90.17064532878062
+   },
+   "20-40": {
+    "tracks": 230,
+    "share_fast_v1": 0.008695652173913044,
+    "share_fast_timestamps": 0.008695652173913044,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 54.212185138205314
+   },
+   "40-60": {
+    "tracks": 38,
+    "share_fast_v1": 0.0,
+    "share_fast_timestamps": 0.0,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 42.922661543035936
+   },
+   "60-91": {
+    "tracks": 35,
+    "share_fast_v1": 0.0,
+    "share_fast_timestamps": 0.0,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 22.40444035268299
+   }
+  },
+  "by_dropped_frames": {
+   "none": {
+    "tracks": 508,
+    "share_fast_v1": 0.08858267716535433,
+    "share_fast_timestamps": 0.08858267716535433,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 65.46458964722852
+   },
+   "some": {
+    "tracks": 105,
+    "share_fast_v1": 0.09523809523809523,
+    "share_fast_timestamps": 0.09523809523809523,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 56.45885806725932
+   }
+  },
+  "by_switches": {
+   "none": {
+    "tracks": 613,
+    "share_fast_v1": 0.08972267536704731,
+    "share_fast_timestamps": 0.08972267536704731,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 63.02735741243917
+   },
+   "some": {
+    "tracks": 0,
+    "share_fast_v1": null,
+    "share_fast_timestamps": null,
+    "share_fast_if_still": null,
+    "median_slant_m": null
+   }
+  },
+  "by_parked_in_image": {
+   "mostly_parked": {
+    "tracks": 76,
+    "share_fast_v1": 0.039473684210526314,
+    "share_fast_timestamps": 0.039473684210526314,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 45.734914085739206
+   },
+   "moving_or_unknown": {
+    "tracks": 537,
+    "share_fast_v1": 0.09683426443202979,
+    "share_fast_timestamps": 0.09683426443202979,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 65.471935390885
+   }
+  },
+  "by_yaw_rate_p90_deg_s": {
+   "quartile_edges": [
+    0.6129917886709221,
+    0.8662864031370847,
+    1.283011499085963
+   ],
+   "q1": {
+    "tracks": 154,
+    "share_fast_v1": 0.08441558441558442,
+    "share_fast_timestamps": 0.08441558441558442,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 67.3535778751947
+   },
+   "q2": {
+    "tracks": 153,
+    "share_fast_v1": 0.06535947712418301,
+    "share_fast_timestamps": 0.06535947712418301,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 65.49775697657557
+   },
+   "q3": {
+    "tracks": 153,
+    "share_fast_v1": 0.13071895424836602,
+    "share_fast_timestamps": 0.13071895424836602,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 65.45724390357205
+   },
+   "q4": {
+    "tracks": 153,
+    "share_fast_v1": 0.0784313725490196,
+    "share_fast_timestamps": 0.0784313725490196,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 56.866980045566734
+   }
+  },
+  "by_drone_speed_median_ms": {
+   "quartile_edges": [
+    0.03407623080493053,
+    0.05717331424058113,
+    0.09346787004369739
+   ],
+   "q1": {
+    "tracks": 154,
+    "share_fast_v1": 0.09090909090909091,
+    "share_fast_timestamps": 0.09090909090909091,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 65.954699036472
+   },
+   "q2": {
+    "tracks": 154,
+    "share_fast_v1": 0.07792207792207792,
+    "share_fast_timestamps": 0.07792207792207792,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 69.42328441496849
+   },
+   "q3": {
+    "tracks": 152,
+    "share_fast_v1": 0.09868421052631579,
+    "share_fast_timestamps": 0.09868421052631579,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 62.79447639467285
+   },
+   "q4": {
+    "tracks": 153,
+    "share_fast_v1": 0.0915032679738562,
+    "share_fast_timestamps": 0.0915032679738562,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 55.66774371453082
+   }
+  },
+  "by_max_tilt_step": {
+   "median_deg": 0.32012248047933767,
+   "below_median": {
+    "tracks": 309,
+    "share_fast_v1": 0.07119741100323625,
+    "share_fast_timestamps": 0.07119741100323625,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 62.94352058131126
+   },
+   "above_median": {
+    "tracks": 304,
+    "share_fast_v1": 0.10855263157894737,
+    "share_fast_timestamps": 0.10855263157894737,
+    "share_fast_if_still": 0.0,
+    "median_slant_m": 64.28244234655246
+   }
+  }
+ },
+ "note": "No ground-truth speeds: shares of implausible speeds only."
+}
