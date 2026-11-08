@@ -88,3 +88,45 @@ def test_kappa_by_box_height_uses_the_bin_and_falls_back_on_empty_bins():
     assert kappa_at(0.04, 50.0) == 0.04
     assert kappa_at(spec, 20.0) == 0.11 and kappa_at(spec, 500.0) == 0.03
     assert kappa_at(spec, 8.0) == 0.06  # empty bin
+
+
+def test_footprint_correction_moves_ranges_along_the_camera_heading():
+    meta, tracks = scene()
+    sizes = {
+        "vehicle": {
+            "length_mean_m": 4.6,
+            "width_mean_m": 1.9,
+            "length_var_m2": 0.0,
+            "width_var_m2": 0.0,
+            "length_width_cov_m2": 0.0,
+        }
+    }
+    plain = replay(tracks, meta, RangeSpeedStage(MODEL, REL, SD))
+    moved = replay(tracks, meta, RangeSpeedStage(MODEL, REL, SD, {"enabled": True, "sizes": sizes}))
+    off = moved["range_m"] - plain["range_m"]
+    assert (off > 0).all()  # the camera looks north, ahead of it: centres are further away
+    # first frame: no filter heading yet, so the offset along the heading is (L + W) / pi
+    d_first = (4.6 + 1.9) / np.pi
+    dep = np.radians(plain["depression_deg"].iloc[0])
+    assert off.iloc[0] == pytest.approx(d_first * np.cos(dep), rel=0.05)
+    assert (moved["range_sigma_m"] >= plain["range_sigma_m"]).all()
+    off_disabled = replay(
+        tracks, meta, RangeSpeedStage(MODEL, REL, SD, {"enabled": False, "sizes": sizes})
+    )
+    np.testing.assert_allclose(off_disabled["range_m"], plain["range_m"])
+
+
+def test_calibrated_half_widths_scale_the_sigmas():
+    meta, tracks = scene()
+    cal = {
+        "dep_edges": [0, 20, 40, 60, 91],
+        "range_edges": [0, 50, 100, 200, np.inf],
+        "range": {"pooled": {"0.68": 1.0, "0.90": 2.0, "0.95": 3.0}},
+        "speed": {"pooled": {"0.68": 1.5, "0.90": 2.5, "0.95": 3.5}},
+    }
+    out = replay(tracks, meta, RangeSpeedStage(MODEL, REL, SD, None, cal))
+    np.testing.assert_allclose(out["range_half_90_m"], 2 * out["range_sigma_m"])
+    sp = out.dropna(subset=["speed_sigma_ms"])
+    np.testing.assert_allclose(sp["speed_half_95_ms"], 3.5 * sp["speed_sigma_ms"])
+    plain = replay(tracks, meta, RangeSpeedStage(MODEL, REL, SD))
+    assert plain["range_half_90_m"].isna().all()

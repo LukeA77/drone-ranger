@@ -1,0 +1,439 @@
+{
+ "name": "v2trk_final_cal",
+ "tolerance_ms": 0.5,
+ "target": 0.9,
+ "nis_window": 10,
+ "nis_conf": 0.95,
+ "n_matched_track_frames": 42949,
+ "grid": [
+  {
+   "sigma_max_ms": 0.1,
+   "min_age": 2,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.1,
+   "min_age": 5,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.1,
+   "min_age": 10,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.1,
+   "min_age": 15,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.1,
+   "min_age": 25,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.1,
+   "min_age": 50,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.15,
+   "min_age": 2,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.15,
+   "min_age": 5,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.15,
+   "min_age": 10,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.15,
+   "min_age": 15,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.15,
+   "min_age": 25,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.15,
+   "min_age": 50,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.2,
+   "min_age": 2,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.2,
+   "min_age": 5,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.2,
+   "min_age": 10,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.2,
+   "min_age": 15,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.2,
+   "min_age": 25,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.2,
+   "min_age": 50,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.3,
+   "min_age": 2,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.3,
+   "min_age": 5,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.3,
+   "min_age": 10,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.3,
+   "min_age": 15,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.3,
+   "min_age": 25,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.3,
+   "min_age": 50,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.4,
+   "min_age": 2,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.4,
+   "min_age": 5,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.4,
+   "min_age": 10,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.4,
+   "min_age": 15,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.4,
+   "min_age": 25,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.4,
+   "min_age": 50,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.5,
+   "min_age": 2,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.5,
+   "min_age": 5,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.5,
+   "min_age": 10,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.5,
+   "min_age": 15,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.5,
+   "min_age": 25,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.5,
+   "min_age": 50,
+   "displayed_share": 0.0,
+   "n_displayed": 0,
+   "accuracy": NaN
+  },
+  {
+   "sigma_max_ms": 0.75,
+   "min_age": 2,
+   "displayed_share": 0.0003725348669352022,
+   "n_displayed": 16,
+   "accuracy": 0.0625
+  },
+  {
+   "sigma_max_ms": 0.75,
+   "min_age": 5,
+   "displayed_share": 0.0003725348669352022,
+   "n_displayed": 16,
+   "accuracy": 0.0625
+  },
+  {
+   "sigma_max_ms": 0.75,
+   "min_age": 10,
+   "displayed_share": 0.0003725348669352022,
+   "n_displayed": 16,
+   "accuracy": 0.0625
+  },
+  {
+   "sigma_max_ms": 0.75,
+   "min_age": 15,
+   "displayed_share": 0.0003492514377517521,
+   "n_displayed": 15,
+   "accuracy": 0.06666666666666667
+  },
+  {
+   "sigma_max_ms": 0.75,
+   "min_age": 25,
+   "displayed_share": 0.00013970057510070082,
+   "n_displayed": 6,
+   "accuracy": 0.16666666666666666
+  },
+  {
+   "sigma_max_ms": 0.75,
+   "min_age": 50,
+   "displayed_share": 4.656685836690028e-05,
+   "n_displayed": 2,
+   "accuracy": 0.0
+  },
+  {
+   "sigma_max_ms": 1.0,
+   "min_age": 2,
+   "displayed_share": 0.023888798342219842,
+   "n_displayed": 1026,
+   "accuracy": 0.13450292397660818
+  },
+  {
+   "sigma_max_ms": 1.0,
+   "min_age": 5,
+   "displayed_share": 0.023888798342219842,
+   "n_displayed": 1026,
+   "accuracy": 0.13450292397660818
+  },
+  {
+   "sigma_max_ms": 1.0,
+   "min_age": 10,
+   "displayed_share": 0.023888798342219842,
+   "n_displayed": 1026,
+   "accuracy": 0.13450292397660818
+  },
+  {
+   "sigma_max_ms": 1.0,
+   "min_age": 15,
+   "displayed_share": 0.019185545647162915,
+   "n_displayed": 824,
+   "accuracy": 0.12742718446601942
+  },
+  {
+   "sigma_max_ms": 1.0,
+   "min_age": 25,
+   "displayed_share": 0.013131854059465878,
+   "n_displayed": 564,
+   "accuracy": 0.12234042553191489
+  },
+  {
+   "sigma_max_ms": 1.0,
+   "min_age": 50,
+   "displayed_share": 0.007962932780739947,
+   "n_displayed": 342,
+   "accuracy": 0.05847953216374269
+  },
+  {
+   "sigma_max_ms": 1.5,
+   "min_age": 2,
+   "displayed_share": 0.057277235791287344,
+   "n_displayed": 2460,
+   "accuracy": 0.13821138211382114
+  },
+  {
+   "sigma_max_ms": 1.5,
+   "min_age": 5,
+   "displayed_share": 0.057277235791287344,
+   "n_displayed": 2460,
+   "accuracy": 0.13821138211382114
+  },
+  {
+   "sigma_max_ms": 1.5,
+   "min_age": 10,
+   "displayed_share": 0.057277235791287344,
+   "n_displayed": 2460,
+   "accuracy": 0.13821138211382114
+  },
+  {
+   "sigma_max_ms": 1.5,
+   "min_age": 15,
+   "displayed_share": 0.04752147896342173,
+   "n_displayed": 2041,
+   "accuracy": 0.13914747672709457
+  },
+  {
+   "sigma_max_ms": 1.5,
+   "min_age": 25,
+   "displayed_share": 0.032643367715197096,
+   "n_displayed": 1402,
+   "accuracy": 0.13338088445078458
+  },
+  {
+   "sigma_max_ms": 1.5,
+   "min_age": 50,
+   "displayed_share": 0.016135416424130945,
+   "n_displayed": 693,
+   "accuracy": 0.08658008658008658
+  },
+  {
+   "sigma_max_ms": 2.0,
+   "min_age": 2,
+   "displayed_share": 0.058511257538010196,
+   "n_displayed": 2513,
+   "accuracy": 0.13649025069637882
+  },
+  {
+   "sigma_max_ms": 2.0,
+   "min_age": 5,
+   "displayed_share": 0.058511257538010196,
+   "n_displayed": 2513,
+   "accuracy": 0.13649025069637882
+  },
+  {
+   "sigma_max_ms": 2.0,
+   "min_age": 10,
+   "displayed_share": 0.058511257538010196,
+   "n_displayed": 2513,
+   "accuracy": 0.13649025069637882
+  },
+  {
+   "sigma_max_ms": 2.0,
+   "min_age": 15,
+   "displayed_share": 0.04838296584320939,
+   "n_displayed": 2078,
+   "accuracy": 0.1381135707410972
+  },
+  {
+   "sigma_max_ms": 2.0,
+   "min_age": 25,
+   "displayed_share": 0.033341870590700595,
+   "n_displayed": 1432,
+   "accuracy": 0.1319832402234637
+  },
+  {
+   "sigma_max_ms": 2.0,
+   "min_age": 50,
+   "displayed_share": 0.016368250715965448,
+   "n_displayed": 703,
+   "accuracy": 0.08534850640113797
+  }
+ ],
+ "chosen": null,
+ "most_accurate": {
+  "sigma_max_ms": 1.5,
+  "min_age": 15,
+  "displayed_share": 0.04752147896342173,
+  "n_displayed": 2041,
+  "accuracy": 0.13914747672709457
+ },
+ "group": "vehicle"
+}

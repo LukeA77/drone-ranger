@@ -18,6 +18,18 @@ Measurement errors for the filters (`kalman.meas_model`):
   relative box noise is larger on small boxes, a table by box height per group:
   `{edges_px: [0, 16, 32, 64, 128, .inf], values: [...], overall: ...}` (an empty bin, NaN,
   takes `overall`).
+
+Footprint centre (`footprint`, D-736): when configured, each box's ground point is moved from
+the box's bottom edge to the footprint centre along the camera heading
+(`pipeline/footprint.py`), using the speed filter's heading for that track from the previous
+frame (uniform when there is none); range, bearing and depression follow the moved point, and
+the offset's variance is added to the range sigma. The speed filter keeps the bottom-edge point:
+moving it as well made slow vehicles' speeds worse, because their heading swings and the offset
+with it (D-736).
+
+Calibrated intervals (`intervals`, D-737): when configured, every row also carries the
+half-widths of the range and speed intervals at 68, 90 and 95 % (`pipeline/intervals.py`), and
+the display rule judges a speed by its calibrated 68 % half-width instead of the filter's sigma.
 """
 
 from __future__ import annotations
@@ -31,6 +43,8 @@ from numpy.typing import NDArray
 
 from aerialrange.geometry.ground_cov import ground_covariance
 from aerialrange.pipeline.filterbank import make_filter_bank
+from aerialrange.pipeline.footprint import FootprintSize, forward_offset
+from aerialrange.pipeline.intervals import LEVEL_KEYS, IntervalCalibration
 from aerialrange.pipeline.ranging import CameraPose, RangingModel, range_boxes
 from aerialrange.pipeline.speed_display import SpeedDisplayRule
 
@@ -79,8 +93,22 @@ def kappa_at(spec: float | dict, height_px: float) -> float:
 
 
 class RangeSpeedStage:
-    def __init__(self, model: RangingModel, kalman: dict, speed_display: dict) -> None:
+    def __init__(
+        self,
+        model: RangingModel,
+        kalman: dict,
+        speed_display: dict,
+        footprint: dict | None = None,
+        intervals: dict | None = None,
+    ) -> None:
         self.model = model
+        self.intervals = IntervalCalibration.from_mapping(intervals) if intervals else None
+        self.sizes = (
+            {g: FootprintSize.from_mapping(v) for g, v in footprint["sizes"].items()}
+            if footprint and footprint.get("enabled")
+            else None
+        )
+        self.heading: dict[int, tuple[float, float]] = {}  # id -> filter heading, sigma (deg)
         self.meas_model = kalman.get("meas_model", "relative")
         if self.meas_model == "relative":
             self.meas_rel = np.array(
@@ -102,7 +130,58 @@ class RangeSpeedStage:
 
     @classmethod
     def from_config(cls, get: Callable[[str], Any]) -> RangeSpeedStage:
-        return cls(ranging_model(get), get("kalman"), get("speed_display"))
+        def optional(key: str) -> Any:
+            try:
+                return get(key)
+            except KeyError:  # configurations written before D-736 / D-737
+                return None
+
+        return cls(
+            ranging_model(get),
+            get("kalman"),
+            get("speed_display"),
+            optional("footprint"),
+            optional("intervals"),
+        )
+
+    def footprint_shift(
+        self, rg: dict[str, NDArray], ids: NDArray, groups: Sequence[str], pose: CameraPose
+    ) -> NDArray:
+        """Move valid ground points to the footprint centre (in place); returns each box's
+        offset variance (m^2, 0 where not moved)."""
+        var = np.zeros(len(ids))
+        if self.sizes is None:
+            return var
+        f = np.array([np.cos(pose.yaw_rad), np.sin(pose.yaw_rad)])
+        for j in np.flatnonzero(rg["valid"]):
+            size = self.sizes.get(groups[j])
+            if size is None:
+                continue
+            hd, hs = self.heading.get(int(ids[j]), (np.nan, np.nan))
+            rel = np.radians(hd) - pose.yaw_rad
+            m, v = forward_offset(size, [rel], [np.radians(hs)])
+            rg["ground_n_m"][j] += m[0] * f[0]
+            rg["ground_e_m"][j] += m[0] * f[1]
+            var[j] = v[0]
+        ok = rg["valid"]
+        dn, de = rg["ground_n_m"] - pose.n_m, rg["ground_e_m"] - pose.e_m
+        horiz = np.hypot(dn, de)
+        rng = np.hypot(horiz, pose.h_m)
+        az = np.degrees(np.arctan2(de, dn)) % 360.0
+        sig = np.sqrt(rg["range_sigma_m"] ** 2 + var)
+        with np.errstate(invalid="ignore"):
+            good = sig / rng <= self.model.reliable_max_rel
+        rg.update(
+            range_m=np.where(ok, rng, np.nan),
+            range_sigma_m=np.where(ok, sig, np.nan),
+            azimuth_deg=np.where(ok, az, np.nan),
+            relative_azimuth_deg=np.where(
+                ok, (az - np.degrees(pose.yaw_rad) + 180.0) % 360.0 - 180.0, np.nan
+            ),
+            depression_deg=np.where(ok, np.degrees(np.arctan2(pose.h_m, horiz)), np.nan),
+        )
+        rg["flag"] = np.where(ok, np.where(good, "reliable", "uncertain"), "invalid").astype(object)
+        return var
 
     def measurement_errors(
         self,
@@ -151,12 +230,18 @@ class RangeSpeedStage:
         dt = (t_s - self.t_prev) if self.t_prev is not None and np.isfinite(t_s) else DEFAULT_DT_S
         self.t_prev = t_s
         valid = rg["valid"]
-        msig = self.measurement_errors(boxes, [t[1] for t in tracked], rg, pose, tilt_sigma_deg)
+        groups = [t[1] for t in tracked]
         ids = np.array([t[0] for t in tracked], int)
+        msig = self.measurement_errors(boxes, groups, rg, pose, tilt_sigma_deg)
+        # the speed filter takes the box's bottom-edge point; only the reported range moves to
+        # the footprint centre (D-736: a slow object's heading swings, so a heading-dependent
+        # offset would add apparent motion)
+        z = np.column_stack([rg["ground_n_m"], rg["ground_e_m"]])
+        self.footprint_shift(rg, ids, groups, pose)
         fb = self.bank.step(
             max(dt, 1e-3),
             ids[valid],
-            np.column_stack([rg["ground_n_m"], rg["ground_e_m"]])[valid],
+            z[valid],
             msig[valid],
             [t[1] for t, ok in zip(tracked, valid, strict=True) if ok],
         )
@@ -172,10 +257,20 @@ class RangeSpeedStage:
             )
             for j, i in enumerate(fb["id"])
         }
+        # the filter's heading per live track, for the next frame's footprint correction
+        self.heading = {i: (v[2], v[3]) for i, v in speed.items()}
         rows = []
         for j, (tid, group, x, y, w, h) in enumerate(tracked):
             sp, ss, hd, hs, age, nis_m, nis_n = speed.get(tid, NO_SPEED)
-            shown = bool(self.rule is not None and valid[j] and self.rule.ok(ss, age, nis_m, nis_n))
+            rh = sh = dict.fromkeys(LEVEL_KEYS, np.nan)
+            if self.intervals is not None and valid[j]:
+                dep, rng = rg["depression_deg"][j], rg["range_m"][j]
+                rh = self.intervals.half_widths("range", group, dep, rng, rg["range_sigma_m"][j])
+                sh = self.intervals.half_widths("speed", group, dep, rng, ss)
+            judged = sh["0.68"] if self.intervals is not None else ss
+            shown = bool(
+                self.rule is not None and valid[j] and self.rule.ok(judged, age, nis_m, nis_n)
+            )
             rows.append(
                 {
                     "frame": k,
@@ -201,6 +296,8 @@ class RangeSpeedStage:
                     "track_age": age,
                     "nis_mean": nis_m,
                     "speed_shown": shown,
+                    **{f"range_half_{lv[2:]}_m": rh[lv] for lv in LEVEL_KEYS},
+                    **{f"speed_half_{lv[2:]}_ms": sh[lv] for lv in LEVEL_KEYS},
                 }
             )
         return rows

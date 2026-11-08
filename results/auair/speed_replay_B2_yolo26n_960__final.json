@@ -1,0 +1,97 @@
+{
+ "generated_utc": "2026-11-08T20:38:52+00:00",
+ "decision": "D-735",
+ "run": "B2_yolo26n_960",
+ "variant": "final",
+ "config": "run_accurate",
+ "overrides": {
+  "kalman": {
+   "meas_sigma": {
+    "kappa_u": {
+     "person": 0.1075,
+     "vehicle": 0.0385
+    },
+    "kappa_v": {
+     "person": 0.079,
+     "vehicle": 0.0532
+    },
+    "tilt_deg": NaN,
+    "h_m": 1.816,
+    "yaw_deg": 0.0
+   }
+  }
+ },
+ "all": {
+  "tracks": 1068,
+  "share_above_70_kmh": 0.05898876404494382,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 231,
+    "share_above_70_kmh": 0.18181818181818182
+   },
+   "10-20": {
+    "tracks": 509,
+    "share_above_70_kmh": 0.03339882121807466
+   },
+   "20-40": {
+    "tracks": 266,
+    "share_above_70_kmh": 0.015037593984962405
+   },
+   "40-91": {
+    "tracks": 62,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "calibration": {
+  "tracks": 278,
+  "share_above_70_kmh": 0.12949640287769784,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 60,
+    "share_above_70_kmh": 0.43333333333333335
+   },
+   "10-20": {
+    "tracks": 104,
+    "share_above_70_kmh": 0.07692307692307693
+   },
+   "20-40": {
+    "tracks": 65,
+    "share_above_70_kmh": 0.03076923076923077
+   },
+   "40-91": {
+    "tracks": 49,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "held_out": {
+  "tracks": 790,
+  "share_above_70_kmh": 0.03417721518987342,
+  "tracks_with_a_shown_speed": 0,
+  "share_of_shown_above_70_kmh": null,
+  "by_depression": {
+   "0-10": {
+    "tracks": 171,
+    "share_above_70_kmh": 0.0935672514619883
+   },
+   "10-20": {
+    "tracks": 405,
+    "share_above_70_kmh": 0.022222222222222223
+   },
+   "20-40": {
+    "tracks": 201,
+    "share_above_70_kmh": 0.009950248756218905
+   },
+   "40-91": {
+    "tracks": 13,
+    "share_above_70_kmh": 0.0
+   }
+  }
+ },
+ "note": "No ground-truth speeds: plausibility only."
+}

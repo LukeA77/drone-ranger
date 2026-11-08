@@ -29,6 +29,7 @@ import yaml
 
 from aerialrange.data.syndrone import FPS, N_FRAMES, SynDroneSequence, syndrone_camera
 from aerialrange.data.syndrone_archive import MemberStore
+from aerialrange.pipeline.intervals import config_from_calibration
 from aerialrange.pipeline.range_speed import RangeSpeedStage, replay
 from aerialrange.utils.config import REPO_ROOT, load_config
 
@@ -73,6 +74,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--towns", nargs="*")
     ap.add_argument("--heights", type=int, nargs="*", default=[20, 50, 80])
     ap.add_argument("--check", action="store_true", help="replay unchanged; must match source")
+    ap.add_argument(
+        "--intervals", help="interval calibration result to apply (D-737; SynDrone conditions)"
+    )
     args = ap.parse_args(argv)
     if not args.check and not args.name:
         ap.error("--name is required unless --check")
@@ -88,9 +92,16 @@ def main(argv: list[str] | None = None) -> int:
     cam = syndrone_camera()
     ov = parse_sets(args.sets)
     ov.setdefault("camera", {}).update({"focal_px": cam.fx, "cx": cam.cx, "cy": cam.cy})
+    if args.intervals:
+        ov["intervals"] = config_from_calibration(REPO_ROOT / args.intervals)
 
     def get(k: str) -> Any:
-        base = cfg.require(k)
+        try:
+            base = cfg.require(k)
+        except KeyError:  # a section given only as an override (intervals)
+            if k in ov:
+                return ov[k]
+            raise
         return {**base, **ov.get(k, {})} if isinstance(base, dict) else ov.get(k, base)
 
     d = load_config("data")

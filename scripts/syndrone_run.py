@@ -26,6 +26,7 @@ import pandas as pd
 
 from aerialrange.data.syndrone import FPS, N_FRAMES, SynDroneSequence, decode_rgb, syndrone_camera
 from aerialrange.data.syndrone_archive import MemberStore
+from aerialrange.pipeline.intervals import config_from_calibration
 from aerialrange.pipeline.range_speed import exact_pose_overrides
 from aerialrange.pipeline.run import run
 from aerialrange.utils.config import REPO_ROOT, load_config
@@ -73,6 +74,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--kind", default=None, help="detector kind with --weights (yolo, rfdetr)")
     ap.add_argument("--imgsz", type=int, default=None, help="detector input size with --weights")
+    ap.add_argument(
+        "--intervals", help="interval calibration result to apply (D-737; SynDrone conditions)"
+    )
     args = ap.parse_args(argv)
     splits = json.loads((REPO_ROOT / "results" / "splits.json").read_text(encoding="utf-8"))
     if args.town in splits["syndrone"]["splits"]["test"] and not args.allow_test:
@@ -101,6 +105,8 @@ def main(argv: list[str] | None = None) -> int:
     dets: list[dict] = []
     overrides: dict = {"camera": {"focal_px": cam.fx, "cx": cam.cx, "cy": cam.cy}}
     overrides |= exact_pose_overrides(load_config(args.config).require("kalman"))
+    if args.intervals:
+        overrides["intervals"] = config_from_calibration(REPO_ROOT / args.intervals)
     if args.weights:
         if not (REPO_ROOT / args.weights).is_file():
             print(f"weights not found: {args.weights}")

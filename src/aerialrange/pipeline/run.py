@@ -57,6 +57,12 @@ COLUMNS = [
     "track_age",
     "nis_mean",
     "speed_shown",
+    "range_half_68_m",
+    "range_half_90_m",
+    "range_half_95_m",
+    "speed_half_68_ms",
+    "speed_half_90_ms",
+    "speed_half_95_ms",
 ]
 
 
@@ -110,11 +116,14 @@ def run(
     cfg = load_config(config)
 
     def get(k: str) -> Any:
-        return (
-            {**cfg.require(k), **(overrides or {}).get(k, {})}
-            if isinstance(cfg.require(k), dict)
-            else (overrides or {}).get(k, cfg.require(k))
-        )
+        ov = overrides or {}
+        try:
+            base = cfg.require(k)
+        except KeyError:  # a section given only as an override (e.g. intervals, D-737)
+            if k in ov:
+                return ov[k]
+            raise
+        return {**base, **ov.get(k, {})} if isinstance(base, dict) else ov.get(k, base)
 
     det, trk, ov = get("detector"), get("tracker"), get("overlay")
     stage = RangeSpeedStage.from_config(get)

@@ -48,6 +48,7 @@ TRUTH = REPO_ROOT / "cache" / "syndrone" / "truth"
 SPEED = REPO_ROOT / "cache" / "syndrone" / "speed"
 RUNS = REPO_ROOT / "cache" / "syndrone" / "runs"
 N_BOOT = 1000
+HALF_LEVELS = ("68", "90", "95")  # calibrated half-width columns of tracks.csv (D-737)
 LEVELS = (0.68, 0.90, 0.95)
 
 
@@ -55,6 +56,17 @@ def splits() -> dict:
     return json.loads((REPO_ROOT / "results" / "splits.json").read_text("utf-8"))["syndrone"][
         "splits"
     ]
+
+
+def calibrated_coverage(name: str, abs_err: np.ndarray, halves: np.ndarray) -> dict:
+    """Coverage of the calibrated intervals (half-width columns), where the run has them."""
+    ok = np.isfinite(halves).all(axis=1)
+    if not ok.any():
+        return {}
+    return {
+        f"{name}_calibrated_coverage_0.{lv}": float(np.mean(abs_err[ok] <= halves[ok, i]))
+        for i, lv in enumerate(HALF_LEVELS)
+    }
 
 
 def mask_ltwh(df: pd.DataFrame) -> np.ndarray:
@@ -139,6 +151,10 @@ def evaluate_sequence(town: str, h: int, name: str, rules: TruthRules, cmap: dic
                             prow["range_sigma_m"],
                             trow["depression_deg"],
                             trow["mask_bottom"] - trow["mask_top"],
+                            f,
+                            trow["id"],
+                            prow["track_id"],
+                            *(prow.get(f"range_half_{lv}_m", np.nan) for lv in HALF_LEVELS),
                         )
                     )
                 key = (int(trow["id"]), int(f))
@@ -161,6 +177,7 @@ def evaluate_sequence(town: str, h: int, name: str, rules: TruthRules, cmap: dic
                                 trow["depression_deg"],
                                 f,
                                 trow["id"],
+                                *(prow.get(f"speed_half_{lv}_ms", np.nan) for lv in HALF_LEVELS),
                             )
                         )
         pieces = {"all": ap_pieces(gt_img, det_img, 0.5)}
@@ -184,8 +201,8 @@ def evaluate_sequence(town: str, h: int, name: str, rules: TruthRules, cmap: dic
             "ap_pieces": pieces,
             "mot": {k: float(m[k]) for k in m.index},
             "hota": hota_sequence(g_ids, t_ids, sims),
-            "range": np.array(rng_rows, float).reshape(-1, 6),
-            "speed": np.array(spd_rows, float).reshape(-1, 10),
+            "range": np.array(rng_rows, float).reshape(-1, 12),
+            "speed": np.array(spd_rows, float).reshape(-1, 13),
             "pairs": np.array(pair_rows, float).reshape(-1, 5),
             "n_valid_truth": int((tg["status"] == "valid").sum()),
         }
@@ -223,6 +240,7 @@ def pooled(seqs: list[dict], g: str) -> dict:
                 for k, v in interval_coverage(r[:, 2] - r[:, 0], r[:, 3], LEVELS).items()
             }
         )
+        res.update(calibrated_coverage("range", np.abs(r[:, 2] - r[:, 0]), r[:, 9:12]))
     sp = np.vstack([s[g]["speed"] for s in seqs])
     if len(sp):
         err = sp[:, 1] - sp[:, 0]
@@ -232,6 +250,7 @@ def pooled(seqs: list[dict], g: str) -> dict:
         res.update(
             {f"speed_coverage_{k}": v for k, v in interval_coverage(err, sp[:, 2], LEVELS).items()}
         )
+        res.update(calibrated_coverage("speed", np.abs(err), sp[:, 10:13]))
         shown = sp[:, 3] > 0
         res["speed_shown_share"] = float(shown.mean())
         if shown.any():
@@ -354,9 +373,26 @@ def main(argv: list[str] | None = None) -> int:
         "depression_deg",
         "frame",
         "truth_id",
+        "half_68_ms",
+        "half_90_ms",
+        "half_95_ms",
     ]
     pair_cols = ["frame", "truth_id", "track_id", "truth_ms", "depression_deg"]
-    frames, pairs = [], []
+    range_cols = [
+        "truth_range_m",
+        "truth_range_near_m",
+        "pred_range_m",
+        "range_sigma_m",
+        "depression_deg",
+        "mask_height_px",
+        "frame",
+        "truth_id",
+        "track_id",
+        "half_68_m",
+        "half_90_m",
+        "half_95_m",
+    ]
+    frames, pairs, ranges = [], [], []
     for s in seqs:
         for g in GROUPS:
             df = pd.DataFrame(s[g]["speed"], columns=cols)
@@ -365,11 +401,16 @@ def main(argv: list[str] | None = None) -> int:
             pf = pd.DataFrame(s[g]["pairs"], columns=pair_cols)
             pf["town"], pf["height"], pf["group"] = s["town"], s["height"], g
             pairs.append(pf)
+            rf = pd.DataFrame(s[g]["range"], columns=range_cols)
+            rf["town"], rf["height"], rf["group"] = s["town"], s["height"], g
+            ranges.append(rf)
     RUNS.joinpath(args.name).mkdir(parents=True, exist_ok=True)
     pd.concat(frames).to_csv(RUNS / args.name / f"speed_matches_{args.split}.csv.gz", index=False)
     # every matched truth-track pair with a true speed, whatever the filter output: the common
     # rows on which ranging and filter settings are compared (scripts/syndrone_speed_compare.py)
     pd.concat(pairs).to_csv(RUNS / args.name / f"speed_pairs_{args.split}.csv.gz", index=False)
+    # every matched track-frame with a valid range: the rows the interval calibration uses
+    pd.concat(ranges).to_csv(RUNS / args.name / f"range_matches_{args.split}.csv.gz", index=False)
     (out / f"eval_{args.name}.json").write_text(
         json.dumps(result, indent=1, default=float) + "\n", encoding="utf-8"
     )

@@ -47,10 +47,16 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--name", default="v1_accurate")
     ap.add_argument("--tol", type=float, default=0.5)
     ap.add_argument("--target", type=float, default=0.90)
+    ap.add_argument("--group", help="fit on one group's rows only (D-739)")
     args = ap.parse_args(argv)
     sd = load_config("run").require("speed_display")
     df = pd.read_csv(RUNS / args.name / "speed_matches_development.csv.gz")
+    if "half_68_ms" in df and np.isfinite(df["half_68_ms"]).any():
+        # calibrated runs (D-737): the rule judges the calibrated 68 % half-width
+        df["sigma_ms"] = df["half_68_ms"]
     df = df[np.isfinite(df["sigma_ms"]) & np.isfinite(df["pred_ms"])]
+    if args.group:
+        df = df[df["group"] == args.group]
     df["ok"] = np.abs(df["pred_ms"] - df["truth_ms"]) <= args.tol
     df["seq"] = df["town"] + "_h" + df["height"].astype(str)
     grid = []
@@ -125,7 +131,9 @@ def main(argv: list[str] | None = None) -> int:
         }
     out = REPO_ROOT / "results" / "syndrone" / "development"
     out.mkdir(parents=True, exist_ok=True)
-    (out / f"speed_display_fit_{args.name}.json").write_text(
+    tag = f"{args.name}__{args.group}" if args.group else args.name
+    res["group"] = args.group
+    (out / f"speed_display_fit_{tag}.json").write_text(
         json.dumps(res, indent=1) + "\n", encoding="utf-8"
     )
     print(json.dumps(res["chosen"], indent=1))

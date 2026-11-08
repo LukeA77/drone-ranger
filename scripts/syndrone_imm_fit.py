@@ -3,9 +3,10 @@
 Usage: python scripts/syndrone_imm_fit.py
 
 Reads the actors' true positions (cache/syndrone/speed/<town>.csv.gz, 25 Hz, position jitter
-about 15 micrometres) of the development towns. Per group (people: CARLA walkers; vehicles:
-cars, trucks, buses, vans, motorbikes; riders on bicycles are left out, as in scoring), every
-sample is labelled with a motion mode and each model's noise is measured from the truth.
+about 15 micrometres) of the development towns. Per group every sample is labelled with a
+motion mode and each model's noise is measured from the truth.
+Groups are those of the scoring (`evaluate/syndrone_eval.py`): people are walkers (40),
+vehicles are cars, trucks and buses (100 to 102); riders, two-wheelers and trains are left out.
 
 *Time scale.* CARLA's actors wobble from frame to frame (walker animation, vehicle physics;
 acceleration correlation times of about one frame), which a filter whose measurements carry
@@ -47,12 +48,13 @@ from datetime import UTC, datetime
 import numpy as np
 import pandas as pd
 
-from aerialrange.data.syndrone import FPS, PERSON, VEHICLE_TAGS
+from aerialrange.data.syndrone import FPS
+from aerialrange.evaluate.syndrone_eval import GROUPS
 from aerialrange.geometry.imm import MODE_NAMES, N_MODES
 from aerialrange.utils.config import REPO_ROOT
 
 DT = 1.0 / FPS
-GROUP_TAGS = {"person": (PERSON,), "vehicle": VEHICLE_TAGS}
+GROUP_TAGS = GROUPS  # as scored: people 40; vehicles car, truck, bus (100 to 102)
 K_SIGMA = 3.0  # a value counts as non-zero beyond 3 sigma of its noise
 V_HEADING = 1.0  # m/s, heading defined from this speed (see above)
 T_LABEL = 1.0  # s, turn rate for labels: heading change over this interval
