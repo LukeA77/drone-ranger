@@ -116,6 +116,35 @@ def test_footprint_correction_moves_ranges_along_the_camera_heading():
     np.testing.assert_allclose(off_disabled["range_m"], plain["range_m"])
 
 
+def test_contact_point_moves_the_near_edge_toward_the_camera():
+    """D-743: the ray through the bottom-centre, a pixels lower, meets a plane b above the
+    ground; to first order the slant range shrinks by (a / f) / tan(dep) + b cos^2(dep) / H."""
+    meta, tracks = scene()
+    sizes = {
+        "vehicle": {
+            "length_mean_m": 4.6,
+            "width_mean_m": 1.9,
+            "length_var_m2": 0.0,
+            "width_var_m2": 0.0,
+            "length_width_cov_m2": 0.0,
+        }
+    }
+    fp = {"enabled": True, "sizes": sizes}
+    base = replay(tracks, meta, RangeSpeedStage(MODEL, REL, SD, fp))
+    for a, b in ((0.0, 0.3), (2.0, 0.0), (2.0, 0.3)):
+        fpc = {**fp, "contact": {"vehicle": {"shift_px": a, "raise_m": b}}}
+        moved = replay(tracks, meta, RangeSpeedStage(MODEL, REL, SD, fpc))
+        dep = np.radians(base["depression_deg"])
+        rel = (moved["range_m"] - base["range_m"]) / base["range_m"]
+        first = -(a / MODEL.focal_px) / np.tan(dep) - b * np.cos(dep) ** 2 / 40.0
+        np.testing.assert_allclose(rel, first, rtol=0.1, atol=2e-5)
+        np.testing.assert_allclose(moved["speed_ms"], base["speed_ms"])  # speed unchanged
+    other = {**fp, "contact": {"person": {"shift_px": 2.0, "raise_m": 0.3}}}
+    np.testing.assert_allclose(
+        replay(tracks, meta, RangeSpeedStage(MODEL, REL, SD, other))["range_m"], base["range_m"]
+    )
+
+
 def test_calibrated_half_widths_scale_the_sigmas():
     meta, tracks = scene()
     cal = {

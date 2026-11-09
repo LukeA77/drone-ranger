@@ -25,7 +25,9 @@ the box's bottom edge to the footprint centre along the camera heading
 frame (uniform when there is none); range, bearing and depression follow the moved point, and
 the offset's variance is added to the range sigma. The speed filter keeps the bottom-edge point:
 moving it as well made slow vehicles' speeds worse, because their heading swings and the offset
-with it (D-736).
+with it (D-736). Optionally (`footprint.contact`, per group: `shift_px`, `raise_m`, D-743) the
+bottom-edge point is first placed under the footprint's near edge, since a box's lowest visible
+point sits a little above it (a car's body ends above the ground).
 
 Calibrated intervals (`intervals`, D-737): when configured, every row also carries the
 half-widths of the range and speed intervals at 68, 90 and 95 % (`pipeline/intervals.py`), and
@@ -41,6 +43,7 @@ import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
 
+from aerialrange.evaluate.auair_world import ground_offset_oblique
 from aerialrange.geometry.ground_cov import ground_covariance
 from aerialrange.pipeline.filterbank import make_filter_bank
 from aerialrange.pipeline.footprint import FootprintSize, forward_offset
@@ -116,10 +119,19 @@ class RangeSpeedStage:
     ) -> None:
         self.model = model
         self.intervals = IntervalCalibration.from_mapping(intervals) if intervals else None
+        on = bool(footprint and footprint.get("enabled"))
         self.sizes = (
             {g: FootprintSize.from_mapping(v) for g, v in footprint["sizes"].items()}
-            if footprint and footprint.get("enabled")
+            if on
             else None
+        )
+        self.contact: dict[str, tuple[float, float]] = (
+            {
+                g: (float(v["shift_px"]), float(v["raise_m"]))
+                for g, v in (footprint.get("contact") or {}).items()
+            }
+            if on
+            else {}
         )
         self.heading: dict[int, tuple[float, float]] = {}  # id -> filter heading, sigma (deg)
         self.meas_model = kalman.get("meas_model", "relative")
@@ -157,14 +169,52 @@ class RangeSpeedStage:
             optional("intervals"),
         )
 
+    def contact_shift(
+        self, rg: dict[str, NDArray], boxes: NDArray, groups: Sequence[str], pose: CameraPose
+    ) -> None:
+        """Place the bottom-edge ground point of groups with `footprint.contact` under the
+        footprint's near edge (in place, D-743): the box's lowest visible point lies a few
+        pixels and some centimetres above that edge, so the ray through the bottom-centre moved
+        down by `shift_px` is intersected with a plane `raise_m` above the ground and the point
+        dropped to the ground."""
+        if not self.contact:
+            return
+        m = self.model
+        for j in np.flatnonzero(rg["valid"]):
+            c = self.contact.get(groups[j])
+            if c is None or c[1] >= pose.h_m:
+                continue
+            u = boxes[j, 0] + boxes[j, 2] / 2
+            v = boxes[j, 1] + boxes[j, 3] + c[0]
+            dn, de = ground_offset_oblique(
+                np.array([u]),
+                np.array([v]),
+                pose.h_m - c[1],
+                m.focal_px,
+                pose.yaw_rad,
+                pose.tilt_deg,
+                m.cx,
+                m.cy,
+            )
+            if np.isfinite(dn[0]) and np.isfinite(de[0]):
+                rg["ground_n_m"][j] = pose.n_m + dn[0]
+                rg["ground_e_m"][j] = pose.e_m + de[0]
+
     def footprint_shift(
-        self, rg: dict[str, NDArray], ids: NDArray, groups: Sequence[str], pose: CameraPose
+        self,
+        rg: dict[str, NDArray],
+        ids: NDArray,
+        groups: Sequence[str],
+        pose: CameraPose,
+        boxes: NDArray | None = None,
     ) -> NDArray:
         """Move valid ground points to the footprint centre (in place); returns each box's
         offset variance (m^2, 0 where not moved)."""
         var = np.zeros(len(ids))
         if self.sizes is None:
             return var
+        if boxes is not None:
+            self.contact_shift(rg, boxes, groups, pose)
         f = np.array([np.cos(pose.yaw_rad), np.sin(pose.yaw_rad)])
         for j in np.flatnonzero(rg["valid"]):
             size = self.sizes.get(groups[j])
@@ -250,7 +300,7 @@ class RangeSpeedStage:
         # the footprint centre (D-736: a slow object's heading swings, so a heading-dependent
         # offset would add apparent motion)
         z = np.column_stack([rg["ground_n_m"], rg["ground_e_m"]])
-        self.footprint_shift(rg, ids, groups, pose)
+        self.footprint_shift(rg, ids, groups, pose, boxes)
         fb = self.bank.step(
             max(dt, 1e-3),
             ids[valid],

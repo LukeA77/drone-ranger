@@ -59,6 +59,27 @@ The same terrain-from-motion samples as version 1 (590,130 land samples on the 1
 - Its pose uncertainty, carried into the range interval, brings coverage close to nominal at 90 and 95 % (the 68 % interval is too wide, because the errors are heavy-tailed).
 - Ranging on a flat ground plane needs the camera's absolute height, and fails with real GPS heights (201 % error, because GPS height is about 12 m off). Terrain from motion needs only how the camera moved between frames, so it is unaffected.
 
+## Results on the test flights
+
+The 9 Mid-Air test flights were run once, after every setting was frozen, and nothing was changed afterwards (D-741). Medians over flights:
+
+| | Test (9 flights) | Development (15 flights) |
+|---|---|---|
+| Translation error over 0.04 s | 4.8 mm | 5.6 mm |
+| Translation error over 0.4 s | 6.4 cm | 7.3 cm |
+| Tilt error | 0.31° | 0.37° |
+| Yaw error (worst flight) | 0.25° (0.83°) | 0.36° (0.8°) |
+| Horizontal position error (root mean square) | 1.05 m | 0.84 m |
+| Range error with the filter's poses | 4.5 % (3.1 to 7.3) | 3.8 % (3.1 to 4.7) |
+| Range error with exact poses | 3.1 % | 2.5 % |
+| Range coverage at 68 / 90 / 95 % | 87 / 91 / 92 % | 89 / 92 / 93 % |
+| NEES, attitude / position / velocity | 3.8 / 4.6 / 4.1 (band 1.6 to 4.8) | 2.8 / 3.0 / 3.3 (band 1.9 to 4.4) |
+| NEES, all nine states (expected 9) | **12.6 (band 6.4 to 12.0)** | 9.0 (band 7.0 to 11.3) |
+
+- Accuracy and range coverage hold on flights the filter never saw.
+- The filter is slightly overconfident on the test flights. On flight 14 the GPS jumps 40 to 100 m for three fixes in a row, larger than anything in the development flights. The filter accepted those fixes because it has no outlier check on GPS (it has one on camera features). Flight 27 is overconfident in attitude and velocity for a reason not yet found.
+- A GPS outlier check is the next change. It can't be scored on these test flights again, so it will be checked by injecting GPS jumps into development flights.
+
 ## Against OpenVINS
 
 OpenVINS (v2.7), a widely used open-source visual-inertial filter, was run as a reference on the same 15 flights, in its own container (it is GPL-licensed, so none of its code is in this package). It uses the camera and IMU only. Our filter was also run with GPS used only to start, so the two can be compared like for like. Medians over flights:
@@ -76,5 +97,6 @@ OpenVINS (v2.7), a widely used open-source visual-inertial filter, was run as a 
 ## Limits
 
 - **Simulated sensors.** Mid-Air's IMU has no scale or axis-misalignment errors, and its camera is ideal. The GPS velocity noise was added by us.
-- **One climate.** Kite, sunny; 15 development flights so far. The test flights run once, after the settings are frozen.
+- **One climate.** Kite, sunny: 15 development and 9 test flights.
+- **No GPS outlier check yet.** A burst of bad GPS fixes is taken in, as on test flight 14.
 - **Laptop speed only.** Runtime has been measured on a laptop only. Raspberry Pi figures will be estimates until measured (build2 R12).

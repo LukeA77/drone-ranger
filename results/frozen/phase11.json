@@ -1,0 +1,29 @@
+{
+ "frozen_utc": "2026-11-09T16:43:03+00:00",
+ "phase": "phase11",
+ "git_commit": "64964f9",
+ "uncommitted_changes_to_frozen_files": [],
+ "files": {
+  "configs/navigation.yaml": "294bd71fff9806b6a381783e91abeddfef44d011108aeb86afaf9755e9d03896",
+  "configs/geometry.yaml": "943010e772ed96427b2f329a7c939225ab717f09dd8f5db4d1edaf0a4701f8b4",
+  "configs/data.yaml": "b1e42729a9f05876b162e36b0cf2cf4e01baeeea2c9487e2d66784a8c252bd46",
+  "configs/project.yaml": "e03d2027f69077f5e66d7a761e1e69f81e7e1f16795ab57884e45e1905394c6f",
+  "configs/uncertainty.yaml": "02d731d4e755934cee055732eb756a0292bc59fd3a04bf2ec75e4ca5fe939d67",
+  "results/splits.json": "cdb52f4fb78e23b501f867a6d90b41afe8725a081ab9d6503c2f2288e7ca32ab",
+  "results/midair/development/navigation/gnss_fit.json": "9bfc2b7b662685732f57350535834144e268ffabc4db693bbfbd4358747f311e",
+  "src/aerialrange/navigation/__init__.py": "49efea1362092eaccb6a1d5a98d552fb83c3c273208a42b35ff2bb521b91729a",
+  "src/aerialrange/navigation/alignment.py": "8df6d7c504d3316ed01aac4932813416e5db5ed5c354cec531d07dfde8f433ab",
+  "src/aerialrange/navigation/features.py": "5672e939f543e31d8bb930652a2e41091e17236d8fa830d20b5d7bcefe9d4bf5",
+  "src/aerialrange/navigation/gnss.py": "e82cfffa2b4f4db3b302257b7ce907bfd9fe3a42d13a46823bb2afbdb5ad8bb7",
+  "src/aerialrange/navigation/heading.py": "8d3f374e08f6c43cd110cc63d98ea51a1485035d323fb7bdc239128435bf8e95",
+  "src/aerialrange/navigation/imu.py": "8a778ee69e361ff26a70cbbbab3578dbdc1076f2523f077e85d728f3b275a96e",
+  "src/aerialrange/navigation/msckf.py": "0f4a2806765befe8955064010f7c5e370e1967043dde53be002e9b7d99807206",
+  "src/aerialrange/navigation/run.py": "753c4b1c36d27413622b55a40529e03664e22d6974cceb8357ebd689aafd4cda",
+  "src/aerialrange/navigation/so3.py": "3d854bda8b90e3323ebca3ed8874c38562e9b2c4d874f6d4d6cd2102dc14ec3b",
+  "scripts/msckf_midair.py": "6158c3682cbb8646bd798dc2da5b834785586cc575991aec4930135f72fd0c2d",
+  "scripts/msckf_ranging.py": "a0edbcaa874be0cb298732705602f264193cabc17e449b0d12bb596ba98500ec",
+  "scripts/midair_common.py": "a59aa682094e1cdab16f196bc5b23e1c0917d554e6c484c302185523f4c8844b",
+  "src/aerialrange/geometry/triangulation.py": "4707b4d1e459adb965716042a7763537ea4ee88df7dcd3517ed2bbcb8c3c4d62",
+  "src/aerialrange/evaluate/terrain_motion.py": "460f2ce486e903c1e137f86a49c58bf9ff9a1a8ac7d44effcf06c78a171c60e8"
+ }
+}
