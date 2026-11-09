@@ -39,6 +39,15 @@ The version 1 detector is fine-tuned on SynDrone development towns so that detec
 3. In a GPU notebook with both attached, paste `gpu/train_syndrone_kaggle.py` into one cell and use **Save & Run All**. It trains the three folds in turn, resumes after a session timeout, and refuses to run without a GPU.
 4. Download `syndrone_ft_outputs.zip` and unzip it into `cache/train/`, so that `cache/train/syndrone_ft_outputs/syndrone_ft_minus_<Town>/weights/best.pt` exists. Scoring then runs locally (`docs/runbook.md`, Phase 7).
 
+### The version 2 detector (D-FINE N)
+
+The same three folds, for the detector chosen in version 2 (D-740), so the comparison with version 1's fine-tune changes only the detector.
+
+1. Build the package from version 1's: `python scripts/syndrone_coco_package.py` writes `cache/gpu_package/syndrone_dev_coco.zip` (the same images and folds in COCO format) and `syndrone_coco_manifest.json` with counts and the SHA-256.
+2. Upload two **private** Kaggle datasets: the zip, and the detector's VisDrone weights `cache/train/dfine_n_640/checkpoint_best.pth`, copied as `cache/gpu_package/dfine_n_640_visdrone_best.pth` (the notebook finds it by that name). Check the zip's SHA-256 against the manifest before uploading.
+3. In a GPU notebook with both attached and **Internet** on, paste `gpu/train_dfine_syndrone_kaggle.py` into one cell and use **Save & Run All**. It trains the folds in turn and does not start a fold that would not finish within 11 hours; if it prints "NOT RUN THIS SESSION", set `FOLDS` on its first settings line to the folds it lists and run again in a new session.
+4. Download each `dfine_syndrone_minus_<Town>.zip` and unzip it into `cache/train/`, so that `cache/train/dfine_syndrone_minus_<Town>/checkpoint_best.pth` exists. Export, parity check and scoring run locally.
+
 ## Detector candidates (version 2)
 
 The version 1 detector's library is AGPL-3.0, so version 2 trains permissively licensed candidates on the same VisDrone data (`docs/model_and_data.md`, detector candidates). The first is RF-DETR (Apache-2.0); the others follow the same pattern.

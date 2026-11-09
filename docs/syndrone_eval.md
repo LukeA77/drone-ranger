@@ -90,6 +90,23 @@ Intervals in brackets resample sequences.
 
 These are development results: the fine-tuning recipe was fixed before scoring, but the same towns are used throughout this phase. The fine-tuned detector is not used anywhere else: it is a measurement of the gap between VisDrone and SynDrone, and version 2's detector is chosen separately (D-715).
 
+## Results: version 2 detector, no SynDrone training
+
+The version 2 pipeline (`configs/run.yaml`: D-FINE N at 640, D-729) against the same pipeline with version 1's detector, both with the version 2 tracker and range-speed stage, so only the detector differs (development towns; D-740).
+
+| | People, version 1 detector | People, version 2 detector | Vehicles, version 1 detector | Vehicles, version 2 detector |
+|---|---|---|---|---|
+| Detection AP50 | 0.032 (0.004 to 0.082) | 0.014 (0.004 to 0.026) | 0.557 (0.460 to 0.629) | 0.277 (0.223 to 0.313) |
+| AP50, 16 to 32 px | 0.035 | 0.012 | 0.460 | 0.233 |
+| AP50, 32 to 64 px | 0.210 | 0.088 | 0.628 | 0.323 |
+| IDF1 | 0.022 | 0.019 | 0.299 | 0.277 |
+| Range, median error (vehicles) | | | 0.6 % | 0.5 % |
+
+- **The version 2 detector transfers worse to rendered imagery.** It finds about half the vehicles version 1's detector does, at every size, so the cause is appearance, not size. On VisDrone, real footage, it was the better of the two (D-729). On the calibration towns the pattern is the same (vehicle AP50 0.301 against 0.641).
+- **Tracking and range barely change.** Vehicle IDF1 drops from 0.299 to 0.277; range accuracy is the same, since it depends on where a box's bottom edge is, not on how many objects are found.
+- **No speeds are shown with this detector.** No display rule reaches 9 in 10 shown speeds right, for either people (best 74 %) or vehicles (best 84 % within 5 km/h), so `configs/run.yaml` shows none (D-739).
+- **Fine-tuning:** how much SynDrone training recovers is being measured, as it was for version 1 above (D-740).
+
 ## Limits of this evaluation
 
 - Synthetic scenes and exact camera poses: real-flight errors will be larger.

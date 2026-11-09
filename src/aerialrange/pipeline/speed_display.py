@@ -5,7 +5,10 @@ A speed is shown only when the filter is confident: its speed sigma is at most
 had at least `min_age` updates, and the mean normalised innovation squared (NIS) over its
 last `nis_window` updates lies inside the two-sided `nis_conf` chi-square band for a
 consistent filter (Bar-Shalom, Li and Kirubarajan, 2001, Section 5.4: the sum of N
-two-dimensional NIS values is chi-square with 2N degrees of freedom). Otherwise the label
+two-dimensional NIS values is chi-square with 2N degrees of freedom). With `nis_test="upper"`
+(D-739) only the upper bound applies, at the one-sided `nis_conf` quantile: the test then
+catches an overconfident filter and does not reject a conservative one, whose interval widths
+the calibration corrects (D-737). Otherwise the label
 reads "speed: settling". Speed, heading and their sigmas are always written to tracks.csv;
 this rule only affects what is displayed.
 """
@@ -27,12 +30,19 @@ def nis_bounds(n: int, conf: float) -> tuple[float, float]:
     return float(chi2.ppf(a, dof) / n), float(chi2.ppf(1.0 - a, dof) / n)
 
 
+@lru_cache(maxsize=64)
+def nis_upper(n: int, conf: float) -> float:
+    """One-sided upper bound on the mean of `n` two-dimensional NIS values."""
+    return float(chi2.ppf(conf, 2 * n) / n)
+
+
 @dataclass(frozen=True)
 class SpeedDisplayRule:
     sigma_max_ms: float
     min_age: int
     nis_window: int
     nis_conf: float
+    nis_test: str = "two_sided"  # or "upper" (D-739)
 
     def ok(self, speed_sigma_ms: float, age: int, nis_mean: float, nis_n: int) -> bool:
         if not (math.isfinite(speed_sigma_ms) and math.isfinite(nis_mean)):
@@ -41,6 +51,8 @@ class SpeedDisplayRule:
             return False
         if nis_n < self.nis_window:
             return False
+        if self.nis_test == "upper":
+            return nis_mean <= nis_upper(self.nis_window, self.nis_conf)
         lo, hi = nis_bounds(self.nis_window, self.nis_conf)
         return lo <= nis_mean <= hi
 

@@ -130,3 +130,23 @@ def test_calibrated_half_widths_scale_the_sigmas():
     np.testing.assert_allclose(sp["speed_half_95_ms"], 3.5 * sp["speed_sigma_ms"])
     plain = replay(tracks, meta, RangeSpeedStage(MODEL, REL, SD))
     assert plain["range_half_90_m"].isna().all()
+
+
+def test_display_rules_per_group_and_one_sided_nis():
+    from aerialrange.pipeline.range_speed import display_rules
+    from aerialrange.pipeline.speed_display import SpeedDisplayRule
+
+    sd = {
+        "sigma_max_ms": None,
+        "min_age": None,
+        "nis_window": 10,
+        "nis_conf": 0.95,
+        "nis_test": "upper",
+        "by_group": {"person": {"sigma_max_ms": 0.2, "min_age": 15}, "vehicle": None},
+    }
+    rules = display_rules(sd)
+    assert rules["vehicle"] is None and rules["person"].nis_test == "upper"
+    r = rules["person"]
+    assert r.ok(0.1, 20, 0.05, 10)  # a calm, conservative filter passes the one-sided test
+    assert not SpeedDisplayRule(0.2, 15, 10, 0.95).ok(0.1, 20, 0.05, 10)  # two-sided rejects
+    assert not r.ok(0.1, 20, 5.0, 10)  # an overconfident filter fails

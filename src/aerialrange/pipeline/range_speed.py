@@ -69,8 +69,21 @@ def display_rule(sd: dict) -> SpeedDisplayRule | None:
     if sd.get("sigma_max_ms") is None or sd.get("min_age") is None:
         return None
     return SpeedDisplayRule(
-        float(sd["sigma_max_ms"]), int(sd["min_age"]), int(sd["nis_window"]), float(sd["nis_conf"])
+        float(sd["sigma_max_ms"]),
+        int(sd["min_age"]),
+        int(sd["nis_window"]),
+        float(sd["nis_conf"]),
+        str(sd.get("nis_test", "two_sided")),
     )
+
+
+def display_rules(sd: dict) -> dict[str, SpeedDisplayRule | None] | SpeedDisplayRule | None:
+    """One rule for every group, or, with `by_group` (D-739), one per group: a group not
+    listed, or listed with a null sigma, shows no speed."""
+    if "by_group" not in sd:
+        return display_rule(sd)
+    shared = {k: v for k, v in sd.items() if k != "by_group"}
+    return {g: display_rule({**shared, **(v or {})}) for g, v in sd["by_group"].items()}
 
 
 def exact_pose_overrides(kalman: dict) -> dict:
@@ -125,7 +138,7 @@ class RangeSpeedStage:
         else:
             raise ValueError(f"unknown meas_model {self.meas_model!r} (relative or propagated)")
         self.bank = make_filter_bank(kalman, int(speed_display["nis_window"]))
-        self.rule = display_rule(speed_display)
+        self.rule = display_rules(speed_display)
         self.t_prev: float | None = None
 
     @classmethod
@@ -268,9 +281,8 @@ class RangeSpeedStage:
                 rh = self.intervals.half_widths("range", group, dep, rng, rg["range_sigma_m"][j])
                 sh = self.intervals.half_widths("speed", group, dep, rng, ss)
             judged = sh["0.68"] if self.intervals is not None else ss
-            shown = bool(
-                self.rule is not None and valid[j] and self.rule.ok(judged, age, nis_m, nis_n)
-            )
+            rule = self.rule.get(group) if isinstance(self.rule, dict) else self.rule
+            shown = bool(rule is not None and valid[j] and rule.ok(judged, age, nis_m, nis_n))
             rows.append(
                 {
                     "frame": k,

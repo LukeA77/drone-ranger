@@ -1,0 +1,25 @@
+<launch>
+    <!-- OpenVINS serial (bag) run, mono camera, for the Phase 11 reference (D-741). The same
+         two nodes as ov_msckf/launch/serial.launch in v2.7 (the filter and the pose
+         recorder), without its ground-truth and live-alignment options. -->
+    <arg name="config_path" />
+    <arg name="bag" />
+    <arg name="path_est" />
+    <node name="ov_msckf" pkg="ov_msckf" type="ros1_serial_msckf" output="screen"
+          clear_params="true" required="true">
+        <param name="verbosity" type="string" value="WARNING" />
+        <param name="config_path" type="string" value="$(arg config_path)" />
+        <param name="use_stereo" type="bool" value="false" />
+        <param name="max_cameras" type="int" value="1" />
+        <param name="path_bag" type="string" value="$(arg bag)" />
+        <param name="bag_start" type="double" value="0" />
+        <param name="bag_durr" type="int" value="-1" />
+        <param name="record_timing_information" type="bool" value="false" />
+    </node>
+    <node name="recorder_estimate" pkg="ov_eval" type="pose_to_file" output="screen"
+          required="true">
+        <param name="topic" type="str" value="/ov_msckf/poseimu" />
+        <param name="topic_type" type="str" value="PoseWithCovarianceStamped" />
+        <param name="output" type="str" value="$(arg path_est)" />
+    </node>
+</launch>

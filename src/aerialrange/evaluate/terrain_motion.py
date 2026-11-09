@@ -92,21 +92,25 @@ def points_from_tracks(
     pose_k: Pose,
     uvk: NDArray,
     tracks: list[tuple[NDArray, NDArray]],
-    prev_poses: list[tuple[Pose, float]],
+    prev_poses: list[tuple[Pose, float]] | list[tuple[Pose, float, NDArray | None]],
     s: MotionSettings,
 ) -> tuple[NDArray, NDArray, NDArray, NDArray]:
     """The triangulation and per-corner baseline choice of `multi_baseline_points`, from
-    tracks already computed by `track_frame` and one pose (and pixel sigma) per earlier frame."""
+    tracks already computed by `track_frame` and one pose (and pixel sigma) per earlier frame.
+    An optional third element per earlier frame is the 12x12 joint pose covariance of
+    (frame k, earlier frame) for `triangulate_batch` (D-741)."""
     n = len(uvk)
     best_P = np.full((n, 3), np.nan)
     best_var = np.full(n, np.nan)
     best_tr = np.full(n, np.inf)
     best_par = np.full(n, np.nan)
-    for (uvp, ok), (pose_p, sigma_px) in zip(tracks, prev_poses, strict=True):
+    for (uvp, ok), prev in zip(tracks, prev_poses, strict=True):
+        pose_p, sigma_px = prev[0], prev[1]
+        pose_cov = prev[2] if len(prev) > 2 else None
         if not ok.any():
             continue
         P, var_z, par, valid, trace = ground_points(
-            cam, pose_k, pose_p, uvk[ok], uvp[ok], s, sigma_px
+            cam, pose_k, pose_p, uvk[ok], uvp[ok], s, sigma_px, pose_cov
         )
         idx = np.nonzero(ok)[0][valid]
         # Select by total 3D variance: for shallow rays the error lies mostly along the
@@ -128,6 +132,7 @@ def ground_points(
     uv_prev: NDArray,
     s: MotionSettings,
     sigma_px: float,
+    pose_cov: NDArray | None = None,
 ) -> tuple[NDArray, NDArray, NDArray, NDArray, NDArray]:
     """Triangulated 3D points (NED, metres), Down variance, parallax (degrees), the validity
     mask over the input features, and the total position variance (trace of the covariance,
@@ -144,6 +149,7 @@ def ground_points(
         sigma_px=sigma_px,
         sigma_pos_m=s.sigma_pos_m,
         sigma_att_rad=s.sigma_att_rad,
+        pose_cov=pose_cov,
     )
     v = r["valid"] & np.isfinite(r["cov_w"][:, 2, 2])
     trace = np.trace(r["cov_w"][v], axis1=1, axis2=2)

@@ -57,3 +57,16 @@ def noise_levels() -> dict[str, dict[str, float]]:
             "fy": f,
         }
     return out
+
+
+def midair_root() -> Path:
+    """Folder of the configured Mid-Air climate (holds sensor_records.hdf5 and image folders)."""
+    from aerialrange.utils.config import load_config
+
+    data = load_config("data")
+    return (
+        REPO_ROOT
+        / data.require("data_root")
+        / data.require("midair_subdir")
+        / data.require("midair_climate")
+    )

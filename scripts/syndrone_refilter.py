@@ -30,7 +30,7 @@ import yaml
 from aerialrange.data.syndrone import FPS, N_FRAMES, SynDroneSequence, syndrone_camera
 from aerialrange.data.syndrone_archive import MemberStore
 from aerialrange.pipeline.intervals import config_from_calibration
-from aerialrange.pipeline.range_speed import RangeSpeedStage, replay
+from aerialrange.pipeline.range_speed import RangeSpeedStage, exact_pose_overrides, replay
 from aerialrange.utils.config import REPO_ROOT, load_config
 
 RUNS = REPO_ROOT / "cache" / "syndrone" / "runs"
@@ -77,6 +77,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--intervals", help="interval calibration result to apply (D-737; SynDrone conditions)"
     )
+    ap.add_argument(
+        "--keep-pose-errors",
+        action="store_true",
+        help="keep the configured pose error terms (default: zeroed, SynDrone poses are exact)",
+    )
     args = ap.parse_args(argv)
     if not args.check and not args.name:
         ap.error("--name is required unless --check")
@@ -92,6 +97,12 @@ def main(argv: list[str] | None = None) -> int:
     cam = syndrone_camera()
     ov = parse_sets(args.sets)
     ov.setdefault("camera", {}).update({"focal_px": cam.fx, "cx": cam.cx, "cy": cam.cy})
+    if not args.keep_pose_errors:
+        # SynDrone poses are exact: zero the pose error terms, as scripts/syndrone_run.py does
+        # (before this was automatic, replays passed them with --set; D-741 note)
+        kal = {**cfg.require("kalman"), **ov.get("kalman", {})}
+        for k, v in exact_pose_overrides(kal).get("kalman", {}).items():
+            ov.setdefault("kalman", {})[k] = v
     if args.intervals:
         ov["intervals"] = config_from_calibration(REPO_ROOT / args.intervals)
 

@@ -74,6 +74,18 @@ def _perturbed_pose(pose: Pose, dpos: NDArray, datt: NDArray) -> Pose:
     return Pose(pose.p_w + dpos, R_wb_from_ypr(yaw + datt[0], pitch + datt[1], roll + datt[2]))
 
 
+def _perturbed_pose_world(pose: Pose, dpos: NDArray, dth: NDArray) -> Pose:
+    """Pose with a position offset and a world-frame rotation-vector error,
+    R_wb <- Exp(dth) R_wb (the navigation filter's error convention, D-741)."""
+    th = float(np.linalg.norm(dth))
+    K = np.array([[0.0, -dth[2], dth[1]], [dth[2], 0.0, -dth[0]], [-dth[1], dth[0], 0.0]])
+    if th < 1e-12:
+        E = np.eye(3) + K
+    else:
+        E = np.eye(3) + np.sin(th) / th * K + (1 - np.cos(th)) / th**2 * K @ K
+    return Pose(pose.p_w + dpos, E @ pose.R_wb)
+
+
 def triangulate_with_covariance(
     cam1: Camera,
     pose1: Pose,
@@ -142,11 +154,16 @@ def triangulate_batch(
     sigma_px: float,
     sigma_pos_m: float = 0.0,
     sigma_att_rad: float = 0.0,
+    pose_cov: NDArray | None = None,
 ) -> dict[str, NDArray]:
     """Vectorised `triangulate_with_covariance` for N features between the same two frames.
 
     Pixel noise is independent per feature; pose noise is shared by all features of a frame.
     Same step rule as the single-point version (tested to match).
+    `pose_cov` (optional, 12x12): joint covariance of the two poses' errors, ordered
+    (position 1, attitude 1, position 2, attitude 2), positions in metres and attitudes as
+    world-frame rotation vectors (radians), e.g. from the navigation filter (D-741). It is
+    propagated in addition to `sigma_pos_m` and `sigma_att_rad`.
     """
     uv1 = np.atleast_2d(np.asarray(uv1, float))
     uv2 = np.atleast_2d(np.asarray(uv2, float))
@@ -191,6 +208,23 @@ def triangulate_batch(
                     grads.append(solve(uv1, uv2, p1, p2)[0])
                 g = (grads[0] - grads[1]) / (2 * h)
                 cov += sig**2 * np.einsum("ni,nj->nij", g, g)
+    if pose_cov is not None:
+        pose_cov = np.asarray(pose_cov, float)
+        G = np.zeros((n, 3, 12))
+        sd = np.sqrt(np.clip(np.diag(pose_cov), 0, None))
+        for col in range(12):
+            if sd[col] == 0:
+                continue
+            h = _REL_STEP * sd[col]
+            grads = []
+            for sign in (1.0, -1.0):
+                dv = np.zeros(12)
+                dv[col] = sign * h
+                p1 = _perturbed_pose_world(pose1, dv[0:3], dv[3:6])
+                p2 = _perturbed_pose_world(pose2, dv[6:9], dv[9:12])
+                grads.append(solve(uv1, uv2, p1, p2)[0])
+            G[:, :, col] = (grads[0] - grads[1]) / (2 * h)
+        cov += np.einsum("nik,kl,njl->nij", G, pose_cov, G)
     cov[~ok] = np.nan
     P = np.where(ok[:, None], P, np.nan)
     return {

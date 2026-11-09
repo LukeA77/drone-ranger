@@ -142,3 +142,28 @@ def test_batch_matches_single_point_triangulation_and_covariance():
             np.testing.assert_allclose(b["point_w"][i], s["point_w"], atol=1e-9)
             np.testing.assert_allclose(b["cov_w"][i], s["cov_w"], rtol=1e-4, atol=1e-10)
             assert b["parallax_deg"][i] == pytest.approx(s["parallax_deg"])
+
+
+def test_joint_pose_covariance_matches_per_axis_position_noise_and_adds_correlation():
+    """D-741: independent position noise given as a joint covariance equals `sigma_pos_m`;
+    fully correlated position errors of the two poses (a shared offset) move the point but
+    leave the relative geometry, so they add no more than the shared offset itself."""
+    from aerialrange.geometry.triangulation import triangulate_batch
+
+    rng = np.random.default_rng(4)
+    p1 = pose_at(0, 0, -20, yaw=0.1, pitch=-0.4)
+    p2 = pose_at(3, 1, -21, yaw=0.12, pitch=-0.38, roll=0.02)
+    X = np.column_stack([rng.uniform(20, 60, 20), rng.uniform(-10, 10, 20), rng.uniform(-2, 2, 20)])
+    uv1 = np.array([project_world_point(CAM, p1, x)[0] for x in X])
+    uv2 = np.array([project_world_point(CAM, p2, x)[0] for x in X])
+    s = 0.05
+    a = triangulate_batch(CAM, p1, uv1, CAM, p2, uv2, sigma_px=0.0, sigma_pos_m=s)
+    C = np.zeros((12, 12))
+    C[0:3, 0:3] = C[6:9, 6:9] = np.eye(3) * s**2
+    b = triangulate_batch(CAM, p1, uv1, CAM, p2, uv2, sigma_px=0.0, pose_cov=C)
+    np.testing.assert_allclose(b["cov_w"], a["cov_w"], rtol=1e-4, atol=1e-12)
+    C[0:3, 6:9] = C[6:9, 0:3] = np.eye(3) * s**2  # same offset on both poses
+    c = triangulate_batch(CAM, p1, uv1, CAM, p2, uv2, sigma_px=0.0, pose_cov=C)
+    np.testing.assert_allclose(
+        c["cov_w"], np.broadcast_to(np.eye(3) * s**2, c["cov_w"].shape), atol=1e-8
+    )

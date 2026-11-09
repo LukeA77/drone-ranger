@@ -59,6 +59,15 @@ PHASES = {
         "configs/tracker.yaml",
         "configs/trackers/botsort_cmc.yaml",
     ],
+    "phase11": [  # camera, IMU and GPS fusion test run on Mid-Air (D-741)
+        "configs/navigation.yaml",
+        "configs/geometry.yaml",
+        "configs/data.yaml",
+        "configs/project.yaml",
+        "configs/uncertainty.yaml",
+        "results/splits.json",
+        "results/midair/development/navigation/gnss_fit.json",
+    ],
 }
 
 

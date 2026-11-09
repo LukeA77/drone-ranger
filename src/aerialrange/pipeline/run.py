@@ -258,7 +258,11 @@ def run(
         "stages": {n: _stats(v) for n, v in times.items()},
         "speed_display": "unresolved: no speed is displayed"
         if stage.rule is None
-        else vars(stage.rule),
+        else (
+            {g: (vars(r) if r is not None else "not displayed") for g, r in stage.rule.items()}
+            if isinstance(stage.rule, dict)
+            else vars(stage.rule)
+        ),
         "note": "Sequential run on this machine; overlay drawing excluded from end_to_end (10.1). "
         "detect is near zero on frames between detections. For the protocol benchmark see "
         "scripts/benchmark_pipeline.py and scripts/benchmark_threaded.py.",

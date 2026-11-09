@@ -1,0 +1,18 @@
+# Camera, IMU and GPS fusion (Phase 11, D-741). Read by scripts/msckf_midair.py and
+# scripts/msckf_ranging.py; frozen with scripts/freeze.py --phase phase11.
+msckf:
+  value: {max_clones: 11, max_features_per_update: 40, sigma_px: 4.0, chi2_multiplier: 1.0, gate_prob: 0.95, min_obs: 3, max_cond: 10000.0, min_depth_m: 0.1, gn_iterations: 5, fej: true, use_gps_velocity: true, gyro_frame: world}
+  placeholder: null
+  source: "OpenVINS EuRoC configuration (github.com/rpng/open_vins config/euroc_mav, read 2026-11-08) for clones, features per update, gate, first-estimate Jacobians and the feature initialiser; sigma_px 4.0 chosen on the 15 Mid-Air development flights by the rule written before the grid ran (smallest of {2, 3, 4} px with pooled NEES of all nine states within its 95 % band; extended to 5 and 6 px, D-741 item 7); gyro_frame world because Mid-Air's gyroscope is in the world frame (D-741 item 1); a real gyroscope is body"
+tracker:
+  value: {max_features: 200, min_distance_px: 10, quality: 0.01, fb_max_px: 1.0, ransac_px: 3.0, ransac_conf: 0.99}
+  placeholder: null
+  source: "OpenVINS num_pts and min_px_dist; version 1 terrain_motion quality and forward-backward limit (configs/geometry.yaml); OpenCV findFundamentalMat defaults"
+alignment:
+  value: {min_window_s: 2.0, max_window_s: 10.0, max_sigma_deg: 5.0}
+  placeholder: null
+  source: "OpenVINS init_window_time 2 s as the shortest window; grows until the attitude sigma is under 5 deg (small-angle range of the filter's attitude error) or 10 s (D-741 item 5)"
+gnss_fit:
+  value: results/midair/development/navigation/gnss_fit.json
+  placeholder: null
+  source: "Development fit of the GPS error model (scripts/msckf_gnss_fit.py, D-741 item 3)"

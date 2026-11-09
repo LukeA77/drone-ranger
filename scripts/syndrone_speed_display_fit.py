@@ -45,9 +45,13 @@ def displayed(df: pd.DataFrame, rule: SpeedDisplayRule) -> np.ndarray:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--name", default="v1_accurate")
-    ap.add_argument("--tol", type=float, default=0.5)
+    ap.add_argument("--tol", type=float, default=0.5, help="absolute tolerance, m/s")
+    ap.add_argument(
+        "--tol-rel", type=float, default=0.0, help="relative tolerance; max(tol, tol_rel x truth)"
+    )
     ap.add_argument("--target", type=float, default=0.90)
     ap.add_argument("--group", help="fit on one group's rows only (D-739)")
+    ap.add_argument("--nis-test", choices=["two_sided", "upper"], default="two_sided")
     args = ap.parse_args(argv)
     sd = load_config("run").require("speed_display")
     df = pd.read_csv(RUNS / args.name / "speed_matches_development.csv.gz")
@@ -57,12 +61,15 @@ def main(argv: list[str] | None = None) -> int:
     df = df[np.isfinite(df["sigma_ms"]) & np.isfinite(df["pred_ms"])]
     if args.group:
         df = df[df["group"] == args.group]
-    df["ok"] = np.abs(df["pred_ms"] - df["truth_ms"]) <= args.tol
+    tol = np.maximum(args.tol, args.tol_rel * np.abs(df["truth_ms"]))
+    df["ok"] = np.abs(df["pred_ms"] - df["truth_ms"]) <= tol
     df["seq"] = df["town"] + "_h" + df["height"].astype(str)
     grid = []
     for s in SIGMAS:
         for a in AGES:
-            rule = SpeedDisplayRule(s, a, int(sd["nis_window"]), float(sd["nis_conf"]))
+            rule = SpeedDisplayRule(
+                s, a, int(sd["nis_window"]), float(sd["nis_conf"]), args.nis_test
+            )
             show = displayed(df, rule)
             n = int(show.sum())
             grid.append(
@@ -84,9 +91,11 @@ def main(argv: list[str] | None = None) -> int:
     res: dict = {
         "name": args.name,
         "tolerance_ms": args.tol,
+        "tolerance_rel": args.tol_rel,
         "target": args.target,
         "nis_window": int(sd["nis_window"]),
         "nis_conf": float(sd["nis_conf"]),
+        "nis_test": args.nis_test,
         "n_matched_track_frames": int(len(df)),
         "grid": [{k: v for k, v in g.items() if k != "_show"} for g in grid],
         "chosen": None,
@@ -132,6 +141,10 @@ def main(argv: list[str] | None = None) -> int:
     out = REPO_ROOT / "results" / "syndrone" / "development"
     out.mkdir(parents=True, exist_ok=True)
     tag = f"{args.name}__{args.group}" if args.group else args.name
+    if args.tol != 0.5 or args.tol_rel:
+        tag += f"__tol{args.tol:g}_{args.tol_rel:g}"
+    if args.nis_test != "two_sided":
+        tag += f"__nis_{args.nis_test}"
     res["group"] = args.group
     (out / f"speed_display_fit_{tag}.json").write_text(
         json.dumps(res, indent=1) + "\n", encoding="utf-8"

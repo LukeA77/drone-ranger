@@ -128,3 +128,14 @@ The version 1 detector and its library are AGPL-3.0, so version 2 replaces them.
 **Excluded:** DEIMv2 (its 2026 licence allows non-commercial use only); RF-DETR Atto, Femto, Pico, XLarge and 2XLarge (Roboflow Platform Model License 1.0: commercial self-hosting needs a paid add-on); the original YOLOv7 and YOLOv9 repositories (GPL-3.0).
 
 **Open question, pretraining data:** Objects365's own site states no licence; a third-party listing describes it as non-commercial. Weights pretrained on it may inherit that restriction, so the COCO-only weights are preferred where a candidate offers both, and the choice is recorded with the result. COCO's annotations are CC-BY 4.0 and its images carry their Flickr licences; ImageNet-pretrained backbones carry ImageNet's research terms. These questions apply to almost every published detector, the version 1 one included. Not legal advice.
+
+## Phase 11 reference tools (licences checked 2026-11-09)
+
+Neither is a dependency of `src/aerialrange` (build2 R13); both live under `tools/openvins/` and are used only to produce a reference trajectory for comparison.
+
+| Tool | Licence | Use |
+|---|---|---|
+| OpenVINS v2.7 (https://github.com/rpng/open_vins) | GPL-3.0 (LICENSE file in the repository) | Built and run in its own container (`tools/openvins/Dockerfile`) on converted Mid-Air flights; only its output trajectories are compared. Its code never enters `src/`. |
+| rosbags 0.11.9 (https://gitlab.com/ternaris/rosbags) | Apache-2.0 (package metadata, `License-Expression`) | Writes the ROS 1 bags OpenVINS reads (`tools/openvins/make_bag.py`), installed in a separate folder (`cache/venvs/rosbags_lib`). |
+
+The navigation filter itself (`src/aerialrange/navigation/`) uses only NumPy, SciPy and OpenCV, already listed above. Its method is from the published papers cited in `docs/navigation.md`; no OpenVINS code was copied, and only OpenVINS's published configuration values are used as settings.

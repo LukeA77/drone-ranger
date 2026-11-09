@@ -1,0 +1,1580 @@
+{
+ "generated_utc": "2026-11-09T00:33:36+00:00",
+ "decision": "D-741",
+ "split": "development",
+ "name": "msckf_dev1_nocam",
+ "camera": false,
+ "settings": {
+  "max_clones": 11,
+  "max_features_per_update": 40,
+  "sigma_px": 1.0,
+  "chi2_multiplier": 1.0,
+  "gate_prob": 0.95,
+  "min_obs": 3,
+  "max_cond": 10000.0,
+  "min_depth_m": 0.1,
+  "gn_iterations": 5,
+  "fej": true,
+  "use_gps_velocity": true,
+  "gyro_frame": "world"
+ },
+ "tracker": {
+  "max_features": 200,
+  "min_distance_px": 10,
+  "quality": 0.01,
+  "fb_max_px": 1.0,
+  "ransac_px": 3.0,
+  "ransac_conf": 0.99
+ },
+ "alignment": {
+  "min_window_s": 2.0,
+  "max_window_s": 10.0,
+  "max_sigma_rad": 0.08726646259971647
+ },
+ "gnss_model": {
+  "const_sigma_m": [
+   0.9233419327036249,
+   0.6379644421737407,
+   12.521885727807131
+  ],
+  "gm_sigma_m": [
+   0.6329312677687265,
+   0.6832310526695419,
+   1.781629242135116
+  ],
+  "gm_tau_s": 2.6642312058565345,
+  "white_sigma_m": [
+   0.3469707120532304,
+   0.29347168205086654,
+   0.9712786072169975
+  ]
+ },
+ "gps_velocity_noise": "synthetic white noise at the u-blox NEO-M8 data-sheet level, seed = trajectory number (Mid-Air's GPS velocity is noise-free)",
+ "pooled": {
+  "ate_rmse_m_median": 12.143844045139344,
+  "ate_horizontal_rmse_m_median": 0.8580580366470428,
+  "vel_rmse_ms_median": 0.13376135930749,
+  "tilt_err_median_deg_median": 0.8163757524641864,
+  "yaw_err_median_abs_deg_median": 4.464059777363691,
+  "nees_mean": {
+   "attitude": 7.739158122460615,
+   "position": 3.0264249564906494,
+   "velocity": 2.594874583829857,
+   "all9": 13.84769083986788,
+   "attitude_band_95": [
+    1.891076819457323,
+    4.360677267333303
+   ],
+   "position_band_95": [
+    1.891076819457323,
+    4.360677267333303
+   ],
+   "velocity_band_95": [
+    1.891076819457323,
+    4.360677267333303
+   ],
+   "all9_band_95": [
+    6.9819012566638845,
+    11.270402394876529
+   ]
+  },
+  "rpe": {
+   "1": {
+    "trans_median_m": 0.03381726587983515,
+    "trans_p90_m": 0.11397063802256611,
+    "rot_median_deg": 0.052266119322845764,
+    "rot_p90_deg": 0.1439201822860452
+   },
+   "2": {
+    "trans_median_m": 0.06998250841945998,
+    "trans_p90_m": 0.22778390838389168,
+    "rot_median_deg": 0.08592679618277474,
+    "rot_p90_deg": 0.2702383866618997
+   },
+   "5": {
+    "trans_median_m": 0.18775566229153579,
+    "trans_p90_m": 0.555576301996051,
+    "rot_median_deg": 0.18975965082430565,
+    "rot_p90_deg": 0.8804293149888486
+   },
+   "10": {
+    "trans_median_m": 0.3796552343510281,
+    "trans_p90_m": 1.064704690574193,
+    "rot_median_deg": 0.35644277504735755,
+    "rot_p90_deg": 1.6081155563747531
+   }
+  }
+ },
+ "flights": {
+  "trajectory_0002": {
+   "frames": 1951,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    0.4821276683756952,
+    1.1643806327978359,
+    7.461315581057918
+   ],
+   "ate_rmse_m": 7.309626743911157,
+   "ate_rmse_per_axis_m": [
+    0.24770711670215909,
+    0.3401582062332357,
+    7.297504827978432
+   ],
+   "ate_horizontal_rmse_m": 0.42079261035896254,
+   "vel_rmse_ms": 0.11185725095959863,
+   "tilt_err_median_deg": 0.5806329061374594,
+   "tilt_err_p90_deg": 1.338582199110177,
+   "yaw_err_median_abs_deg": 3.3399674845330147,
+   "yaw_err_p90_abs_deg": 9.242253217454213,
+   "nees": {
+    "attitude": {
+     "mean": 0.9714454445033245,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "position": {
+     "mean": 0.6186798487579142,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 2.080189578615087,
+     "expected": 3,
+     "share_above_95": 0.013839056893900564
+    },
+    "all9": {
+     "mean": 3.6569277155117392,
+     "expected": 9,
+     "share_above_95": 0.0
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.02266451409550896,
+     "trans_p90_m": 0.05602695699852759,
+     "trans_rmse_m": 0.07755713634125623,
+     "rot_median_deg": 0.0202230665626695,
+     "rot_p90_deg": 0.05377857216525161
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.04660352589523218,
+     "trans_p90_m": 0.12480464467546025,
+     "trans_rmse_m": 0.11741862066221949,
+     "rot_median_deg": 0.03535534102454299,
+     "rot_p90_deg": 0.13990541465850745
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.1271885132558886,
+     "trans_p90_m": 0.30262450541945396,
+     "trans_rmse_m": 0.2183606532191451,
+     "rot_median_deg": 0.07869474805656068,
+     "rot_p90_deg": 0.7302332772835974
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.26045894931013946,
+     "trans_p90_m": 0.563461288290987,
+     "trans_rmse_m": 0.37284579977917776,
+     "rot_median_deg": 0.2060087952974819,
+     "rot_p90_deg": 1.9879235249933564
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 6.5414669198371955,
+    "imu_noise_final": {
+     "gyr": [
+      0.0022962829527378935,
+      0.0014474510369321097,
+      0.01586532239057347
+     ],
+     "acc": [
+      0.0029672594905908937,
+      0.0030950808001046558,
+      0.003573878875325711
+     ]
+    }
+   }
+  },
+  "trajectory_0003": {
+   "frames": 1954,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    1.9028067870660357,
+    1.7754463939219882,
+    13.98912362183628
+   ],
+   "ate_rmse_m": 9.439061021510451,
+   "ate_rmse_per_axis_m": [
+    0.5824631110549532,
+    0.6300796128385391,
+    9.39997922197402
+   ],
+   "ate_horizontal_rmse_m": 0.8580580366470428,
+   "vel_rmse_ms": 0.12689046077423774,
+   "tilt_err_median_deg": 0.8487937928100586,
+   "tilt_err_p90_deg": 3.757982393115116,
+   "yaw_err_median_abs_deg": 1.9786075014829216,
+   "yaw_err_p90_abs_deg": 12.977487334441182,
+   "nees": {
+    "attitude": {
+     "mean": 2.7993582493429954,
+     "expected": 3,
+     "share_above_95": 0.0849539406345957
+    },
+    "position": {
+     "mean": 1.5402861938068517,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 2.188349997505154,
+     "expected": 3,
+     "share_above_95": 0.0127942681678608
+    },
+    "all9": {
+     "mean": 6.784803515445333,
+     "expected": 9,
+     "share_above_95": 0.02354145342886387
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.019924929720983302,
+     "trans_p90_m": 0.12050506307810384,
+     "trans_rmse_m": 0.07413453674260166,
+     "rot_median_deg": 0.04720890880072513,
+     "rot_p90_deg": 0.10968180286238235
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.04245511822877221,
+     "trans_p90_m": 0.2399967811718707,
+     "trans_rmse_m": 0.1325878548799596,
+     "rot_median_deg": 0.07892953942122657,
+     "rot_p90_deg": 0.19420535272508763
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.12976007458517202,
+     "trans_p90_m": 0.5691132024452316,
+     "trans_rmse_m": 0.3056908276876829,
+     "rot_median_deg": 0.16257281505009918,
+     "rot_p90_deg": 0.7005548607302879
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.2367914997544929,
+     "trans_p90_m": 1.1234555010620808,
+     "trans_rmse_m": 0.5936388802997353,
+     "rot_median_deg": 0.3291943543561223,
+     "rot_p90_deg": 1.436735790254168
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 5.322560361285298,
+    "imu_noise_final": {
+     "gyr": [
+      0.0510041888056967,
+      0.007445766327587232,
+      0.0012465868204383575
+     ],
+     "acc": [
+      0.003490459541433794,
+      0.018872493455582756,
+      0.041473274665481105
+     ]
+    }
+   }
+  },
+  "trajectory_0004": {
+   "frames": 2006,
+   "start_s": 9.0,
+   "align_window_s": 9.0,
+   "align_sigma_deg": [
+    0.9281718218047177,
+    1.2035780626753725,
+    2.075082096618532
+   ],
+   "ate_rmse_m": 9.739113478241974,
+   "ate_rmse_per_axis_m": [
+    0.4402680888116363,
+    0.5844992459987551,
+    9.711583598130403
+   ],
+   "ate_horizontal_rmse_m": 0.7317618182161216,
+   "vel_rmse_ms": 0.13876267508764212,
+   "tilt_err_median_deg": 0.7467947344254569,
+   "tilt_err_p90_deg": 1.3416141129527852,
+   "yaw_err_median_abs_deg": 2.0719412727306805,
+   "yaw_err_p90_abs_deg": 3.5238533278929083,
+   "nees": {
+    "attitude": {
+     "mean": 1.2555959495217779,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "position": {
+     "mean": 1.4073640616105367,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 2.393600467836062,
+     "expected": 3,
+     "share_above_95": 0.02143569292123629
+    },
+    "all9": {
+     "mean": 4.95102948249641,
+     "expected": 9,
+     "share_above_95": 0.0
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.01882600892586742,
+     "trans_p90_m": 0.04771329398870469,
+     "trans_rmse_m": 0.0621529971424238,
+     "rot_median_deg": 0.07005674953176036,
+     "rot_p90_deg": 0.17731630028231962
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.038752357498028384,
+     "trans_p90_m": 0.09879710410658979,
+     "trans_rmse_m": 0.09460351666950063,
+     "rot_median_deg": 0.10675120042751896,
+     "rot_p90_deg": 0.30625866641247296
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.10305132027459898,
+     "trans_p90_m": 0.24403358575086528,
+     "trans_rmse_m": 0.17744006739026533,
+     "rot_median_deg": 0.21622766768438592,
+     "rot_p90_deg": 0.7121354237258466
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.20614451533008793,
+     "trans_p90_m": 0.4785726312425501,
+     "trans_rmse_m": 0.3054331371048667,
+     "rot_median_deg": 0.3955274636813805,
+     "rot_p90_deg": 1.1088501657286653
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 5.582513704093971,
+    "imu_noise_final": {
+     "gyr": [
+      0.004894846428100343,
+      0.08754913802338443,
+      0.013645669045978541
+     ],
+     "acc": [
+      0.0837940594316826,
+      0.005895431762255898,
+      0.010090342686576914
+     ]
+    }
+   }
+  },
+  "trajectory_0006": {
+   "frames": 1955,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    0.848188664322669,
+    2.1573723063198385,
+    21.34381307921917
+   ],
+   "ate_rmse_m": 10.939412639804125,
+   "ate_rmse_per_axis_m": [
+    0.5177700960237581,
+    0.3200706043780897,
+    10.922463908834079
+   ],
+   "ate_horizontal_rmse_m": 0.6087126285230222,
+   "vel_rmse_ms": 0.11973728991966195,
+   "tilt_err_median_deg": 0.6791829180468101,
+   "tilt_err_p90_deg": 1.356479541051117,
+   "yaw_err_median_abs_deg": 2.870757303904579,
+   "yaw_err_p90_abs_deg": 11.420704793538784,
+   "nees": {
+    "attitude": {
+     "mean": 1.2801356507658253,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "position": {
+     "mean": 1.2245344916739187,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 2.5284890411605025,
+     "expected": 3,
+     "share_above_95": 0.03938618925831202
+    },
+    "all9": {
+     "mean": 5.08778012226178,
+     "expected": 9,
+     "share_above_95": 0.0
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.018342570549463342,
+     "trans_p90_m": 0.03503770826868838,
+     "trans_rmse_m": 0.04361160981538582,
+     "rot_median_deg": 0.052266119322845764,
+     "rot_p90_deg": 0.12557543587905565
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.03814858344899762,
+     "trans_p90_m": 0.07297955837312929,
+     "trans_rmse_m": 0.06791423165998534,
+     "rot_median_deg": 0.08592679618277474,
+     "rot_p90_deg": 0.22172197774056374
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.10608408215047464,
+     "trans_p90_m": 0.18939735918961226,
+     "trans_rmse_m": 0.1326360170142046,
+     "rot_median_deg": 0.1696068376538976,
+     "rot_p90_deg": 0.9304258297533875
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.20120752154963017,
+     "trans_p90_m": 0.36154690109126997,
+     "trans_rmse_m": 0.23527024992697776,
+     "rot_median_deg": 0.3359427522993687,
+     "rot_p90_deg": 1.5869930086979505
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 3.761391375757187,
+    "imu_noise_final": {
+     "gyr": [
+      0.0024279042825845094,
+      0.0014018614900242461,
+      0.05834041484661886
+     ],
+     "acc": [
+      0.03165580303555049,
+      0.003806932030508588,
+      0.005954880786409071
+     ]
+    }
+   }
+  },
+  "trajectory_0008": {
+   "frames": 1954,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    0.7725871717481384,
+    0.6321699059563612,
+    6.821405713797594
+   ],
+   "ate_rmse_m": 15.560107611726012,
+   "ate_rmse_per_axis_m": [
+    0.8374428697045495,
+    1.9855261459544948,
+    15.410169507575386
+   ],
+   "ate_horizontal_rmse_m": 2.1549071061853002,
+   "vel_rmse_ms": 0.13376135930749,
+   "tilt_err_median_deg": 0.6179791824716471,
+   "tilt_err_p90_deg": 1.3001584414318639,
+   "yaw_err_median_abs_deg": 4.464059777363691,
+   "yaw_err_p90_abs_deg": 8.358487959715108,
+   "nees": {
+    "attitude": {
+     "mean": 1.777070553553655,
+     "expected": 3,
+     "share_above_95": 0.0005117707267144319
+    },
+    "position": {
+     "mean": 8.779332614495015,
+     "expected": 3,
+     "share_above_95": 0.49129989764585463
+    },
+    "velocity": {
+     "mean": 2.7294458069221887,
+     "expected": 3,
+     "share_above_95": 0.0383828045035824
+    },
+    "all9": {
+     "mean": 13.179088484527563,
+     "expected": 9,
+     "share_above_95": 0.14994882292732856
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.03381726587983515,
+     "trans_p90_m": 0.0801659961006713,
+     "trans_rmse_m": 0.09582599777393806,
+     "rot_median_deg": 0.04080354589067121,
+     "rot_p90_deg": 0.07929006560531282
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.06998250841945998,
+     "trans_p90_m": 0.1667579541837116,
+     "trans_rmse_m": 0.1498740190389624,
+     "rot_median_deg": 0.06536169916418927,
+     "rot_p90_deg": 0.14936753318025617
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.18775566229153579,
+     "trans_p90_m": 0.4095107992834271,
+     "trans_rmse_m": 0.2946837841893484,
+     "rot_median_deg": 0.13465168059580973,
+     "rot_p90_deg": 0.7020325815686991
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.3796552343510281,
+     "trans_p90_m": 0.8010850659577239,
+     "trans_rmse_m": 0.5254857875283533,
+     "rot_median_deg": 0.26883270238493,
+     "rot_p90_deg": 1.3868935397479007
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 9.41216203656588,
+    "imu_noise_final": {
+     "gyr": [
+      0.02833343502467799,
+      0.0027894259746470656,
+      0.0287344843482847
+     ],
+     "acc": [
+      0.0020187486455324347,
+      0.13707663999561864,
+      0.036900981814928235
+     ]
+    }
+   }
+  },
+  "trajectory_0010": {
+   "frames": 1981,
+   "start_s": 9.0,
+   "align_window_s": 9.0,
+   "align_sigma_deg": [
+    1.1344745779076288,
+    0.7391408029146886,
+    4.705218972438341
+   ],
+   "ate_rmse_m": 14.08186905834104,
+   "ate_rmse_per_axis_m": [
+    0.8351758795441253,
+    0.4016247053499168,
+    14.051342107519222
+   ],
+   "ate_horizontal_rmse_m": 0.9267260402728049,
+   "vel_rmse_ms": 0.12394537880727777,
+   "tilt_err_median_deg": 0.48536408935823927,
+   "tilt_err_p90_deg": 1.1755990086875543,
+   "yaw_err_median_abs_deg": 2.538448979771208,
+   "yaw_err_p90_abs_deg": 9.718647336242311,
+   "nees": {
+    "attitude": {
+     "mean": 1.070634626848046,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "position": {
+     "mean": 2.2199445500743753,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 2.651155119308428,
+     "expected": 3,
+     "share_above_95": 0.02120141342756184
+    },
+    "all9": {
+     "mean": 5.7268653251513895,
+     "expected": 9,
+     "share_above_95": 0.0
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.024456123466659194,
+     "trans_p90_m": 0.11397063802256611,
+     "trans_rmse_m": 0.09055101551622002,
+     "rot_median_deg": 0.02710800856471504,
+     "rot_p90_deg": 0.05381333590023461
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.050917571964660444,
+     "trans_p90_m": 0.22778390838389168,
+     "trans_rmse_m": 0.15083906604832545,
+     "rot_median_deg": 0.04403508376037522,
+     "rot_p90_deg": 0.09858541247929761
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.135764081051574,
+     "trans_p90_m": 0.559716850910565,
+     "trans_rmse_m": 0.32297606925896694,
+     "rot_median_deg": 0.08706086758203717,
+     "rot_p90_deg": 0.6099286475718699
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.27321977782414675,
+     "trans_p90_m": 1.1186474503886776,
+     "trans_rmse_m": 0.6049036140480427,
+     "rot_median_deg": 0.1856575403041509,
+     "rot_p90_deg": 1.2667681985700192
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 4.575304870297231,
+    "imu_noise_final": {
+     "gyr": [
+      0.01578297572115924,
+      0.00377046658871431,
+      0.02245867795568872
+     ],
+     "acc": [
+      0.010184579016893323,
+      0.008455107009674967,
+      0.009853198002434893
+     ]
+    }
+   }
+  },
+  "trajectory_0011": {
+   "frames": 1958,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    2.0314373128881194,
+    1.0737674858485335,
+    13.218117313058968
+   ],
+   "ate_rmse_m": 12.143844045139344,
+   "ate_rmse_per_axis_m": [
+    2.4356418923466454,
+    1.0242952763421687,
+    11.852907489378946
+   ],
+   "ate_horizontal_rmse_m": 2.6422589276773834,
+   "vel_rmse_ms": 0.14989735473792581,
+   "tilt_err_median_deg": 0.9647810015797873,
+   "tilt_err_p90_deg": 3.1342471588864855,
+   "yaw_err_median_abs_deg": 7.582037810026746,
+   "yaw_err_p90_abs_deg": 13.000350662073123,
+   "nees": {
+    "attitude": {
+     "mean": 3.8024056055440347,
+     "expected": 3,
+     "share_above_95": 0.16802860061287028
+    },
+    "position": {
+     "mean": 8.679844021333295,
+     "expected": 3,
+     "share_above_95": 0.585291113381001
+    },
+    "velocity": {
+     "mean": 2.5004681172226655,
+     "expected": 3,
+     "share_above_95": 0.0296220633299285
+    },
+    "all9": {
+     "mean": 15.34854692765437,
+     "expected": 9,
+     "share_above_95": 0.28855975485188967
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.05780932470054022,
+     "trans_p90_m": 0.11364210899914218,
+     "trans_rmse_m": 0.08205158619002162,
+     "rot_median_deg": 0.07803263962783616,
+     "rot_p90_deg": 0.20294945950322296
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.11816298353616808,
+     "trans_p90_m": 0.2313986941389879,
+     "trans_rmse_m": 0.14917185504058425,
+     "rot_median_deg": 0.12414105311822135,
+     "rot_p90_deg": 0.3634127302551038
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.3010658442777522,
+     "trans_p90_m": 0.555576301996051,
+     "trans_rmse_m": 0.3487237122884428,
+     "rot_median_deg": 0.2706627408990568,
+     "rot_p90_deg": 1.025947063045292
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.5942806877735469,
+     "trans_p90_m": 1.064704690574193,
+     "trans_rmse_m": 0.6806939891610327,
+     "rot_median_deg": 0.5186468810296383,
+     "rot_p90_deg": 1.6081155563747531
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 5.741935438312879,
+    "imu_noise_final": {
+     "gyr": [
+      0.08952318788076401,
+      0.0021176722218655022,
+      0.009688526457813757
+     ],
+     "acc": [
+      0.034732236452041,
+      0.09397891634295996,
+      0.003332737077143695
+     ]
+    }
+   }
+  },
+  "trajectory_0016": {
+   "frames": 2124,
+   "start_s": 3.0,
+   "align_window_s": 3.0,
+   "align_sigma_deg": [
+    1.0545520609694987,
+    1.0320101453344737,
+    4.673547206627444
+   ],
+   "ate_rmse_m": 12.067896619143879,
+   "ate_rmse_per_axis_m": [
+    0.3040123819389103,
+    0.5137859054973444,
+    12.05312114455358
+   ],
+   "ate_horizontal_rmse_m": 0.5969920309852514,
+   "vel_rmse_ms": 0.12271554400092906,
+   "tilt_err_median_deg": 0.5282706416929881,
+   "tilt_err_p90_deg": 1.3263522171609088,
+   "yaw_err_median_abs_deg": 1.2882208815034772,
+   "yaw_err_p90_abs_deg": 7.444829783701594,
+   "nees": {
+    "attitude": {
+     "mean": 1.2076896655597875,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "position": {
+     "mean": 1.5026500930716087,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 2.4980326447707313,
+     "expected": 3,
+     "share_above_95": 0.015536723163841809
+    },
+    "all9": {
+     "mean": 5.118810748044922,
+     "expected": 9,
+     "share_above_95": 0.0
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.015461378951817666,
+     "trans_p90_m": 0.11423200366119042,
+     "trans_rmse_m": 0.061464299805967,
+     "rot_median_deg": 0.008917660173442046,
+     "rot_p90_deg": 0.043762585559548234
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.03683352205787378,
+     "trans_p90_m": 0.22591976502354952,
+     "trans_rmse_m": 0.11332065129847288,
+     "rot_median_deg": 0.015766273586229958,
+     "rot_p90_deg": 0.13456430380175635
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.10120457375216277,
+     "trans_p90_m": 0.5422703098002237,
+     "trans_rmse_m": 0.2681031389137863,
+     "rot_median_deg": 0.04148559513878295,
+     "rot_p90_deg": 0.7584646223643912
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.20232992158003854,
+     "trans_p90_m": 1.0383866475207792,
+     "trans_rmse_m": 0.5264835783219102,
+     "rot_median_deg": 0.16137232125567164,
+     "rot_p90_deg": 1.2454630453766542
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 3.67436428667818,
+    "imu_noise_final": {
+     "gyr": [
+      0.005124966161537387,
+      0.0026388652715538204,
+      0.001146864673360392
+     ],
+     "acc": [
+      0.02157790893483688,
+      0.002841407501990009,
+      0.006219808237408975
+     ]
+    }
+   }
+  },
+  "trajectory_0018": {
+   "frames": 1956,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    1.9736059221126356,
+    3.4500951039456935,
+    8.762410656014382
+   ],
+   "ate_rmse_m": 11.156694159254274,
+   "ate_rmse_per_axis_m": [
+    0.7281629762450428,
+    0.4961209844026116,
+    11.121846394012094
+   ],
+   "ate_horizontal_rmse_m": 0.8811114294677239,
+   "vel_rmse_ms": 0.15051221172081272,
+   "tilt_err_median_deg": 0.8163757524641864,
+   "tilt_err_p90_deg": 1.6813053723369773,
+   "yaw_err_median_abs_deg": 1.9164558057455912,
+   "yaw_err_p90_abs_deg": 5.222280536051521,
+   "nees": {
+    "attitude": {
+     "mean": 1.3116658181522256,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "position": {
+     "mean": 1.713353556311897,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 3.0355518355220177,
+     "expected": 3,
+     "share_above_95": 0.019938650306748466
+    },
+    "all9": {
+     "mean": 5.859437738330481,
+     "expected": 9,
+     "share_above_95": 0.0
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.023359872858544836,
+     "trans_p90_m": 0.05532300303514722,
+     "trans_rmse_m": 0.0729124522100151,
+     "rot_median_deg": 0.059787799837669464,
+     "rot_p90_deg": 0.15127901521672588
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.04856818874610966,
+     "trans_p90_m": 0.11569821726085736,
+     "trans_rmse_m": 0.11066055073017791,
+     "rot_median_deg": 0.09708639586763569,
+     "rot_p90_deg": 0.2702383866618997
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.12913047734898267,
+     "trans_p90_m": 0.2783193161268357,
+     "trans_rmse_m": 0.20653623813845481,
+     "rot_median_deg": 0.18975965082430565,
+     "rot_p90_deg": 0.8706827062236054
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.2609013008170788,
+     "trans_p90_m": 0.5467786944235367,
+     "trans_rmse_m": 0.35402483304101645,
+     "rot_median_deg": 0.35644277504735755,
+     "rot_p90_deg": 1.3155157830961537
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 4.991526295410945,
+    "imu_noise_final": {
+     "gyr": [
+      0.07530562749116199,
+      0.007629590065690915,
+      0.0026772930266256044
+     ],
+     "acc": [
+      0.002344040756894966,
+      0.0025179008458687613,
+      0.024155692149037865
+     ]
+    }
+   }
+  },
+  "trajectory_0021": {
+   "frames": 1953,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    1.3626903110369981,
+    1.6758556595283258,
+    29.29504507681524
+   ],
+   "ate_rmse_m": 10.338259835472131,
+   "ate_rmse_per_axis_m": [
+    0.3419098392615547,
+    0.3695928513345246,
+    10.325992214397347
+   ],
+   "ate_horizontal_rmse_m": 0.5034890405375734,
+   "vel_rmse_ms": 0.1379760812737095,
+   "tilt_err_median_deg": 2.6089740632509733,
+   "tilt_err_p90_deg": 6.644779372891006,
+   "yaw_err_median_abs_deg": 14.840952835310565,
+   "yaw_err_p90_abs_deg": 40.66649942010452,
+   "nees": {
+    "attitude": {
+     "mean": 13.269892713527486,
+     "expected": 3,
+     "share_above_95": 0.7122375832053252
+    },
+    "position": {
+     "mean": 1.051681951613247,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 2.3743531474623216,
+     "expected": 3,
+     "share_above_95": 0.016897081413210446
+    },
+    "all9": {
+     "mean": 17.524669628764627,
+     "expected": 9,
+     "share_above_95": 0.4915514592933948
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.1317905511106266,
+     "trans_p90_m": 0.2368842693772407,
+     "trans_rmse_m": 0.16890357177884263,
+     "rot_median_deg": 0.07521027188106133,
+     "rot_p90_deg": 0.17555878802122452
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.26333488641341646,
+     "trans_p90_m": 0.4669957379209022,
+     "trans_rmse_m": 0.32961609713573675,
+     "rot_median_deg": 0.1284286353212144,
+     "rot_p90_deg": 0.35492895607625685
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.6467618306602817,
+     "trans_p90_m": 1.1274746957809823,
+     "trans_rmse_m": 0.8120777197264117,
+     "rot_median_deg": 0.2914923913880052,
+     "rot_p90_deg": 1.2167934981269366
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 1.3099900558195594,
+     "trans_p90_m": 2.2672854833899847,
+     "trans_rmse_m": 1.6180341740944806,
+     "rot_median_deg": 0.6286485628743997,
+     "rot_p90_deg": 2.24220489497788
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 5.031160046639,
+    "imu_noise_final": {
+     "gyr": [
+      0.06781637984066687,
+      0.001085580843548293,
+      0.015500000995319054
+     ],
+     "acc": [
+      0.026900203216355573,
+      0.1040604102137128,
+      0.004167579346662329
+     ]
+    }
+   }
+  },
+  "trajectory_0023": {
+   "frames": 1954,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    1.4201876874483554,
+    1.2552943537317673,
+    16.22292699487096
+   ],
+   "ate_rmse_m": 14.673322605165254,
+   "ate_rmse_per_axis_m": [
+    0.811134214240624,
+    0.7396046806527965,
+    14.632205660053396
+   ],
+   "ate_horizontal_rmse_m": 1.0977038749841777,
+   "vel_rmse_ms": 0.174335949509882,
+   "tilt_err_median_deg": 1.1679969607281753,
+   "tilt_err_p90_deg": 2.67567813041211,
+   "yaw_err_median_abs_deg": 6.687509022110289,
+   "yaw_err_p90_abs_deg": 12.996578997916568,
+   "nees": {
+    "attitude": {
+     "mean": 3.059088977518168,
+     "expected": 3,
+     "share_above_95": 0.04247697031729785
+    },
+    "position": {
+     "mean": 2.9726060478947023,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 2.922787378797208,
+     "expected": 3,
+     "share_above_95": 0.0465711361310133
+    },
+    "all9": {
+     "mean": 8.617655610345231,
+     "expected": 9,
+     "share_above_95": 0.048106448311156604
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.05507960726491371,
+     "trans_p90_m": 0.1264049498762418,
+     "trans_rmse_m": 0.09792651995989611,
+     "rot_median_deg": 0.1277633775051231,
+     "rot_p90_deg": 0.24152294115384293
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.11221644422639945,
+     "trans_p90_m": 0.25550254942754863,
+     "trans_rmse_m": 0.17590123444103734,
+     "rot_median_deg": 0.20071305591048053,
+     "rot_p90_deg": 0.4641117232535841
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.28969709932091103,
+     "trans_p90_m": 0.5940486223591145,
+     "trans_rmse_m": 0.40682653474219765,
+     "rot_median_deg": 0.38448423861229025,
+     "rot_p90_deg": 1.472868708823734
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.5599435862547107,
+     "trans_p90_m": 1.1018964803813935,
+     "trans_rmse_m": 0.789789480337175,
+     "rot_median_deg": 0.7150683847049807,
+     "rot_p90_deg": 2.3791157918284855
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 7.5208006192145485,
+    "imu_noise_final": {
+     "gyr": [
+      0.08126307093974401,
+      0.09556451340013464,
+      0.03582361359202564
+     ],
+     "acc": [
+      0.07834948371717262,
+      0.11411079364969967,
+      0.0023509954002927345
+     ]
+    }
+   }
+  },
+  "trajectory_0025": {
+   "frames": 1954,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    0.4660868805798825,
+    0.49341500443515557,
+    12.543748594089752
+   ],
+   "ate_rmse_m": 13.381475647259055,
+   "ate_rmse_per_axis_m": [
+    1.5530925260188015,
+    1.0536166653346397,
+    13.249214543750908
+   ],
+   "ate_horizontal_rmse_m": 1.8767537056967143,
+   "vel_rmse_ms": 0.1371651320064617,
+   "tilt_err_median_deg": 0.7694562321227858,
+   "tilt_err_p90_deg": 1.6980711485333075,
+   "yaw_err_median_abs_deg": 7.389514799583765,
+   "yaw_err_p90_abs_deg": 10.693958973875072,
+   "nees": {
+    "attitude": {
+     "mean": 1.75697200942605,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "position": {
+     "mean": 5.621785384855606,
+     "expected": 3,
+     "share_above_95": 0.15097236438075742
+    },
+    "velocity": {
+     "mean": 2.936908839239104,
+     "expected": 3,
+     "share_above_95": 0.04605936540429888
+    },
+    "all9": {
+     "mean": 10.233271959049468,
+     "expected": 9,
+     "share_above_95": 0.04094165813715456
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.04042995160303166,
+     "trans_p90_m": 0.08308586402297093,
+     "trans_rmse_m": 0.08527032443223007,
+     "rot_median_deg": 0.03680330125158773,
+     "rot_p90_deg": 0.08549539223142733
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.08281506570943575,
+     "trans_p90_m": 0.17243844494229765,
+     "trans_rmse_m": 0.13891712432714776,
+     "rot_median_deg": 0.06413650587054526,
+     "rot_p90_deg": 0.2147356513625356
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.2096811432318163,
+     "trans_p90_m": 0.4063781625323613,
+     "trans_rmse_m": 0.2900858498845915,
+     "rot_median_deg": 0.1510413067076319,
+     "rot_p90_deg": 0.8804293149888486
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.4045509222157978,
+     "trans_p90_m": 0.8083650734546606,
+     "trans_rmse_m": 0.5381580859534945,
+     "rot_median_deg": 0.3423788346728307,
+     "rot_p90_deg": 2.0492117772967506
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 5.714817194454741,
+    "imu_noise_final": {
+     "gyr": [
+      0.021398282132688122,
+      0.018393090912366548,
+      0.004966831259117976
+     ],
+     "acc": [
+      0.004614870377457556,
+      0.02218469371938704,
+      0.0723000761664648
+     ]
+    }
+   }
+  },
+  "trajectory_0026": {
+   "frames": 1953,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    1.196362032250431,
+    1.7777369508578105,
+    33.19509884913482
+   ],
+   "ate_rmse_m": 13.896861206935393,
+   "ate_rmse_per_axis_m": [
+    0.3303352731373008,
+    0.674740912025584,
+    13.876539724073366
+   ],
+   "ate_horizontal_rmse_m": 0.7512633965792632,
+   "vel_rmse_ms": 0.17042596059864393,
+   "tilt_err_median_deg": 2.975602594224233,
+   "tilt_err_p90_deg": 7.136245356352647,
+   "yaw_err_median_abs_deg": 52.32346690436269,
+   "yaw_err_p90_abs_deg": 60.409681561610405,
+   "nees": {
+    "attitude": {
+     "mean": 59.26271526901308,
+     "expected": 3,
+     "share_above_95": 0.9743983614951357
+    },
+    "position": {
+     "mean": 2.172915695097023,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 3.1009188281348083,
+     "expected": 3,
+     "share_above_95": 0.05427547363031234
+    },
+    "all9": {
+     "mean": 70.46777283888771,
+     "expected": 9,
+     "share_above_95": 0.9861751152073732
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.1734046220074007,
+     "trans_p90_m": 0.21015706826891606,
+     "trans_rmse_m": 0.1769945067500772,
+     "rot_median_deg": 0.16283307896544447,
+     "rot_p90_deg": 0.31976725671190687
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.34681476308829134,
+     "trans_p90_m": 0.4205265921364822,
+     "trans_rmse_m": 0.3466480882774135,
+     "rot_median_deg": 0.2766167841034674,
+     "rot_p90_deg": 0.665905762762301
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.8652328874562194,
+     "trans_p90_m": 1.0494372740732945,
+     "trans_rmse_m": 0.8555513890700658,
+     "rot_median_deg": 0.6104743659616472,
+     "rot_p90_deg": 1.6740483887723026
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 1.7410235823886255,
+     "trans_p90_m": 2.101818067435292,
+     "trans_rmse_m": 1.70380605400229,
+     "rot_median_deg": 1.2346633959675264,
+     "rot_p90_deg": 2.854612779399365
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 5.095488242028509,
+    "imu_noise_final": {
+     "gyr": [
+      0.054703343359792336,
+      0.09321628622947425,
+      0.07945725226888145
+     ],
+     "acc": [
+      0.05890653174529811,
+      0.06108241254289472,
+      0.06333864467458546
+     ]
+    }
+   }
+  },
+  "trajectory_0028": {
+   "frames": 1954,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    0.3767626637434648,
+    0.31933859124182523,
+    16.529300733060385
+   ],
+   "ate_rmse_m": 13.021443711894465,
+   "ate_rmse_per_axis_m": [
+    1.512781680147726,
+    0.15606645820962264,
+    12.93232891597131
+   ],
+   "ate_horizontal_rmse_m": 1.5208106888001125,
+   "vel_rmse_ms": 0.11772019212251802,
+   "tilt_err_median_deg": 1.4416682534392855,
+   "tilt_err_p90_deg": 4.1718797050095535,
+   "yaw_err_median_abs_deg": 15.090843901209235,
+   "yaw_err_p90_abs_deg": 35.70237305931739,
+   "nees": {
+    "attitude": {
+     "mean": 7.807067313291146,
+     "expected": 3,
+     "share_above_95": 0.3858751279426817
+    },
+    "position": {
+     "mean": 3.465863907322863,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 2.281604334607738,
+     "expected": 3,
+     "share_above_95": 0.014329580348004094
+    },
+    "all9": {
+     "mean": 14.020590656808915,
+     "expected": 9,
+     "share_above_95": 0.3162743091095189
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.07351225673567498,
+     "trans_p90_m": 0.15568357571382221,
+     "trans_rmse_m": 0.10844890564937204,
+     "rot_median_deg": 0.037855014877543676,
+     "rot_p90_deg": 0.1439201822860452
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.14808032694176135,
+     "trans_p90_m": 0.30623313414594366,
+     "trans_rmse_m": 0.19670320846032086,
+     "rot_median_deg": 0.07929363380945384,
+     "rot_p90_deg": 0.401381508201415
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.3693018590319127,
+     "trans_p90_m": 0.7529104579434065,
+     "trans_rmse_m": 0.45808037774107596,
+     "rot_median_deg": 0.22803025438113342,
+     "rot_p90_deg": 1.3571275914867393
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.7434384619849116,
+     "trans_p90_m": 1.4955523584650052,
+     "trans_rmse_m": 0.889673975360261,
+     "rot_median_deg": 0.5925117198228105,
+     "rot_p90_deg": 2.1378262209384142
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 7.857020127065362,
+    "imu_noise_final": {
+     "gyr": [
+      0.00730999915530842,
+      0.0016271246920543422,
+      0.0012341347021620562
+     ],
+     "acc": [
+      0.17010351963659615,
+      0.008960396444682626,
+      0.18501329583450962
+     ]
+    }
+   }
+  },
+  "trajectory_0029": {
+   "frames": 1954,
+   "start_s": 10.0,
+   "align_window_s": 10.0,
+   "align_sigma_deg": [
+    1.9996096897761342,
+    1.2787263491967915,
+    23.318035982482062
+   ],
+   "ate_rmse_m": 16.746183387643807,
+   "ate_rmse_per_axis_m": [
+    0.7251720040178331,
+    0.264140779089733,
+    16.72838944029007
+   ],
+   "ate_horizontal_rmse_m": 0.7717802709251972,
+   "vel_rmse_ms": 0.13078850282731092,
+   "tilt_err_median_deg": 2.1741800502565183,
+   "tilt_err_p90_deg": 4.96383929904401,
+   "yaw_err_median_abs_deg": 29.141951910234994,
+   "yaw_err_p90_abs_deg": 36.49596422203087,
+   "nees": {
+    "attitude": {
+     "mean": 15.455633990341644,
+     "expected": 3,
+     "share_above_95": 0.687308085977482
+    },
+    "position": {
+     "mean": 2.425531929440877,
+     "expected": 3,
+     "share_above_95": 0.0
+    },
+    "velocity": {
+     "mean": 2.701263620343834,
+     "expected": 3,
+     "share_above_95": 0.013817809621289662
+    },
+    "all9": {
+     "mean": 21.138111844738273,
+     "expected": 9,
+     "share_above_95": 0.5890481064483112
+    }
+   },
+   "rpe": {
+    "1": {
+     "seconds": 0.04,
+     "trans_median_m": 0.08541037749253962,
+     "trans_p90_m": 0.13417996603707422,
+     "trans_rmse_m": 0.11047455606356026,
+     "rot_median_deg": 0.07125511830491897,
+     "rot_p90_deg": 0.22181674933835888
+    },
+    "2": {
+     "seconds": 0.08,
+     "trans_median_m": 0.17086633395593515,
+     "trans_p90_m": 0.26870760402999444,
+     "trans_rmse_m": 0.20714753157160204,
+     "rot_median_deg": 0.14657788569087585,
+     "rot_p90_deg": 0.49658284529524604
+    },
+    "5": {
+     "seconds": 0.2,
+     "trans_median_m": 0.4295170951682497,
+     "trans_p90_m": 0.6709068787846639,
+     "trans_rmse_m": 0.4959807586254627,
+     "rot_median_deg": 0.4224615806986604,
+     "rot_p90_deg": 1.3156750425792871
+    },
+    "10": {
+     "seconds": 0.4,
+     "trans_median_m": 0.8603973836465544,
+     "trans_p90_m": 1.3268943919587741,
+     "trans_rmse_m": 0.976853658987276,
+     "rot_median_deg": 0.8972181501547722,
+     "rot_p90_deg": 2.5599504230502186
+    }
+   },
+   "info": {
+    "features_used": 0,
+    "features_tried": 0,
+    "rejected_triangulation": 0,
+    "rejected_chi2": 0,
+    "feature_nis_mean": null,
+    "gps_nis_mean": 4.840786829552578,
+    "imu_noise_final": {
+     "gyr": [
+      0.001443855731004836,
+      0.016064940023288742,
+      0.0037768708947279483
+     ],
+     "acc": [
+      0.049252318593074426,
+      0.07379800598014588,
+      0.011410989302881664
+     ]
+    }
+   }
+  }
+ }
+}
