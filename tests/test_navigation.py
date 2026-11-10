@@ -325,3 +325,65 @@ def test_camera_travel_direction_fixes_yaw_in_steady_flight() -> None:
     yaw_err = log_so3(Rwb @ a1.R0.T)[2]
     assert np.sqrt(a1.cov[2, 2]) < 0.03
     assert abs(yaw_err) < 3 * np.sqrt(a1.cov[2, 2])
+
+
+def _gps_run(offset_from_s: float, offset: np.ndarray, gate: float | None, dur: float = 20.0):
+    """IMU and GPS flight with small noise; `offset` is added to every GPS position from
+    `offset_from_s` on. Returns (second, update result, fix) per fix, and the filter."""
+    from dataclasses import replace
+
+    t = np.arange(0, dur, DT)
+    gyr, acc = ideal_imu(t)
+    p, v, _, R = truth(t)
+    g = gnss_model()
+    P0 = np.zeros((NCORE, NCORE))
+    P0[TH, TH] = np.eye(3) * np.deg2rad(1) ** 2
+    P0[PO, PO] = np.diag(g.const_sigma**2 + g.gm_sigma**2 + g.white_sigma**2)
+    P0[PO, GC] = P0[GC, PO] = -np.diag(g.const_sigma**2)
+    P0[PO, GM] = P0[GM, PO] = -np.diag(g.gm_sigma**2)
+    P0[GC, GC] = np.diag(g.const_sigma**2)
+    P0[GM, GM] = np.diag(g.gm_sigma**2)
+    P0[VE, VE] = np.eye(3) * g.vel_sigma**2
+    P0[BG, BG] = np.eye(3) * 1e-6
+    P0[BA, BA] = np.eye(3) * 1e-4
+    noise = ImuNoise(np.full(3, 1e-3), np.full(3, 1e-2), np.full(3, 1e-5), np.full(3, 2e-4))
+    f = make_filter(R[0], p[0], v[0], P0, noise)
+    f.s = replace(f.s, gps_gate_sd=gate)
+    per = round(1.0 / DT)
+    out = []
+    for s in range(1, int(dur)):
+        f.propagate(gyr[(s - 1) * per : s * per], acc[(s - 1) * per : s * per], DT)
+        k = s * per
+        z = p[k] + (offset if offset_from_s <= s else 0.0)
+        out.append((s, f.update_gps(z, v[k]), z))
+    return out, f
+
+
+def test_gps_gate_rejects_a_position_jump_but_keeps_the_velocity() -> None:
+    jump = np.array([60.0, 0.0, -50.0])
+    t = np.arange(0, 20.0, DT)
+    p, *_ = truth(t)
+    out, f = _gps_run(19, jump, gate=5.0)
+    s, u, _ = out[-1]
+    assert not u.pos_used and u.vel_used and not u.pos_reset
+    assert np.linalg.norm(f.p - p[s * 100]) < 1.0  # the jump did not move the position
+    assert all(u.pos_used and u.vel_used for _, u, _ in out[:-1])  # clean fixes all pass
+
+
+def test_gps_gate_off_uses_every_fix() -> None:
+    out, _ = _gps_run(19, np.array([60.0, 0.0, -50.0]), gate=None)
+    assert all(u.pos_used and u.vel_used for _, u, _ in out)
+
+
+def test_gps_reset_follows_a_persistent_offset_after_the_timeout() -> None:
+    """A persistent 60 m offset from 5 s: rejected while within the 7 s timeout, then the state
+    is moved onto the fix, and later fixes are used again."""
+    off = np.array([60.0, 0.0, -50.0])
+    out, f = _gps_run(5, off, gate=5.0, dur=20.0)
+    by_s = {s: u for s, u, _ in out}
+    assert all(not by_s[s].pos_used and not by_s[s].pos_reset for s in range(5, 12))
+    assert by_s[12].pos_reset  # first fix more than 7 s after the last used one (4 s)
+    assert all(by_s[s].pos_used for s in range(13, 20))
+    s, _, z = out[-1]
+    assert np.linalg.norm(f.p + f.gc + f.gm - z) < 2.0
+    assert all(u.vel_used for u in by_s.values())  # velocity was never wrong

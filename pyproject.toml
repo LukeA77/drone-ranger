@@ -26,7 +26,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov", "ruff"]
+dev = ["pytest", "pytest-cov", "ruff", "pymap3d"]  # pymap3d: test reference only
 edge = ["onnx", "onnxslim"]  # model export and quantisation tools
 
 [project.scripts]
@@ -34,6 +34,9 @@ aerialrange = "aerialrange.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"aerialrange.viz" = ["map_viewer.html"]
 
 [tool.ruff]
 line-length = 100

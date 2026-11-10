@@ -1,0 +1,269 @@
+<!doctype html>
+<!--
+Drone Ranger map viewer (Phase 12). Written by aerialrange.pipeline.geomap with the run's
+GeoJSON embedded, so it opens from a local file with no network access.
+
+Map tiles are off by default. To draw a tile layer, open the page with
+  map.html?tiles=<XYZ URL template with {z}/{x}/{y}>&attribution=<the provider's credit>
+and follow that provider's usage policy (for OpenStreetMap's tile servers:
+https://operations.osmfoundation.org/policies/tiles/ — attribution shown on the map, no bulk or
+offline download). The viewer requests only the tiles in view and shows the attribution text
+whenever tiles are drawn.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drone Ranger map</title>
+<style>
+:root { --bg: #f4f5f6; --panel: #ffffff; --fg: #1d2125; --muted: #5d6670; --line: #d7dbe0;
+  --grid: #e6e9ec; --person: #0b6bcb; --vehicle: #c8590a; --drone: #1d2125;
+  --foot: rgb(26, 127, 55); --foot-line: rgba(26, 127, 55, 0.7); }
+@media (prefers-color-scheme: dark) { :root { --bg: #121518; --panel: #1b2026; --fg: #e5e8eb;
+  --muted: #9aa3ad; --line: #2e353d; --grid: #20262c; --person: #5aa9f0; --vehicle: #f08a3c;
+  --drone: #e5e8eb; --foot: rgb(74, 194, 107); --foot-line: rgba(74, 194, 107, 0.7); } }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg);
+  font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
+#map { position: absolute; inset: 0 0 64px 0; width: 100%; height: calc(100% - 64px);
+  cursor: grab; touch-action: none; }
+#bar { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; background: var(--panel);
+  border-top: 1px solid var(--line); display: flex; align-items: center; gap: 12px;
+  padding: 0 16px; box-sizing: border-box; }
+#bar input[type=range] { flex: 1; min-width: 80px; }
+#time { font-variant-numeric: tabular-nums; min-width: 92px; color: var(--muted); }
+#layers { position: absolute; top: 12px; left: 12px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; display: grid; gap: 4px; }
+#layers label { display: flex; gap: 6px; align-items: center; }
+#info { position: absolute; top: 12px; right: 12px; max-width: min(320px, calc(100% - 24px));
+  background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px;
+  white-space: pre-line; display: none; }
+#attr { position: absolute; right: 8px; bottom: 70px; background: var(--panel); color: var(--muted);
+  font-size: 12px; padding: 2px 6px; border-radius: 3px; display: none; }
+button { font: inherit; padding: 6px 10px; border: 1px solid var(--line); border-radius: 4px;
+  background: var(--bg); color: var(--fg); cursor: pointer; }
+.key { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+</style>
+</head>
+<body>
+<canvas id="map" aria-label="Map of tracked objects"></canvas>
+<div id="layers">
+  <strong id="title">Run</strong>
+  <label><input type="checkbox" id="l-foot" checked> Searched ground</label>
+  <label><input type="checkbox" id="l-track" checked> Tracks</label>
+  <label><input type="checkbox" id="l-ell" checked> Error ellipses</label>
+  <label><input type="checkbox" id="l-drone" checked> Drone path</label>
+  <span><span class="key" style="background:var(--person)"></span> person
+    &nbsp;<span class="key" style="background:var(--vehicle)"></span> vehicle</span>
+</div>
+<div id="info"></div>
+<div id="attr"></div>
+<div id="bar">
+  <button id="play" type="button">Play</button>
+  <input type="range" id="slider" min="0" max="0" value="0" aria-label="Time">
+  <span id="time"></span>
+  <button id="fit" type="button">Fit</button>
+</div>
+<script>
+const DATA = /*__DATA__*/null;
+(() => {
+  const cv = document.getElementById("map");
+  let ctx = cv.getContext("2d");
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const R = 6378137, TILE = 256;
+  // Web Mercator (EPSG:3857) in metres; the same projection as XYZ tiles
+  const merc = ([lon, lat]) => [R * lon * Math.PI / 180,
+    R * Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360))];
+  const feats = DATA.features;
+  const by = (k) => feats.filter((f) => f.properties.kind === k);
+  const det = by("detection"), foot = by("footprint"), tracks = by("track"), drone = by("drone");
+  document.getElementById("title").textContent = DATA.drone_ranger.name;
+  const frames = [...new Set(det.map((f) => f.properties.frame).concat(
+    foot.map((f) => f.properties.frame)))].sort((a, b) => a - b);
+  const slider = document.getElementById("slider");
+  slider.max = Math.max(0, frames.length - 1); slider.value = slider.max;
+  const tOf = new Map(); for (const f of det.concat(foot)) tOf.set(f.properties.frame, f.properties.t_s);
+  const P = (c) => merc(c);
+  for (const f of feats) {
+    const g = f.geometry;
+    f._xy = g.type === "Point" ? P(g.coordinates) : g.type === "LineString"
+      ? g.coordinates.map(P) : g.coordinates[0].map(P);
+  }
+  const trackPts = new Map();
+  for (const d of det) {
+    const k = d.properties.track_id;
+    if (!trackPts.has(k)) trackPts.set(k, []);
+    trackPts.get(k).push(d);
+  }
+  for (const v of trackPts.values()) v.sort((a, b) => a.properties.frame - b.properties.frame);
+  let cx = 0, cy = 0, scale = 1; // view centre (mercator m) and pixels per metre
+  function fit() {
+    const all = feats.flatMap((f) => Array.isArray(f._xy[0]) ? f._xy : [f._xy]);
+    if (!all.length) return;
+    const xs = all.map((p) => p[0]), ys = all.map((p) => p[1]);
+    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    cx = (x0 + x1) / 2; cy = (y0 + y1) / 2;
+    scale = 0.9 * Math.min(cv.clientWidth / Math.max(x1 - x0, 1), cv.clientHeight / Math.max(y1 - y0, 1));
+    draw();
+  }
+  const sx = (p) => cv.clientWidth / 2 + (p[0] - cx) * scale;
+  const sy = (p) => cv.clientHeight / 2 - (p[1] - cy) * scale;
+  const params = new URLSearchParams(location.search);
+  const tileUrl = params.get("tiles"), attribution = params.get("attribution") || "";
+  const tileCache = new Map();
+  function drawTiles() {
+    const attrEl = document.getElementById("attr");
+    if (!tileUrl) { attrEl.style.display = "none"; return; }
+    attrEl.textContent = attribution || "Tile attribution required: add &attribution=...";
+    attrEl.style.display = "block";
+    const world = 2 * Math.PI * R;
+    const z = Math.max(0, Math.min(19, Math.round(Math.log2(scale * world / TILE))));
+    const n = 2 ** z, tm = world / n;
+    const left = cx - cv.clientWidth / 2 / scale, right = cx + cv.clientWidth / 2 / scale;
+    const top = cy + cv.clientHeight / 2 / scale, bottom = cy - cv.clientHeight / 2 / scale;
+    const tx0 = Math.floor((left + world / 2) / tm), tx1 = Math.floor((right + world / 2) / tm);
+    const ty0 = Math.floor((world / 2 - top) / tm), ty1 = Math.floor((world / 2 - bottom) / tm);
+    for (let x = tx0; x <= tx1; x++) for (let y = Math.max(0, ty0); y <= Math.min(n - 1, ty1); y++) {
+      const xx = ((x % n) + n) % n, key = `${z}/${xx}/${y}`;
+      let img = tileCache.get(key);
+      if (!img) {
+        img = new Image(); img.crossOrigin = "anonymous";
+        img.onload = draw; img.src = tileUrl.replace("{z}", z).replace("{x}", xx).replace("{y}", y);
+        tileCache.set(key, img);
+      }
+      if (img.complete && img.naturalWidth) {
+        const mx = x * tm - world / 2, my = world / 2 - y * tm;
+        ctx.drawImage(img, sx([mx, 0]), sy([0, my]), tm * scale + 0.5, tm * scale + 0.5);
+      }
+    }
+  }
+  function grid() {
+    const step = 10 ** Math.floor(Math.log10(150 / scale));
+    ctx.strokeStyle = css("--grid"); ctx.lineWidth = 1; ctx.beginPath();
+    const w = cv.clientWidth / scale, h = cv.clientHeight / scale;
+    for (let x = Math.floor((cx - w) / step) * step; x < cx + w; x += step) {
+      ctx.moveTo(sx([x, 0]), 0); ctx.lineTo(sx([x, 0]), cv.clientHeight); }
+    for (let y = Math.floor((cy - h) / step) * step; y < cy + h; y += step) {
+      ctx.moveTo(0, sy([0, y])); ctx.lineTo(cv.clientWidth, sy([0, y])); }
+    ctx.stroke();
+  }
+  function scaleBar() {
+    // mercator metres per ground metre = 1 / cos(latitude)
+    const k = 1 / Math.cos(DATA.drone_ranger.origin_lat_deg * Math.PI / 180);
+    const target = 120 / (scale * k), m = 10 ** Math.floor(Math.log10(target));
+    const len = [5, 2, 1].map((f) => f * m).find((v) => v <= target) || m;
+    const px = len * k * scale, x = 16, y = cv.clientHeight - 16;
+    ctx.strokeStyle = css("--fg"); ctx.lineWidth = 2; ctx.beginPath();
+    ctx.moveTo(x, y); ctx.lineTo(x + px, y); ctx.stroke();
+    ctx.fillStyle = css("--fg"); ctx.font = "12px system-ui"; ctx.fillText(`${len} m`, x, y - 6);
+  }
+  const colour = (c) => css(c === "person" ? "--person" : "--vehicle");
+  function poly(xy, fill, stroke) {
+    ctx.beginPath(); xy.forEach((p, i) => i ? ctx.lineTo(sx(p), sy(p)) : ctx.moveTo(sx(p), sy(p)));
+    ctx.closePath(); if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+    if (stroke) { ctx.strokeStyle = stroke; ctx.stroke(); }
+  }
+  function ellipseAt(d) {
+    const p = d.properties, k = 1 / Math.cos(DATA.drone_ranger.origin_lat_deg * Math.PI / 180);
+    const b = p.ellipse_bearing_deg * Math.PI / 180;
+    ctx.beginPath();
+    ctx.ellipse(sx(d._xy), sy(d._xy), Math.max(1, p.ellipse_major_m * k * scale),
+      Math.max(1, p.ellipse_minor_m * k * scale), b - Math.PI / 2, 0, 2 * Math.PI);
+    ctx.stroke();
+  }
+  function draw() {
+    const dpr = window.devicePixelRatio || 1;
+    if (cv.width !== cv.clientWidth * dpr) { cv.width = cv.clientWidth * dpr; cv.height = cv.clientHeight * dpr; }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = css("--bg"); ctx.fillRect(0, 0, cv.clientWidth, cv.clientHeight);
+    if (tileUrl) drawTiles(); else grid();
+    const now = frames[+slider.value] ?? Infinity;
+    document.getElementById("time").textContent =
+      Number.isFinite(tOf.get(now)) ? `t = ${tOf.get(now).toFixed(1)} s` : `frame ${now}`;
+    const on = (id) => document.getElementById(id).checked;
+    if (on("l-foot")) {
+      // the union of the footprints so far, drawn opaque off screen and blended once, so
+      // overlapping frames do not darken it
+      const off = document.createElement("canvas");
+      off.width = cv.width; off.height = cv.height;
+      const main = ctx; ctx = off.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      for (const f of foot) if (f.properties.frame <= now) poly(f._xy, css("--foot"), null);
+      ctx = main; ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 0.16;
+      ctx.drawImage(off, 0, 0); ctx.restore();
+      const cur = foot.filter((f) => f.properties.frame === now);
+      ctx.lineWidth = 1.5; for (const f of cur) poly(f._xy, null, css("--foot-line"));
+    }
+    if (on("l-drone")) for (const f of drone) {
+      ctx.strokeStyle = css("--drone"); ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath();
+      f._xy.forEach((p, i) => i ? ctx.lineTo(sx(p), sy(p)) : ctx.moveTo(sx(p), sy(p)));
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    for (const pts of trackPts.values()) {
+      const seen = pts.filter((d) => d.properties.frame <= now);
+      if (!seen.length) continue;
+      const c = colour(seen[0].properties.class);
+      if (on("l-track") && seen.length > 1) {
+        ctx.strokeStyle = c; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.6; ctx.beginPath();
+        seen.forEach((d, i) => i ? ctx.lineTo(sx(d._xy), sy(d._xy)) : ctx.moveTo(sx(d._xy), sy(d._xy)));
+        ctx.stroke(); ctx.globalAlpha = 1;
+      }
+      const last = seen[seen.length - 1];
+      const live = last.properties.frame === now;
+      if (on("l-ell") && live) { ctx.strokeStyle = c; ctx.lineWidth = 1; ellipseAt(last); }
+      ctx.fillStyle = c; ctx.globalAlpha = live ? 1 : 0.45; ctx.beginPath();
+      ctx.arc(sx(last._xy), sy(last._xy), live ? 4 : 2.5, 0, 2 * Math.PI); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    scaleBar();
+  }
+  function pick(e) {
+    const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+    const now = frames[+slider.value] ?? Infinity;
+    let best = null, bd = 12;
+    for (const pts of trackPts.values()) {
+      const seen = pts.filter((d) => d.properties.frame <= now);
+      if (!seen.length) continue;
+      const d = seen[seen.length - 1], dist = Math.hypot(sx(d._xy) - mx, sy(d._xy) - my);
+      if (dist < bd) { bd = dist; best = d; }
+    }
+    const box = document.getElementById("info");
+    if (!best) { box.style.display = "none"; return; }
+    const p = best.properties, f = (x, u) => x == null ? "—" : `${x.toFixed(1)} ${u}`;
+    box.textContent = `${p.class} ${p.track_id}\nrange ${f(p.range_m, "m")}` +
+      (p.range_half_95_m != null ? ` ± ${p.range_half_95_m.toFixed(1)} m (95 %)` : "") +
+      `\n${p.flag}\nposition ellipse ${p.ellipse_major_m.toFixed(1)} × ${p.ellipse_minor_m.toFixed(1)} m (95 %)` +
+      (p.speed_ms != null ? `\nspeed ${f(p.speed_ms, "m/s")}, heading ${f(p.heading_deg, "°")}` : "") +
+      `\nframe ${p.frame}`;
+    box.style.display = "block";
+  }
+  let drag = null;
+  cv.addEventListener("pointerdown", (e) => { drag = [e.clientX, e.clientY, cx, cy, false];
+    cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener("pointermove", (e) => { if (!drag) return;
+    const dx = e.clientX - drag[0], dy = e.clientY - drag[1];
+    if (Math.hypot(dx, dy) > 3) drag[4] = true;
+    cx = drag[2] - dx / scale; cy = drag[3] + dy / scale; draw(); });
+  cv.addEventListener("pointerup", (e) => { if (drag && !drag[4]) pick(e); drag = null; });
+  cv.addEventListener("wheel", (e) => { e.preventDefault();
+    const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+    const wx = cx + (mx - cv.clientWidth / 2) / scale, wy = cy - (my - cv.clientHeight / 2) / scale;
+    scale *= Math.exp(-e.deltaY * 0.0015);
+    cx = wx - (mx - cv.clientWidth / 2) / scale; cy = wy + (my - cv.clientHeight / 2) / scale; draw();
+  }, { passive: false });
+  slider.addEventListener("input", draw);
+  for (const id of ["l-foot", "l-track", "l-ell", "l-drone"])
+    document.getElementById(id).addEventListener("change", draw);
+  document.getElementById("fit").addEventListener("click", fit);
+  let timer = null;
+  document.getElementById("play").addEventListener("click", (e) => {
+    if (timer) { clearInterval(timer); timer = null; e.target.textContent = "Play"; return; }
+    if (+slider.value >= +slider.max) slider.value = 0;
+    e.target.textContent = "Pause";
+    timer = setInterval(() => { if (+slider.value >= +slider.max) { clearInterval(timer); timer = null;
+      e.target.textContent = "Play"; return; } slider.value = +slider.value + 1; draw(); }, 100);
+  });
+  window.addEventListener("resize", draw);
+  fit();
+})();
+</script>
+</body>
+</html>

@@ -300,7 +300,8 @@ class RangeSpeedStage:
         # the footprint centre (D-736: a slow object's heading swings, so a heading-dependent
         # offset would add apparent motion)
         z = np.column_stack([rg["ground_n_m"], rg["ground_e_m"]])
-        self.footprint_shift(rg, ids, groups, pose, boxes)
+        fp_var = self.footprint_shift(rg, ids, groups, pose, boxes)
+        gcov = ground_point_cov(msig, fp_var, pose.yaw_rad)
         fb = self.bank.step(
             max(dt, 1e-3),
             ids[valid],
@@ -358,11 +359,29 @@ class RangeSpeedStage:
                     "track_age": age,
                     "nis_mean": nis_m,
                     "speed_shown": shown,
+                    "ground_n_m": rg["ground_n_m"][j] if valid[j] else np.nan,
+                    "ground_e_m": rg["ground_e_m"][j] if valid[j] else np.nan,
+                    "ground_cov_nn_m2": gcov[j, 0, 0] if valid[j] else np.nan,
+                    "ground_cov_ne_m2": gcov[j, 0, 1] if valid[j] else np.nan,
+                    "ground_cov_ee_m2": gcov[j, 1, 1] if valid[j] else np.nan,
                     **{f"range_half_{lv[2:]}_m": rh[lv] for lv in LEVEL_KEYS},
                     **{f"speed_half_{lv[2:]}_ms": sh[lv] for lv in LEVEL_KEYS},
                 }
             )
         return rows
+
+
+def ground_point_cov(msig: NDArray, fp_var: NDArray, yaw_rad: float) -> NDArray:
+    """2 x 2 NED covariance (m^2) of each reported ground point: the measurement covariance of
+    the box's ground point (or an isotropic sigma, for the `relative` model) plus the footprint
+    offset's variance along the camera heading (D-736). Raw, before any interval calibration."""
+    n = len(fp_var)
+    if msig.ndim == 1:
+        cov = np.nan_to_num(msig)[:, None, None] ** 2 * np.eye(2)
+    else:
+        cov = np.nan_to_num(msig).copy()
+    f = np.array([np.cos(yaw_rad), np.sin(yaw_rad)]) if np.isfinite(yaw_rad) else np.zeros(2)
+    return cov.reshape(n, 2, 2) + fp_var[:, None, None] * np.outer(f, f)
 
 
 def pose_of(meta: pd.DataFrame, k: int) -> tuple[CameraPose, float, float]:

@@ -155,3 +155,52 @@ def geodetic_to_ned(
     sl, cl, so, co = np.sin(lat0), np.cos(lat0), np.sin(lon0), np.cos(lon0)
     R_ned_ecef = np.array([[-sl * co, -sl * so, cl], [-so, co, 0.0], [-cl * co, -cl * so, -sl]])
     return d @ R_ned_ecef.T
+
+
+def _ecef_to_geodetic(xyz: NDArray) -> tuple[NDArray, NDArray, NDArray]:
+    """Exact closed-form ECEF to geodetic latitude, longitude (radians) and ellipsoidal height
+    (Vermeille, 2002, "Direct transformation from geocentric coordinates to geodetic
+    coordinates", Journal of Geodesy 76, 451-454, Section 3). Valid everywhere outside a small
+    region around the Earth's centre, so for every point near the surface."""
+    x, y, z = xyz[..., 0], xyz[..., 1], xyz[..., 2]
+    a2, e4 = WGS84_A_M**2, WGS84_E2**2
+    w2 = x * x + y * y
+    p = w2 / a2
+    q = (1.0 - WGS84_E2) * z * z / a2
+    r = (p + q - e4) / 6.0
+    s = e4 * p * q / (4.0 * r**3)
+    t = np.cbrt(1.0 + s + np.sqrt(s * (2.0 + s)))
+    u = r * (1.0 + t + 1.0 / t)
+    v = np.sqrt(u * u + e4 * q)
+    w = WGS84_E2 * (u + v - q) / (2.0 * v)
+    k = np.sqrt(u + v + w * w) - w
+    d = k * np.sqrt(w2) / (k + WGS84_E2)
+    lat = 2.0 * np.arctan2(z, d + np.sqrt(d * d + z * z))
+    lon = np.arctan2(y, x)
+    h = (k + WGS84_E2 - 1.0) / k * np.sqrt(d * d + z * z)
+    return lat, lon, h
+
+
+def ned_to_geodetic(
+    ned: ArrayLike, lat0_deg: float, lon0_deg: float, alt0_m: float
+) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
+    """WGS 84 latitude and longitude (degrees) and ellipsoidal height (metres) of local NED
+    positions (..., 3) relative to an origin fix: the inverse of `geodetic_to_ned`, exact (no
+    flat-Earth approximation)."""
+    lat0, lon0 = np.radians(lat0_deg), np.radians(lon0_deg)
+    sl, cl, so, co = np.sin(lat0), np.cos(lat0), np.sin(lon0), np.cos(lon0)
+    R_ned_ecef = np.array([[-sl * co, -sl * so, cl], [-so, co, 0.0], [-cl * co, -cl * so, -sl]])
+    origin = _geodetic_to_ecef(np.asarray(lat0), np.asarray(lon0), np.asarray(alt0_m, float))
+    xyz = np.asarray(ned, float) @ R_ned_ecef + origin
+    lat, lon, h = _ecef_to_geodetic(xyz)
+    return np.degrees(lat), np.degrees(lon), h
+
+
+def ned_to_enu(v: ArrayLike) -> NDArray[np.float64]:
+    """NED vectors (..., 3) to East, North, Up (ROS REP 103's world convention): a fixed
+    permutation and sign, its own inverse."""
+    a = np.asarray(v, float)
+    return np.stack([a[..., 1], a[..., 0], -a[..., 2]], axis=-1)
+
+
+enu_to_ned = ned_to_enu

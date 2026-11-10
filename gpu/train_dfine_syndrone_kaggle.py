@@ -64,7 +64,14 @@ MIRROR = ("best_stg1.pth", "best_stg2.pth", "last.pth", "log.txt")  # copied in 
 SYNC_S, SETTLE_S = 60, 20  # Colab: copy to Drive every minute, files unchanged for 20 s
 
 SMOKE = int(os.environ.get("SMOKE", "0"))
-COLAB = importlib.util.find_spec("google.colab") is not None
+# Kaggle's image also ships the google.colab package, so test for Kaggle first and for a real
+# Colab machine (its hostname file, which drive.mount itself requires) second.
+KAGGLE = Path("/kaggle/working").exists() or "KAGGLE_KERNEL_RUN_TYPE" in os.environ
+COLAB = (
+    not KAGGLE
+    and importlib.util.find_spec("google.colab") is not None
+    and Path("/var/colab/hostname").exists()
+)
 T0 = time.time()
 
 if COLAB:
@@ -561,7 +568,7 @@ val_dataloader:
         "lr_scale": lr_scale,
         "num_classes": NUM_CLASSES,
         "seed": SEED,
-        "platform": "colab" if COLAB else "kaggle" if Path("/kaggle").exists() else "local",
+        "platform": "colab" if COLAB else "kaggle" if KAGGLE else "local",
         "resumed": resume is not None,
         "stopped_by_time_limit": stopped_by_time,
         "best_checkpoint": best.name if best else None,

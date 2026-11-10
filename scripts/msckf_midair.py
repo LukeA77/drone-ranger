@@ -13,6 +13,10 @@ alignment, and estimates are scored against ground truth at every frame:
 - attitude error split into tilt (roll and pitch: what ranging is most sensitive to) and yaw;
 - NEES of attitude, position, velocity and all nine, against their chi-squared expectations.
 Estimates are saved to cache/midair/navigation/<name>/<flight>.npz for the ranging comparison.
+--gps-gate turns on the GPS outlier gate and reset (configs/navigation.yaml gps_gate, D-744);
+--inject burst|step adds GPS errors for that check (development only, seeded per flight):
+burst = flight 0014's three-fix deviation pattern at three fix times; step = its largest fix
+added to every fix from one fix time on.
 Writes results/midair/<split>/navigation/<name>.json.
 """
 
@@ -49,7 +53,39 @@ FIT = REPO_ROOT / NAV_CFG.require("gnss_fit")
 CACHE = REPO_ROOT / "cache" / "midair" / "navigation"
 
 
-def load_input(root: Path, name: str, gnss: GnssErrorModel) -> tuple[FlightInput, dict]:
+# Test flight 0014, fixes 46 to 48: GPS error minus the flight's median error, m NED
+# (scripts/msckf_gnss_check.py, D-741); the pattern injected by --inject (D-744)
+BURST_M = np.array([[39.9, -0.2, -31.9], [100.3, -0.3, -89.6], [75.4, -0.4, -66.3]])
+FIRST_INJECT_FIX = 12  # after the longest alignment window (10 s) and two more fixes
+BURSTS, BURST_SPACING = 3, 10
+
+
+def inject_gps(gps_pos: np.ndarray, name: str, kind: str) -> tuple[np.ndarray, list[int]]:
+    """GPS positions with injected errors (D-744), and the fix indices changed."""
+    rng = np.random.default_rng(1000 + int(name.split("_")[-1]))
+    n = len(gps_pos)
+    out = gps_pos.copy()
+    if kind == "burst":
+        last = n - len(BURST_M) - 1
+        while True:
+            starts = np.sort(rng.integers(FIRST_INJECT_FIX, last, size=BURSTS))
+            if np.all(np.diff(starts) >= BURST_SPACING):
+                break
+        fixes = [int(s) + j for s in starts for j in range(len(BURST_M))]
+        for s in starts:
+            out[s : s + len(BURST_M)] += BURST_M
+        return out, fixes
+    if kind == "step":
+        s = int(rng.integers(FIRST_INJECT_FIX, n - 20))
+        big = BURST_M[np.argmax(np.linalg.norm(BURST_M, axis=1))]
+        out[s:] += big
+        return out, list(range(s, n))
+    raise ValueError(kind)
+
+
+def load_input(
+    root: Path, name: str, gnss: GnssErrorModel, inject: str | None = None
+) -> tuple[FlightInput, dict]:
     traj = MidAirTrajectory(root, name)
     with h5py.File(root / "sensor_records.hdf5", "r") as f:
         g = f[name]
@@ -66,6 +102,10 @@ def load_input(root: Path, name: str, gnss: GnssErrorModel) -> tuple[FlightInput
         }
     rng = np.random.default_rng(int(name.split("_")[-1]))  # synthetic receiver noise, seeded
     gps_vel = gps_vel_true + rng.normal(size=gps_vel_true.shape) * gnss.vel_sigma
+    injected: list[int] = []
+    if inject:
+        gps_pos, injected = inject_gps(gps_pos, name, inject)
+    truth["injected_fixes"] = injected
     first = cv2.imread(str(traj.frame_path("color_left", 0)), cv2.IMREAD_GRAYSCALE)
     h, w = first.shape
     cam = midair_camera(w, h)
@@ -162,10 +202,10 @@ def score(out: FlightOutput, truth: dict) -> dict:
 
 
 def run_one(args: tuple) -> tuple[str, dict]:
-    name, name_out, s, ts, al, use_camera, max_frames = args
+    name, name_out, s, ts, al, use_camera, max_frames, inject = args
     cv2.setNumThreads(1)
     gnss = GnssErrorModel.from_fit(FIT)
-    d, truth = load_input(midair_root(), name, gnss)
+    d, truth = load_input(midair_root(), name, gnss, inject)
     out = run_flight(d, gnss, s, ts, al, use_camera=use_camera, max_frames=max_frames)
     dest = CACHE / name_out
     dest.mkdir(parents=True, exist_ok=True)
@@ -185,7 +225,9 @@ def run_one(args: tuple) -> tuple[str, dict]:
             else {}
         ),
     )
-    return name, score(out, truth)
+    sc = score(out, truth)
+    sc["injected_fixes"] = truth["injected_fixes"]
+    return name, sc
 
 
 def pooled(per: dict) -> dict:
@@ -232,6 +274,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--max-frames", type=int, default=None)
     ap.add_argument("--flights", default=None)
+    ap.add_argument("--gps-gate", action="store_true", help="GPS outlier gate and reset (D-744)")
+    ap.add_argument("--inject", choices=("burst", "step"), default=None)
     args = ap.parse_args(argv)
     if args.split == "test" and not args.final:
         print("The test split runs once, after all settings are frozen. Use --final.")
@@ -245,13 +289,21 @@ def main(argv: list[str] | None = None) -> int:
         s = replace(s, use_gps_velocity=False)
     if args.sigma_px is not None:
         s = replace(s, sigma_px=args.sigma_px)
+    gate = NAV_CFG.require("gps_gate")
+    if gate["enabled"] or args.gps_gate:
+        s = replace(s, gps_gate_sd=gate["gate_sd"], gps_reset_s=gate["reset_s"])
+    if args.inject and args.split != "development":
+        print("GPS errors are injected on development flights only (D-744).")
+        return 1
     ts = TrackerSettings(**NAV_CFG.require("tracker"))
     a = NAV_CFG.require("alignment")
     al = AlignSettings(a["min_window_s"], a["max_window_s"], float(np.deg2rad(a["max_sigma_deg"])))
     names = split_names(args.split)
     if args.flights:
         names = [n for n in names if n in args.flights.split(",")]
-    jobs = [(n, args.name, s, ts, al, not args.no_camera, args.max_frames) for n in names]
+    jobs = [
+        (n, args.name, s, ts, al, not args.no_camera, args.max_frames, args.inject) for n in names
+    ]
     with ProcessPoolExecutor(max_workers=min(args.workers, len(jobs))) as ex:
         per = dict(ex.map(run_one, jobs))
     per = {n: per[n] for n in names}
@@ -261,6 +313,7 @@ def main(argv: list[str] | None = None) -> int:
         "split": args.split,
         "name": args.name,
         "camera": not args.no_camera,
+        "inject": args.inject,
         "settings": asdict(s),
         "tracker": asdict(ts),
         "alignment": asdict(al),

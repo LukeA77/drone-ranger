@@ -12,6 +12,10 @@ alignment:
   value: {min_window_s: 2.0, max_window_s: 10.0, max_sigma_deg: 5.0}
   placeholder: null
   source: "OpenVINS init_window_time 2 s as the shortest window; grows until the attitude sigma is under 5 deg (small-angle range of the filter's attitude error) or 10 s (D-741 item 5)"
+gps_gate:
+  value: {enabled: true, gate_sd: 5.0, reset_s: 7.0}
+  placeholder: null
+  source: "PX4 EKF2 defaults (src/modules/ekf2/EKF/common.h, read 2026-11-09): ekf2_gps_p_gate and ekf2_gps_v_gate 5 standard deviations per axis, reset to the measurement after reset_timeout_max 7 s without an accepted one (D-744). On by the D-744 check on the development flights (results/midair/development/navigation/gps_gate_check.json); the one-time test (D-741) ran without it"
 gnss_fit:
   value: results/midair/development/navigation/gnss_fit.json
   placeholder: null

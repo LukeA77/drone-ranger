@@ -78,7 +78,20 @@ The 9 Mid-Air test flights were run once, after every setting was frozen, and no
 
 - Accuracy and range coverage hold on flights the filter never saw.
 - The filter is slightly overconfident on the test flights. On flight 14 the GPS jumps 40 to 100 m for three fixes in a row, larger than anything in the development flights. The filter accepted those fixes because it has no outlier check on GPS (it has one on camera features). Flight 27 is overconfident in attitude and velocity for a reason not yet found.
-- A GPS outlier check is the next change. It can't be scored on these test flights again, so it will be checked by injecting GPS jumps into development flights.
+- A GPS outlier check has since been added (D-744). It can't be scored on these test flights again, so it was checked on the development flights, with GPS faults added.
+
+## GPS outlier check
+
+Each GPS fix is checked against the filter's prediction: position and velocity separately, each axis against 5 standard deviations, as in PX4's flight-controller estimator. A fix outside that is not used. If no fix has been accepted for 7 seconds, the filter trusts the GPS again and moves onto it, so it cannot get stuck ignoring a GPS that was right.
+
+| Development flights | NEES, all nine states (expected 9, band 7.0 to 11.3) | Horizontal error | Tilt error |
+|---|---|---|---|
+| Clean GPS, no check | 9.0 | 0.84 m | 0.37° |
+| Clean GPS, with the check | 9.1 (6 of 1,279 good fixes rejected) | 0.84 m | 0.37° |
+| Three bursts like test flight 14's added, no check | 128 | 8.2 m | 0.61° |
+| The same bursts, with the check | 9.1 (all 135 bad fixes rejected) | 0.85 m | 0.37° |
+
+With a GPS error that never ends (a 134 m step held to the end of the flight), the filter follows the GPS again 6 to 7 seconds after the step on every flight. It can't know the GPS is wrong for good, so it trusts it, as designed.
 
 ## Against OpenVINS
 
@@ -98,5 +111,5 @@ OpenVINS (v2.7), a widely used open-source visual-inertial filter, was run as a 
 
 - **Simulated sensors.** Mid-Air's IMU has no scale or axis-misalignment errors, and its camera is ideal. The GPS velocity noise was added by us.
 - **One climate.** Kite, sunny: 15 development and 9 test flights.
-- **No GPS outlier check yet.** A burst of bad GPS fixes is taken in, as on test flight 14.
+- **The GPS outlier check came after the test.** The test numbers above are from the filter without it.
 - **Laptop speed only.** Runtime has been measured on a laptop only. Raspberry Pi figures will be estimates until measured (build2 R12).

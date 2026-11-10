@@ -109,6 +109,7 @@ The package (`src/aerialrange`) no longer uses Ultralytics (D-725). Its pinned e
 | Indirect: fonttools, pyparsing, rich, markdown-it-py, mdurl, six, annotated-doc, xmltodict, shellingham | MIT (shellingham ISC) |
 | Indirect: flatbuffers, ml_dtypes, packaging, tzdata, typing_extensions | Apache-2.0 (packaging also BSD-2-Clause; typing_extensions PSF-2.0) |
 | Development only: pytest, pytest-cov, pluggy, iniconfig, ruff, coverage | MIT (coverage Apache-2.0) |
+| Development only: pymap3d 3.1.0 (test reference for the geodetic conversion, Phase 12; licence read from its LICENSE file 2026-11-09: two conditions, BSD-2-Clause) | BSD-2-Clause |
 
 Version 1's results can still be reproduced in a separate environment, `requirements-v1.txt`, which adds PyTorch and Ultralytics 8.4.182 (AGPL-3.0); the scripts that need it load the library through `scripts/ultralytics_v1.py`. The version 1 detector's weights were trained with that library from its COCO weights, which Ultralytics distributes under AGPL-3.0; running them through the project's own ONNX runner removes the library, not the weights' terms.
 

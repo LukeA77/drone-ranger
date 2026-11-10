@@ -15,6 +15,7 @@ the 90th-percentile absolute speed error, ties by the mean distance of 90 % cove
 90th-percentile error is worse than version 1's (`v2trk_accurate`), and the lowest mean of the
 five wins (3 decimal places; ties by coverage as above); if none qualifies, the
 constant-velocity filter with propagated errors (`v2trk_prop_cv`) is selected.
+`--output conditional` reports the IMM's speed given whether the object moves (D-746).
 Runs are written as cache/syndrone/runs/immgrid<suffix>_<k>/.
 Output: results/syndrone/development/imm_grid.json.
 """
@@ -55,7 +56,7 @@ MEAS_SIGMA_B2_960 = {  # results/visdrone/val/pixel_noise_B2_yolo26n_960.json, o
 REFERENCES = ("v2trk_accurate", "v2trk_prop_cv")
 
 
-def point_settings(fit: dict, gate: float, reset: int, qs: float) -> dict:
+def point_settings(fit: dict, gate: float, reset: int, qs: float, output: str = "mixture") -> dict:
     keys = (
         "q_cv",
         "q_ct",
@@ -71,6 +72,7 @@ def point_settings(fit: dict, gate: float, reset: int, qs: float) -> dict:
             "gate_prob": gate,
             "reset_after": reset,
             "q_stationary": qs,
+            "output": output,
         }
         for g in fit
     }
@@ -113,6 +115,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--suffix", default="", help="extension: run names and output suffix")
     ap.add_argument("--rule", choices=["pooled", "strata"], default="strata")
     ap.add_argument(
+        "--output",
+        choices=["mixture", "conditional"],
+        default="mixture",
+        help="the IMM's reported estimate (D-746)",
+    )
+    ap.add_argument(
         "--union-with", help="extension: an earlier grid's output; selection over the union"
     )
     args = ap.parse_args(argv)
@@ -140,7 +148,14 @@ def main(argv: list[str] | None = None) -> int:
     names = [f"immgrid{args.suffix}_{k:02d}" for k in range(len(points))]
     with ProcessPoolExecutor(args.workers) as ex:
         futs = [
-            ex.submit(job, n, s, args.source, point_settings(fit, *pt), str(meta_dir / f"{s}.pkl"))
+            ex.submit(
+                job,
+                n,
+                s,
+                args.source,
+                point_settings(fit, *pt, args.output),
+                str(meta_dir / f"{s}.pkl"),
+            )
             for n, pt in zip(names, points, strict=True)
             for s in seqs
         ]
@@ -190,6 +205,7 @@ def main(argv: list[str] | None = None) -> int:
         "decision": "D-735",
         "source": args.source,
         "rule": args.rule,
+        "output": args.output,
         "qualifies_no_stratum_worse_than_v1": qualifies,
         "union_with": args.union_with,
         "points": {n: {**p, "key": key(n)} for n, p in all_points.items()},

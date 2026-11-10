@@ -58,6 +58,13 @@ class MsckfSettings:
     # "body" (regression on the attitude-derived rates: identity, residual 0.001 rad/s against
     # 0.01 to 0.015 rad/s for body rates; scripts/msckf_imu_frames.py, D-741), so "world".
     gyro_frame: str = "body"
+    # GPS outlier gate (D-744), from PX4's EKF2 (src/modules/ekf2/EKF/common.h, read
+    # 2026-11-09): position and velocity are gated separately, each axis against gps_gate_sd
+    # standard deviations of its innovation (ekf2_gps_p_gate, ekf2_gps_v_gate = 5); after
+    # gps_reset_s with no accepted fix of a block the state is reset to it (reset_timeout_max
+    # 7 s). None: every fix is used (the filter of D-741).
+    gps_gate_sd: float | None = None
+    gps_reset_s: float = 7.0
 
 
 @dataclass
@@ -67,6 +74,15 @@ class Clone:
     p: NDArray[np.float64]
     R_fej: NDArray[np.float64]
     p_fej: NDArray[np.float64]
+
+
+@dataclass
+class GpsUpdate:
+    nis: float  # normalised innovation squared of the whole fix, before any update
+    pos_used: bool
+    vel_used: bool
+    pos_reset: bool = False
+    vel_reset: bool = False
 
 
 @dataclass
@@ -116,6 +132,7 @@ class Msckf:
         self.clones: dict[int, Clone] = {}
         self._fej_p = self.p.copy()
         self._fej_v = self.v.copy()
+        self._gps_ok_t = {"pos": self.t, "vel": self.t}  # last accepted (or reset) fix
 
     # ------------------------------------------------------------------ propagation
     def propagate(self, gyr: NDArray, acc: NDArray, dt: float) -> None:
@@ -319,30 +336,71 @@ class Msckf:
         return stats
 
     # ------------------------------------------------------------------ GPS
-    def update_gps(self, pos: NDArray, vel: NDArray | None) -> float:
-        """GPS position (and velocity) update; returns the normalised innovation squared."""
+    def update_gps(self, pos: NDArray, vel: NDArray | None) -> GpsUpdate:
+        """GPS position (and velocity) update, gated per block when `gps_gate_sd` is set
+        (D-744): a block whose innovation exceeds the gate on any axis is not used, and after
+        `gps_reset_s` without a used fix of that block the state is reset to it."""
         N = self.P.shape[0]
-        rows_H, rows_r, rows_R = [], [], []
+        blocks = []
         H = np.zeros((3, N))
         H[:, PO] = np.eye(3)
         H[:, GC] = np.eye(3)
         H[:, GM] = np.eye(3)
-        rows_H.append(H)
-        rows_r.append(np.asarray(pos, float) - (self.p + self.gc + self.gm))
-        rows_R.append(np.diag(self.gnss.white_sigma**2))
+        r = np.asarray(pos, float) - (self.p + self.gc + self.gm)
+        blocks.append(("pos", H, r, np.diag(self.gnss.white_sigma**2)))
         if vel is not None and self.s.use_gps_velocity:
             Hv = np.zeros((3, N))
             Hv[:, VE] = np.eye(3)
-            rows_H.append(Hv)
-            rows_r.append(np.asarray(vel, float) - self.v)
-            rows_R.append(np.eye(3) * self.gnss.vel_sigma**2)
-        H = np.vstack(rows_H)
-        r = np.concatenate(rows_r)
-        Rm = _block_diag(rows_R)
-        S = H @ self.P @ H.T + Rm
-        nis = float(r @ np.linalg.solve(S, r))
-        self._ekf_update(H, r, Rm)
-        return nis
+            rv = np.asarray(vel, float) - self.v
+            blocks.append(("vel", Hv, rv, np.eye(3) * self.gnss.vel_sigma**2))
+        H_all = np.vstack([b[1] for b in blocks])
+        r_all = np.concatenate([b[2] for b in blocks])
+        R_all = _block_diag([b[3] for b in blocks])
+        nis = float(r_all @ np.linalg.solve(H_all @ self.P @ H_all.T + R_all, r_all))
+        used, reset = {"pos": False, "vel": False}, {"pos": False, "vel": False}
+        keep = []
+        for name, Hb, rb, Rb in blocks:
+            Sb = Hb @ self.P @ Hb.T + Rb
+            g = self.s.gps_gate_sd
+            if g is None or np.all(rb**2 <= g**2 * np.diag(Sb)):
+                keep.append((Hb, rb, Rb))
+                used[name] = True
+                self._gps_ok_t[name] = self.t
+            elif self.t - self._gps_ok_t[name] > self.s.gps_reset_s:
+                self._reset_to_gps(name, rb, Sb)
+                reset[name] = True
+                self._gps_ok_t[name] = self.t
+        if keep:
+            self._ekf_update(
+                np.vstack([k[0] for k in keep]),
+                np.concatenate([k[1] for k in keep]),
+                _block_diag([k[2] for k in keep]),
+            )
+        return GpsUpdate(nis, used["pos"], used["vel"], reset["pos"], reset["vel"])
+
+    def _reset_to_gps(self, block: str, r: NDArray, S: NDArray) -> None:
+        """Move the state onto a GPS fix that has been rejected for too long (D-744). Position:
+        a common translation of the current pose and every clone (it leaves the camera
+        constraints between clones unchanged), with the innovation covariance added along
+        that translation. Velocity: set to the fix, with its innovation covariance added."""
+        N = self.P.shape[0]
+        J = np.zeros((N, 3))
+        if block == "pos":
+            J[PO] = np.eye(3)
+            for k in range(len(self.clones)):
+                i = NCORE + 6 * k
+                J[i + 3 : i + 6] = np.eye(3)
+            self.p = self.p + r
+            self._fej_p = self._fej_p + r
+            for c in self.clones.values():
+                c.p = c.p + r
+                c.p_fej = c.p_fej + r
+        else:
+            J[VE] = np.eye(3)
+            self.v = self.v + r
+            self._fej_v = self._fej_v + r
+        self.P = self.P + J @ S @ J.T
+        self.P = 0.5 * (self.P + self.P.T)
 
     # ------------------------------------------------------------------ EKF core
     def _ekf_update(self, H: NDArray, r: NDArray, Rm: NDArray) -> None:

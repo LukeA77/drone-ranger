@@ -25,8 +25,17 @@ AU-AIR 5 Hz, the pipeline's detection stride).
 exceeds the chi-square quantile at `gate_prob` (2 degrees of freedom) is not used. Seen from
 the filter, an identity switch is a run of such measurements: after `reset_after` rejections in
 a row `needs_reset` is set and the caller restarts the track from two new measurements, as a new
-track starts. Every setting is required: none has a default (they are fitted on development
-data).
+track starts. Every fitted setting is required: none has a default (they are fitted on
+development data).
+
+**Output** (`output`, D-746): `mixture` reports the combined (moment-matched) estimate, the
+minimum-mean-square-error estimate under the model and the filter of D-735. Its speed is
+scaled down by the stationary model's probability, which a moving object keeps when its motion
+between updates is small against the measurement noise. `conditional` reports the speed given
+whether the object moves: the renormalised mixture of the two moving models when their
+probability is at least one half, otherwise zero speed with the full mixture's speed sigma. The
+filter itself is the same in both; only the reported estimate differs. `mixture` is the
+default, so configurations written before D-746 are unchanged.
 """
 
 from __future__ import annotations
@@ -45,6 +54,8 @@ N_MODES = 3
 STATIONARY, CV, CT = range(N_MODES)
 MODE_NAMES = ("stationary", "constant_velocity", "coordinated_turn")
 H = np.hstack([np.eye(2), np.zeros((2, 3))])
+OUTPUTS = ("mixture", "conditional")
+OPTIONAL = ("output",)  # settings with a default; every fitted setting is required
 SMALL_TURN = 1e-4  # rad/s; below this the turn coefficients use their Taylor series
 
 
@@ -60,6 +71,7 @@ class IMMSettings:
     velocity_sigma_moving: float  # m/s per axis, spread of true velocities of moving objects
     gate_prob: float  # gate: chi-square quantile (2 degrees of freedom)
     reset_after: int  # rejected measurements in a row that mean a reset
+    output: str = "mixture"  # reported estimate: "mixture" or "conditional" (D-746)
     _generator: NDArray[np.float64] = field(init=False, repr=False, compare=False)
     _cache: dict = field(init=False, repr=False, compare=False)
 
@@ -85,6 +97,8 @@ class IMMSettings:
             raise ValueError("noise densities and sigmas must be non-negative")
         if not 0 < self.gate_prob < 1 or self.reset_after < 1:
             raise ValueError("gate_prob must be in (0, 1) and reset_after at least 1")
+        if self.output not in OUTPUTS:
+            raise ValueError(f"output must be one of {OUTPUTS}")
         object.__setattr__(self, "_generator", r - np.diag(r.sum(1)))
         object.__setattr__(self, "_cache", {})
 
@@ -102,7 +116,11 @@ class IMMSettings:
 
     @classmethod
     def from_mapping(cls, m: Mapping[str, Any]) -> IMMSettings:
-        return cls(**{k: m[k] for k in cls.__dataclass_fields__ if not k.startswith("_")})
+        fields = cls.__dataclass_fields__
+        req = [k for k, f in fields.items() if not k.startswith("_") and k not in OPTIONAL]
+        kw = {k: m[k] for k in req}
+        kw |= {k: m[k] for k in OPTIONAL if k in m}
+        return cls(**kw)
 
 
 def gate_threshold(prob: float) -> float:
@@ -282,6 +300,14 @@ class IMMGround:
         return True
 
     def speed_heading(self) -> tuple[float, float, float, float]:
-        """(speed m/s, sigma, heading degrees clockwise from North, sigma), as version 1."""
-        x, P = self.x, self.P
+        """(speed m/s, sigma, heading degrees clockwise from North, sigma), as version 1, of
+        the estimate chosen by `output` (see the module docstring)."""
+        x, P = _combine(self.mode, self.xs, self.Ps)
+        if self.s.output == "conditional":
+            p_move = float(self.mode[CV] + self.mode[CT])
+            if p_move >= 0.5:
+                x, P = _combine(self.mode[CV:] / p_move, self.xs[CV:], self.Ps[CV:])
+            else:
+                x = x.copy()
+                x[2:4] = 0.0
         return GroundKalman(x[:4], P[:4, :4], self.s.q_cv).speed_heading()

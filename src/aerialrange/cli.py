@@ -38,13 +38,43 @@ def run_cmd(
     out: Annotated[Path, typer.Option(help="Output folder")] = Path("cache/run"),
     boxes: Annotated[Path | None, typer.Option(help="Boxes CSV instead of a model")] = None,
     max_frames: Annotated[int | None, typer.Option(help="Stop after this many frames")] = None,
+    camera: Annotated[
+        str | None, typer.Option(help="Camera focal,cx,cy (px) replacing the config's")
+    ] = None,
 ) -> None:
     """Detect, track, range and annotate one flight: tracks.csv, annotated.mp4, timing.json."""
     from aerialrange.pipeline.run import run
 
-    timing = run(source, metadata, out, config=config, boxes_csv=boxes, max_frames=max_frames)
+    ov = None
+    if camera:
+        f, cx, cy = (float(x) for x in camera.split(","))
+        ov = {"camera": {"focal_px": f, "cx": cx, "cy": cy}}
+    timing = run(
+        source, metadata, out, config=config, boxes_csv=boxes, max_frames=max_frames, overrides=ov
+    )
     typer.echo(json.dumps(timing["stages"]["end_to_end"], indent=1))
     typer.echo(f"wrote {out}")
+
+
+@app.command("map")
+def map_cmd(
+    run_dir: Annotated[Path, typer.Option(help="Run folder holding tracks.csv")],
+    metadata: Annotated[Path, typer.Option(help="The run's flight-data CSV")],
+    origin: Annotated[
+        str, typer.Option(help="Local frame origin: latitude,longitude,height (deg, deg, m)")
+    ],
+    config: Annotated[str, typer.Option(help="The run's config name in configs/")] = "run",
+    out: Annotated[Path | None, typer.Option(help="Output folder (default: run folder)")] = None,
+) -> None:
+    """Write map.geojson and map.html (tracks, error ellipses, searched ground) for a run."""
+    from aerialrange.pipeline.geomap import write_map
+    from aerialrange.pipeline.range_speed import ranging_model
+    from aerialrange.utils.config import load_config
+
+    lat, lon, h = (float(x) for x in origin.split(","))
+    model = ranging_model(load_config(config).require)
+    gj = write_map(run_dir / "tracks.csv", metadata, (lat, lon, h), model, out or run_dir)
+    typer.echo(f"{len(gj['features'])} features; wrote {(out or run_dir) / 'map.html'}")
 
 
 @app.command("demo")

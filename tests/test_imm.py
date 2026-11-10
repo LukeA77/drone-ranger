@@ -301,3 +301,48 @@ def test_a_bank_per_group_routes_measurements_by_group():
     assert np.isnan(p[2]) and np.isfinite(p[1])
     with pytest.raises(ValueError):
         bank.step(DT, [1], np.zeros((1, 2)), [0.3])
+
+
+# --- reported estimate (D-746) -----------------------------------------------------------------
+
+
+def _filter_with_modes(mode) -> IMMGround:
+    xs = np.array([[0, 0, 0, 0, 0.0], [0, 0, 4.0, 0, 0.0], [0, 0, 4.0, 1.0, 0.1]])
+    Ps = np.repeat((np.eye(5) * 0.04)[None], 3, axis=0)
+    return IMMGround(xs, Ps, np.asarray(mode, float), replace(SET, output="conditional"))
+
+
+def test_mixture_output_is_the_default_and_scales_speed_by_the_moving_probability():
+    f = _filter_with_modes([0.3, 0.7, 0.0])
+    mix = IMMGround(f.xs, f.Ps, f.mode, SET)
+    assert SET.output == "mixture"
+    assert mix.speed_heading()[0] == pytest.approx(0.7 * 4.0)
+
+
+def test_conditional_output_reports_the_moving_models_when_they_are_more_probable():
+    f = _filter_with_modes([0.3, 0.7, 0.0])
+    s, _, h, _ = f.speed_heading()
+    assert s == pytest.approx(4.0) and h == pytest.approx(0.0)
+    f = _filter_with_modes([0.2, 0.4, 0.4])  # moving: CV and CT renormalised, 1:1
+    v = 0.5 * np.array([4.0, 0.0]) + 0.5 * np.array([4.0, 1.0])
+    assert f.speed_heading()[0] == pytest.approx(np.hypot(*v))
+
+
+def test_conditional_output_reports_zero_speed_with_the_mixture_sigma_when_stationary():
+    f = _filter_with_modes([0.6, 0.4, 0.0])
+    s, sig, h, _ = f.speed_heading()
+    assert s == 0.0 and np.isnan(h)
+    P = IMMGround(f.xs, f.Ps, f.mode, SET).P
+    assert sig == pytest.approx(np.sqrt(np.trace(P[2:4, 2:4]) / 2))
+
+
+def test_output_setting_is_optional_in_a_mapping_and_validated():
+    m = {k: getattr(SET, k) for k in SET.__dataclass_fields__ if not k.startswith("_")}
+    m.pop("output")
+    assert IMMSettings.from_mapping(m).output == "mixture"
+    assert IMMSettings.from_mapping({**m, "output": "conditional"}).output == "conditional"
+    with pytest.raises(ValueError):
+        replace(SET, output="map")
+    m.pop("q_cv")
+    with pytest.raises(KeyError):
+        IMMSettings.from_mapping(m)  # fitted settings stay required

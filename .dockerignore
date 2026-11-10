@@ -1,4 +1,4 @@
-# Build context for docker/Dockerfile: nothing but what the image needs (the data, caches and
+# Build context for docker/Dockerfile and docker/ros2.Dockerfile: nothing but what the image needs (the data, caches and
 # weights in this folder are hundreds of gigabytes).
 *
 !requirements-lock.txt
@@ -9,5 +9,7 @@
 !src/
 !configs/
 !scripts/
+!ros2/
+!docker/ros2_entrypoint.sh
 **/__pycache__
 **/*.pyc

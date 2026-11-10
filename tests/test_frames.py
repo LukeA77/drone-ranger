@@ -174,3 +174,48 @@ def test_ned_vectorised():
     lat = np.array([56.2, 56.2001])
     out = fr.geodetic_to_ned(lat, np.full(2, 10.2), np.zeros(2), 56.2, 10.2, 0.0)
     assert out.shape == (2, 3)
+
+
+# --- local NED back to geodetic, against pymap3d (BSD-2-Clause, test reference only) --------
+
+
+def _sample_points(n: int = 400) -> tuple[np.ndarray, np.ndarray]:
+    rng = np.random.default_rng(7)
+    origins = np.c_[rng.uniform(-80, 80, n), rng.uniform(-180, 180, n), rng.uniform(-100, 3000, n)]
+    ned = np.c_[rng.uniform(-5000, 5000, (n, 2)), rng.uniform(-500, 100, n)]
+    return origins, ned
+
+
+def test_ned_to_geodetic_matches_pymap3d() -> None:
+    pm = pytest.importorskip("pymap3d")
+    origins, ned = _sample_points()
+    for (la0, lo0, h0), (n, e, d) in zip(origins, ned, strict=True):
+        lat, lon, h = fr.ned_to_geodetic([n, e, d], la0, lo0, h0)
+        rlat, rlon, rh = pm.ned2geodetic(n, e, d, la0, lo0, h0, deg=True)
+        # 1e-9 degrees is about 0.1 mm on the ground
+        assert lat == pytest.approx(rlat, abs=1e-9)
+        assert ((lon - rlon + 180) % 360 - 180) == pytest.approx(0.0, abs=1e-9)
+        assert h == pytest.approx(rh, abs=1e-4)
+
+
+def test_geodetic_to_ned_matches_pymap3d() -> None:
+    pm = pytest.importorskip("pymap3d")
+    origins, ned = _sample_points(100)
+    for (la0, lo0, h0), (n, e, d) in zip(origins, ned, strict=True):
+        lat, lon, h = pm.ned2geodetic(n, e, d, la0, lo0, h0, deg=True)
+        np.testing.assert_allclose(
+            fr.geodetic_to_ned(lat, lon, h, la0, lo0, h0), [n, e, d], atol=1e-4
+        )
+
+
+def test_ned_geodetic_round_trip_vectorised() -> None:
+    origins, ned = _sample_points(50)
+    la0, lo0, h0 = 56.2, 10.2, 30.0
+    lat, lon, h = fr.ned_to_geodetic(ned, la0, lo0, h0)
+    assert lat.shape == (50,)
+    np.testing.assert_allclose(fr.geodetic_to_ned(lat, lon, h, la0, lo0, h0), ned, atol=1e-6)
+
+
+def test_ned_to_enu_permutes_and_flips_down() -> None:
+    np.testing.assert_allclose(fr.ned_to_enu([1.0, 2.0, 3.0]), [2.0, 1.0, -3.0])
+    np.testing.assert_allclose(fr.enu_to_ned(fr.ned_to_enu([[1.0, 2.0, 3.0]])), [[1.0, 2.0, 3.0]])

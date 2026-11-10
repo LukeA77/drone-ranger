@@ -204,6 +204,7 @@ def run_flight(
     }
     used = tri_rej = chi_rej = tried = 0
     gps_nis: list[float] = []
+    gps_log = {"pos_rejected": [], "vel_rejected": [], "pos_reset": [], "vel_reset": []}
     feat_nis: list[float] = []
     for k in range(k0, last):
         if k > k0:
@@ -214,7 +215,16 @@ def run_flight(
             if gi < len(d.gps_pos):
                 noise = ImuNoise.from_signal(d.gyr[: k * per_frame], d.acc[: k * per_frame])
                 flt.noise = noise
-                gps_nis.append(flt.update_gps(d.gps_pos[gi], d.gps_vel[gi]))
+                u = flt.update_gps(d.gps_pos[gi], d.gps_vel[gi])
+                gps_nis.append(u.nis)
+                for key, hit in (
+                    ("pos_rejected", not u.pos_used),
+                    ("vel_rejected", not u.vel_used),
+                    ("pos_reset", u.pos_reset),
+                    ("vel_reset", u.vel_reset),
+                ):
+                    if hit:
+                        gps_log[key].append(int(gi))
         if use_camera:
             flt.augment(k)
             ids, uv = tracker.step(d.read_gray(k))
@@ -294,6 +304,9 @@ def run_flight(
             "rejected_chi2": chi_rej,
             "feature_nis_mean": float(np.mean(feat_nis)) if feat_nis else None,
             "gps_nis_mean": float(np.mean(gps_nis)) if gps_nis else None,
+            "gps_fixes_used_from": int(k0 // per_gps_frames) + 1,
+            "gps_fixes": len(gps_nis),
+            "gps_events": gps_log,  # fix indices
             "imu_noise_final": {
                 "gyr": noise.gyr.tolist(),
                 "acc": noise.acc.tolist(),
