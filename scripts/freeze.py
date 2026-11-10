@@ -72,6 +72,7 @@ PHASES = {
         "scripts/syndrone_refilter.py",
         "scripts/syndrone_evaluate.py",
         "scripts/syndrone_breakdowns.py",
+        "scripts/syndrone_search_metrics.py",
         "scripts/terrain_pose_sweep.py",
         "scripts/queues/phase10_syndrone_test.sh",
         "src/aerialrange/pipeline/run.py",

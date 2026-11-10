@@ -2,9 +2,10 @@
 # Phase 10 (build2 Section 9, D-749): the one-time end-to-end test on the SynDrone test towns.
 # Runs the frozen version 2 pipeline (configs/run.yaml: D-FINE N, own tracker, range and speed
 # stage) once on every test town and height, applies the interval calibration fitted on the
-# calibration towns, evaluates with bootstrap intervals over sequences and breaks the results
-# down by condition; then repeats the ranging and speed part with version 1's three navigation
-# grades added to the camera poses (fixed seeds), tracks unchanged.
+# calibration towns, evaluates with bootstrap intervals over sequences, breaks the results
+# down by condition and reports false alarms per km2 searched and the share of people found;
+# then repeats the ranging and speed part with version 1's three navigation grades added to the
+# camera poses (fixed seeds), tracks unchanged.
 #
 # Usage: bash scripts/queues/phase10_syndrone_test.sh          the test run (once, after freezing)
 #        SPLIT=development FRAMES=10 NAME=zz_p10_check bash scripts/queues/phase10_syndrone_test.sh
@@ -62,6 +63,8 @@ step "eval ${NAME}_cal" "$L/eval.log" \
   "$PY" scripts/syndrone_evaluate.py --name "${NAME}_cal" --split "$SPLIT" "${ALLOW[@]}"
 step "breakdowns ${NAME}_cal" "$L/breakdowns.log" \
   "$PY" scripts/syndrone_breakdowns.py --name "${NAME}_cal" --split "$SPLIT"
+step "search ${NAME}_cal" "$L/search.log" \
+  "$PY" scripts/syndrone_search_metrics.py --name "${NAME}_cal" --split "$SPLIT"
 
 # 4. the same tracks with version 1's navigation grades added to the poses
 for G in $GRADES; do

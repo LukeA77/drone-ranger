@@ -11,7 +11,10 @@ that resample whole sequences, and separately whole towns:
 - range: relative error of matched tracks against the footprint centre and the near edge,
   and coverage of the pipeline's range intervals at 68 / 90 / 95 %;
 - speed: error of matched tracks against truth, coverage of the speed intervals, and the
-  same for speeds the display rule shows.
+  same for speeds the display rule shows;
+- search counts per sequence (D-749): output tracks, false-alarm tracks (never matched to a
+  valid truth box in any frame they were kept), valid truth objects, and those found (matched
+  by a track at least once); scripts/syndrone_search_metrics.py turns them into rates.
 
 Truth 2D boxes are the instance-mask boxes (visible extent, D-704). Results go to
 `results/syndrone/<split>/eval_<name>.json`; refuses to evaluate test towns unless
@@ -112,6 +115,10 @@ def evaluate_sequence(town: str, h: int, name: str, rules: TruthRules, cmap: dic
         gid_map: dict[int, int] = {}
         tid_map: dict[int, int] = {}
         rng_rows, spd_rows, pair_rows = [], [], []
+        # search counts (D-749): per track, frames kept after ignore removal and frames matched
+        # to a valid truth box; per valid truth object, whether any track ever matched it
+        track_life: dict[int, list[int]] = {}
+        truth_found: dict[int, bool] = {int(i): False for i in tg[tg["status"] == "valid"]["id"]}
         for f in frames:
             v = valid_by_f.get(f)
             vb = mask_ltwh(v) if v is not None else np.zeros((0, 4))
@@ -140,8 +147,12 @@ def evaluate_sequence(town: str, h: int, name: str, rules: TruthRules, cmap: dic
             g_ids.append(np.array([gid_map.setdefault(int(i), len(gid_map)) for i in gids], int))
             t_ids.append(np.array([tid_map.setdefault(int(i), len(tid_map)) for i in tids], int))
             sims.append(iou)
+            for tid in tids:
+                track_life.setdefault(int(tid), [0, 0])[0] += 1
             for a, b, _ in match_pairs(vb, tb):
                 trow, prow = v.iloc[a], t.iloc[b]
+                track_life[int(prow["track_id"])][1] += 1
+                truth_found[int(trow["id"])] = True
                 if bool(prow["valid"]):
                     rng_rows.append(
                         (
@@ -205,6 +216,12 @@ def evaluate_sequence(town: str, h: int, name: str, rules: TruthRules, cmap: dic
             "speed": np.array(spd_rows, float).reshape(-1, 13),
             "pairs": np.array(pair_rows, float).reshape(-1, 5),
             "n_valid_truth": int((tg["status"] == "valid").sum()),
+            "search": {
+                "n_tracks": len(track_life),
+                "n_false_alarm_tracks": sum(m == 0 for _, m in track_life.values()),
+                "n_truth_objects": len(truth_found),
+                "n_truth_found": sum(truth_found.values()),
+            },
         }
     return out
 
@@ -353,6 +370,9 @@ def main(argv: list[str] | None = None) -> int:
             if any(s["height"] == h for s in seqs)
         }
         result[g] = {
+            "search_counts_per_sequence": {
+                f"{s['town']}_h{s['height']}": s[g]["search"] for s in seqs
+            },
             "pooled": res,
             "ci95_resample_sequences": ci_seq,
             "ci95_resample_towns": ci_town,
