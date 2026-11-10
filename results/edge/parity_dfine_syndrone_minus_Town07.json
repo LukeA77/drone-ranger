@@ -1,0 +1,22 @@
+{
+ "generated_utc": "2026-11-10T09:38:17+00:00",
+ "run": "dfine_syndrone_minus_Town07",
+ "commit": "956d1709314c2c6a4df6f34de232054578a7449f",
+ "onnx": "dfine_syndrone_minus_Town07.onnx",
+ "input_hw": [
+  640,
+  640
+ ],
+ "score_floor": 0.1,
+ "n_frames": 50,
+ "torch": "2.15.0+cpu",
+ "onnxruntime": "1.31.1",
+ "reference": "authors' validation transform, network and post-processor (PyTorch)",
+ "max_box_diff_px": 0.009816110134124756,
+ "p99_box_diff_px": 0.0010479736328125,
+ "max_score_diff": 9.922742045553878e-05,
+ "agreement_library_side": 1.0,
+ "agreement_onnx_side": 1.0,
+ "detections_library": 7005,
+ "detections_onnx": 7005
+}

@@ -179,6 +179,13 @@ def main(argv: list[str] | None = None) -> int:
         "object_size_px": "size_band",
         "class": "class",
     }
+    order = {  # bands in increasing order, as the edges give them
+        "height": ["h20", "h50", "h80"],
+        "camera_angle_deg": band_labels(dep_edges),
+        "true_range_m": band_labels(range_edges),
+        "object_size_px": band_labels(size_edges),
+        "class": ["person", "car", "truck", "bus"],
+    }
     result: dict = {
         "name": args.name,
         "split": args.split,
@@ -212,9 +219,8 @@ def main(argv: list[str] | None = None) -> int:
         }
         for dim, col in dims.items():
             res[dim] = {}
-            for b in sorted(set(rg.get(col, pd.Series(dtype=str))) | set(sg.get(col, []))):
-                if b in ("nan", "other"):
-                    continue
+            present = set(rg.get(col, pd.Series(dtype=str))) | set(sg.get(col, []))
+            for b in [x for x in order[dim] if x in present]:
                 entry = {}
                 if col in rg:
                     entry["range"] = cell(rg[rg[col] == b], "range")
