@@ -1,117 +1,240 @@
 <!doctype html>
 <!--
-Drone Ranger map viewer (Phase 12). Written by aerialrange.pipeline.geomap with the run's
-GeoJSON embedded, so it opens from a local file with no network access.
+Drone Ranger search map (Phases 12 and 14 groundwork; D-750). Written by
+aerialrange.pipeline.geomap with the run's data embedded, so it opens from a local file with no
+network access. Optional files next to it, named in the embedded data: the ground image built
+from the flight's own frames (ground.webp) and the flight video (video.mp4).
 
 Map tiles are off by default. To draw a tile layer, open the page with
   map.html?tiles=<XYZ URL template with {z}/{x}/{y}>&attribution=<the provider's credit>
 and follow that provider's usage policy (for OpenStreetMap's tile servers:
-https://operations.osmfoundation.org/policies/tiles/ — attribution shown on the map, no bulk or
+https://operations.osmfoundation.org/policies/tiles/ - attribution shown on the map, no bulk or
 offline download). The viewer requests only the tiles in view and shows the attribution text
 whenever tiles are drawn.
+
+Confirm / dismiss marks are kept in this browser only (localStorage), per flight name.
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Drone Ranger map</title>
+<title>Drone Ranger search map</title>
 <style>
-:root { --bg: #f4f5f6; --panel: #ffffff; --fg: #1d2125; --muted: #5d6670; --line: #d7dbe0;
-  --grid: #e6e9ec; --person: #0b6bcb; --vehicle: #c8590a; --drone: #1d2125;
-  --foot: rgb(26, 127, 55); --foot-line: rgba(26, 127, 55, 0.7); }
-@media (prefers-color-scheme: dark) { :root { --bg: #121518; --panel: #1b2026; --fg: #e5e8eb;
-  --muted: #9aa3ad; --line: #2e353d; --grid: #20262c; --person: #5aa9f0; --vehicle: #f08a3c;
-  --drone: #e5e8eb; --foot: rgb(74, 194, 107); --foot-line: rgba(74, 194, 107, 0.7); } }
-html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg);
-  font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
-#map { position: absolute; inset: 0 0 64px 0; width: 100%; height: calc(100% - 64px);
-  cursor: grab; touch-action: none; }
-#bar { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; background: var(--panel);
-  border-top: 1px solid var(--line); display: flex; align-items: center; gap: 12px;
-  padding: 0 16px; box-sizing: border-box; }
-#bar input[type=range] { flex: 1; min-width: 80px; }
-#time { font-variant-numeric: tabular-nums; min-width: 92px; color: var(--muted); }
-#layers { position: absolute; top: 12px; left: 12px; background: var(--panel);
-  border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; display: grid; gap: 4px; }
-#layers label { display: flex; gap: 6px; align-items: center; }
-#info { position: absolute; top: 12px; right: 12px; max-width: min(320px, calc(100% - 24px));
-  background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px;
-  white-space: pre-line; display: none; }
-#attr { position: absolute; right: 8px; bottom: 70px; background: var(--panel); color: var(--muted);
+:root { --bg: #eef1f3; --panel: #ffffff; --fg: #18212a; --muted: #5a6672; --line: #d3d9df;
+  --grid: #e2e6ea; --person: #0a66c2; --vehicle: #c25400; --truth: #6b2fb3;
+  --reliable: #1f9d55; --uncertain: #d99a00; --invalid: #c53030; --drone: #18212a;
+  --foot: rgb(31, 157, 85); --sel: #e11d74; --mapbg: #dfe4e8; }
+@media (prefers-color-scheme: dark) { :root { --bg: #0f1418; --panel: #172027; --fg: #e3e8ec;
+  --muted: #98a4ae; --line: #2b3640; --grid: #1c252c; --person: #5aa9f0; --vehicle: #f2914a;
+  --truth: #c39bf2; --reliable: #48c47c; --uncertain: #f0b93a; --invalid: #f0675f;
+  --drone: #e3e8ec; --foot: rgb(72, 196, 124); --sel: #ff5ca8; --mapbg: #131a1f; } }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px;
+  padding: 12px max(16px, env(safe-area-inset-left, 0px)) 8px; }
+header h1 { font-size: 18px; margin: 0; font-weight: 650; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { background: var(--panel); border: 1px solid var(--line); border-radius: 99px;
+  padding: 2px 10px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.chip b { font-weight: 650; }
+main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px;
+  padding: 0 max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px)); }
+main.novideo { grid-template-columns: minmax(0, 1fr); }
+.pane { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  overflow: hidden; position: relative; min-width: 0; }
+#vidpane { aspect-ratio: 16 / 9; background: #000; }
+#vidpane video, #vidpane canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+#vidpane canvas { cursor: pointer; }
+#mappane { min-height: 360px; }
+#map { display: block; width: 100%; height: 100%; min-height: 360px; cursor: grab;
+  touch-action: none; }
+#layers { position: absolute; top: 8px; left: 8px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 6px; padding: 6px 9px; display: grid; gap: 2px;
+  font-size: 13px; max-width: calc(100% - 16px); }
+#layers label { display: flex; gap: 6px; align-items: center; white-space: nowrap; }
+#attr { position: absolute; right: 6px; bottom: 6px; background: var(--panel); color: var(--muted);
   font-size: 12px; padding: 2px 6px; border-radius: 3px; display: none; }
-button { font: inherit; padding: 6px 10px; border: 1px solid var(--line); border-radius: 4px;
+#bar { display: flex; align-items: center; gap: 10px; margin: 10px max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+#bar input[type=range] { flex: 1; min-width: 60px; }
+#time { font-variant-numeric: tabular-nums; min-width: 70px; color: var(--muted); }
+button { font: inherit; padding: 5px 10px; border: 1px solid var(--line); border-radius: 5px;
   background: var(--bg); color: var(--fg); cursor: pointer; }
-.key { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--sel); outline-offset: 2px; }
+#lower { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 10px;
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); }
+#finds, #info { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 12px; min-width: 0; }
+#finds h2, #info h2 { font-size: 14px; margin: 0 0 6px; }
+#finds .note { color: var(--muted); font-size: 12.5px; margin: 0 0 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+td, th { text-align: left; padding: 5px 6px; border-top: 1px solid var(--line);
+  font-variant-numeric: tabular-nums; vertical-align: middle; }
+th { color: var(--muted); font-weight: 500; border-top: 0; }
+tr.row { cursor: pointer; }
+tr.row:hover td { background: var(--bg); }
+tr.sel td { background: color-mix(in srgb, var(--sel) 12%, transparent); }
+tr.dismissed td { opacity: 0.45; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+.st { font-size: 12px; padding: 1px 7px; border-radius: 99px; border: 1px solid var(--line); }
+.st.confirmed { border-color: var(--reliable); color: var(--reliable); }
+.st.dismissed { color: var(--muted); }
+.tablewrap { overflow-x: auto; max-height: 420px; overflow-y: auto; }
+#info dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; margin: 0; font-size: 13px; }
+#info dt { color: var(--muted); } #info dd { margin: 0; font-variant-numeric: tabular-nums; }
+#info .acts { display: flex; gap: 8px; margin-top: 10px; }
+main.novideo #mappane, main.novideo #map { min-height: 70vh; }
+@media (max-width: 820px) { main, #lower { grid-template-columns: minmax(0, 1fr); } }
 </style>
 </head>
 <body>
-<canvas id="map" aria-label="Map of tracked objects"></canvas>
-<div id="layers">
-  <strong id="title">Run</strong>
-  <label><input type="checkbox" id="l-foot" checked> Searched ground</label>
-  <label><input type="checkbox" id="l-track" checked> Tracks</label>
-  <label><input type="checkbox" id="l-ell" checked> Error ellipses</label>
-  <label><input type="checkbox" id="l-drone" checked> Drone path</label>
-  <span><span class="key" style="background:var(--person)"></span> person
-    &nbsp;<span class="key" style="background:var(--vehicle)"></span> vehicle</span>
-</div>
-<div id="info"></div>
-<div id="attr"></div>
+<header>
+  <h1 id="title">Search map</h1>
+  <div class="chips" id="chips"></div>
+</header>
+<main id="main">
+  <div class="pane" id="vidpane">
+    <video id="video" muted playsinline preload="auto"></video>
+    <canvas id="boxes" aria-label="Detections on the video; click one to select it"></canvas>
+  </div>
+  <div class="pane" id="mappane">
+    <canvas id="map" aria-label="Map of the search"></canvas>
+    <div id="layers"></div>
+    <div id="attr"></div>
+  </div>
+</main>
 <div id="bar">
   <button id="play" type="button">Play</button>
-  <input type="range" id="slider" min="0" max="0" value="0" aria-label="Time">
+  <input type="range" id="slider" min="0" max="0" value="0" aria-label="Time in the flight">
   <span id="time"></span>
-  <button id="fit" type="button">Fit</button>
+  <button id="fit" type="button">Fit map</button>
+</div>
+<div id="lower">
+  <section id="finds">
+    <h2>Finds</h2>
+    <p class="note" id="findsnote"></p>
+    <div class="tablewrap"><table id="findtable"></table></div>
+  </section>
+  <section id="info"><h2>Selected</h2><p class="note" style="color:var(--muted);margin:0">Click a marker, a box in the video, or a row.</p></section>
 </div>
 <script>
 const DATA = /*__DATA__*/null;
 (() => {
-  const cv = document.getElementById("map");
-  let ctx = cv.getContext("2d");
+  const $ = (id) => document.getElementById(id);
   const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const DR = DATA.drone_ranger || {};
   const R = 6378137, TILE = 256;
-  // Web Mercator (EPSG:3857) in metres; the same projection as XYZ tiles
   const merc = ([lon, lat]) => [R * lon * Math.PI / 180,
     R * Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360))];
+  const kLat = 1 / Math.cos((DR.origin_lat_deg || 0) * Math.PI / 180); // mercator m per ground m
   const feats = DATA.features;
   const by = (k) => feats.filter((f) => f.properties.kind === k);
-  const det = by("detection"), foot = by("footprint"), tracks = by("track"), drone = by("drone");
-  document.getElementById("title").textContent = DATA.drone_ranger.name;
-  const frames = [...new Set(det.map((f) => f.properties.frame).concat(
-    foot.map((f) => f.properties.frame)))].sort((a, b) => a - b);
-  const slider = document.getElementById("slider");
-  slider.max = Math.max(0, frames.length - 1); slider.value = slider.max;
-  const tOf = new Map(); for (const f of det.concat(foot)) tOf.set(f.properties.frame, f.properties.t_s);
-  const P = (c) => merc(c);
+  const det = by("detection"), foot = by("footprint"), objs = by("object"), drone = by("drone");
   for (const f of feats) {
     const g = f.geometry;
-    f._xy = g.type === "Point" ? P(g.coordinates) : g.type === "LineString"
-      ? g.coordinates.map(P) : g.coordinates[0].map(P);
+    f._xy = g.type === "Point" ? merc(g.coordinates) : g.type === "LineString"
+      ? g.coordinates.map(merc) : g.coordinates[0].map(merc);
   }
-  const trackPts = new Map();
+  for (const o of objs) o._ring = (o.properties.ellipse_ring || []).map(merc);
+  const name = DR.name || "run";
+  $("title").textContent = DR.title || name;
+  document.title = `${DR.title || name} - Drone Ranger`;
+
+  // ---- timeline: the flight's frames (fallback: frames with data) ----
+  let timeline = DR.timeline || null; // [[frame, t_s], ...]
+  if (!timeline) {
+    const fr = new Map();
+    for (const f of det.concat(foot)) fr.set(f.properties.frame, f.properties.t_s);
+    timeline = [...fr.entries()].sort((a, b) => a[0] - b[0]);
+  }
+  const frames = timeline.map((r) => r[0]);
+  const tOf = new Map(timeline);
+  const slider = $("slider");
+  slider.max = Math.max(0, frames.length - 1);
+  const idxOfFrame = (f) => { // last timeline index with frame <= f
+    let lo = 0, hi = frames.length - 1, ans = 0;
+    while (lo <= hi) { const m = (lo + hi) >> 1; if (frames[m] <= f) { ans = m; lo = m + 1; } else hi = m - 1; }
+    return ans;
+  };
+  const nowFrame = () => frames[+slider.value] ?? 0;
+  const detByTrack = new Map(), detByFrame = new Map();
   for (const d of det) {
-    const k = d.properties.track_id;
-    if (!trackPts.has(k)) trackPts.set(k, []);
-    trackPts.get(k).push(d);
+    const p = d.properties;
+    if (!detByTrack.has(p.track_id)) detByTrack.set(p.track_id, []);
+    detByTrack.get(p.track_id).push(d);
+    if (!detByFrame.has(p.frame)) detByFrame.set(p.frame, []);
+    detByFrame.get(p.frame).push(d);
   }
-  for (const v of trackPts.values()) v.sort((a, b) => a.properties.frame - b.properties.frame);
-  let cx = 0, cy = 0, scale = 1; // view centre (mercator m) and pixels per metre
-  function fit() {
-    const all = feats.flatMap((f) => Array.isArray(f._xy[0]) ? f._xy : [f._xy]);
-    if (!all.length) return;
-    const xs = all.map((p) => p[0]), ys = all.map((p) => p[1]);
-    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
-    cx = (x0 + x1) / 2; cy = (y0 + y1) / 2;
-    scale = 0.9 * Math.min(cv.clientWidth / Math.max(x1 - x0, 1), cv.clientHeight / Math.max(y1 - y0, 1));
-    draw();
+  for (const v of detByTrack.values()) v.sort((a, b) => a.properties.frame - b.properties.frame);
+  const objById = new Map(objs.map((o) => [o.properties.track_id, o]));
+  const footByFrame = new Map(foot.map((f) => [f.properties.frame, f]));
+
+  // ---- confirm / dismiss marks, per flight, in this browser ----
+  const KEY = `drone-ranger-finds:${name}`;
+  let marks = {};
+  try { marks = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { marks = {}; }
+  const saveMarks = () => { try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch (e) {} };
+
+  // ---- layers ----
+  const hasGround = !!DR.ground_image, hasTruth = !!DR.truth;
+  const LAYERS = [
+    ["ground", "Ground image (from the drone)", hasGround, hasGround],
+    ["foot", "Searched ground", true, !hasGround],
+    ["reliable", "Objects with a reliable range", true, true],
+    ["uncertain", "Objects with uncertain ranges only", true, false],
+    ["dismissed", "Dismissed finds", true, false],
+    ["trails", "Trails", true, false],
+    ["drone", "Drone path", true, true],
+    ["truth", "True positions (simulation)", hasTruth, hasTruth],
+  ];
+  const on = {};
+  for (const [id, label, avail, def] of LAYERS) {
+    if (!avail) continue;
+    const l = document.createElement("label");
+    l.innerHTML = `<input type="checkbox" id="l-${id}"${def ? " checked" : ""}> ${label}`;
+    $("layers").appendChild(l);
+    on[id] = def;
+    l.querySelector("input").addEventListener("change", (e) => { on[id] = e.target.checked; drawAll(); });
   }
+  const isReliable = (o) => o.properties.reliable_share > 0;
+  const visibleObj = (o) => {
+    const m = marks[o.properties.track_id];
+    if (m === "dismissed" && !on.dismissed) return false;
+    if (m === "confirmed") return true;
+    return isReliable(o) ? on.reliable : on.uncertain;
+  };
+
+  // ---- map ----
+  const cv = $("map");
+  let ctx = cv.getContext("2d");
+  let cx = 0, cy = 0, scale = 1;
   const sx = (p) => cv.clientWidth / 2 + (p[0] - cx) * scale;
   const sy = (p) => cv.clientHeight / 2 - (p[1] - cy) * scale;
+  let groundImg = null, gCorners = null;
+  if (hasGround) {
+    groundImg = new Image();
+    groundImg.onload = () => drawMap();
+    groundImg.src = DR.ground_image.src;
+    gCorners = ["tl", "tr", "bl"].map((k) => merc(DR.ground_image[k]));
+  }
+  function fit() {
+    // bounds by a loop: a long flight has hundreds of thousands of footprint points, too many
+    // to spread into Math.min
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    const add = (p) => { if (p[0] < x0) x0 = p[0]; if (p[0] > x1) x1 = p[0]; if (p[1] < y0) y0 = p[1]; if (p[1] > y1) y1 = p[1]; };
+    if (gCorners) { gCorners.forEach(add); add([gCorners[1][0] + gCorners[2][0] - gCorners[0][0], gCorners[1][1] + gCorners[2][1] - gCorners[0][1]]); }
+    for (const f of foot.concat(drone, objs)) { if (Array.isArray(f._xy[0])) f._xy.forEach(add); else add(f._xy); }
+    if (!Number.isFinite(x0)) return;
+    cx = (x0 + x1) / 2; cy = (y0 + y1) / 2;
+    scale = 0.92 * Math.min(cv.clientWidth / Math.max(x1 - x0, 1), cv.clientHeight / Math.max(y1 - y0, 1));
+    drawMap();
+  }
   const params = new URLSearchParams(location.search);
   const tileUrl = params.get("tiles"), attribution = params.get("attribution") || "";
   const tileCache = new Map();
   function drawTiles() {
-    const attrEl = document.getElementById("attr");
+    const attrEl = $("attr");
     if (!tileUrl) { attrEl.style.display = "none"; return; }
     attrEl.textContent = attribution || "Tile attribution required: add &attribution=...";
     attrEl.style.display = "block";
@@ -127,7 +250,7 @@ const DATA = /*__DATA__*/null;
       let img = tileCache.get(key);
       if (!img) {
         img = new Image(); img.crossOrigin = "anonymous";
-        img.onload = draw; img.src = tileUrl.replace("{z}", z).replace("{x}", xx).replace("{y}", y);
+        img.onload = drawMap; img.src = tileUrl.replace("{z}", z).replace("{x}", xx).replace("{y}", y);
         tileCache.set(key, img);
       }
       if (img.complete && img.naturalWidth) {
@@ -147,122 +270,269 @@ const DATA = /*__DATA__*/null;
     ctx.stroke();
   }
   function scaleBar() {
-    // mercator metres per ground metre = 1 / cos(latitude)
-    const k = 1 / Math.cos(DATA.drone_ranger.origin_lat_deg * Math.PI / 180);
-    const target = 120 / (scale * k), m = 10 ** Math.floor(Math.log10(target));
+    const target = 120 / (scale * kLat), m = 10 ** Math.floor(Math.log10(target));
     const len = [5, 2, 1].map((f) => f * m).find((v) => v <= target) || m;
-    const px = len * k * scale, x = 16, y = cv.clientHeight - 16;
-    ctx.strokeStyle = css("--fg"); ctx.lineWidth = 2; ctx.beginPath();
-    ctx.moveTo(x, y); ctx.lineTo(x + px, y); ctx.stroke();
-    ctx.fillStyle = css("--fg"); ctx.font = "12px system-ui"; ctx.fillText(`${len} m`, x, y - 6);
+    const px = len * kLat * scale, x = 12, y = cv.clientHeight - 14;
+    ctx.lineWidth = 5; ctx.strokeStyle = css("--panel"); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + px, y); ctx.stroke();
+    ctx.lineWidth = 2; ctx.strokeStyle = css("--fg"); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + px, y); ctx.stroke();
+    ctx.font = "12px system-ui"; ctx.lineWidth = 3; ctx.strokeStyle = css("--panel");
+    ctx.strokeText(`${len} m`, x, y - 6); ctx.fillStyle = css("--fg"); ctx.fillText(`${len} m`, x, y - 6);
   }
   const colour = (c) => css(c === "person" ? "--person" : "--vehicle");
-  function poly(xy, fill, stroke) {
+  function path(xy, close) {
     ctx.beginPath(); xy.forEach((p, i) => i ? ctx.lineTo(sx(p), sy(p)) : ctx.moveTo(sx(p), sy(p)));
-    ctx.closePath(); if (fill) { ctx.fillStyle = fill; ctx.fill(); }
-    if (stroke) { ctx.strokeStyle = stroke; ctx.stroke(); }
+    if (close) ctx.closePath();
   }
-  function ellipseAt(d) {
-    const p = d.properties, k = 1 / Math.cos(DATA.drone_ranger.origin_lat_deg * Math.PI / 180);
-    const b = p.ellipse_bearing_deg * Math.PI / 180;
-    ctx.beginPath();
-    ctx.ellipse(sx(d._xy), sy(d._xy), Math.max(1, p.ellipse_major_m * k * scale),
-      Math.max(1, p.ellipse_minor_m * k * scale), b - Math.PI / 2, 0, 2 * Math.PI);
-    ctx.stroke();
-  }
-  function draw() {
+  let selected = null;
+  function drawMap() {
     const dpr = window.devicePixelRatio || 1;
-    if (cv.width !== cv.clientWidth * dpr) { cv.width = cv.clientWidth * dpr; cv.height = cv.clientHeight * dpr; }
+    const W = cv.clientWidth, H = cv.clientHeight;
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) {
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = css("--bg"); ctx.fillRect(0, 0, cv.clientWidth, cv.clientHeight);
+    ctx.fillStyle = css("--mapbg"); ctx.fillRect(0, 0, W, H);
     if (tileUrl) drawTiles(); else grid();
-    const now = frames[+slider.value] ?? Infinity;
-    document.getElementById("time").textContent =
-      Number.isFinite(tOf.get(now)) ? `t = ${tOf.get(now).toFixed(1)} s` : `frame ${now}`;
-    const on = (id) => document.getElementById(id).checked;
-    if (on("l-foot")) {
-      // the union of the footprints so far, drawn opaque off screen and blended once, so
-      // overlapping frames do not darken it
-      const off = document.createElement("canvas");
-      off.width = cv.width; off.height = cv.height;
+    const now = nowFrame();
+    if (on.ground && groundImg && groundImg.complete && groundImg.naturalWidth) {
+      const [tl, tr, bl] = gCorners, iw = groundImg.naturalWidth, ih = groundImg.naturalHeight;
+      const ax = (sx(tr) - sx(tl)) / iw, ay = (sy(tr) - sy(tl)) / iw;
+      const bx = (sx(bl) - sx(tl)) / ih, by_ = (sy(bl) - sy(tl)) / ih;
+      ctx.save(); ctx.setTransform(dpr * ax, dpr * ay, dpr * bx, dpr * by_, dpr * sx(tl), dpr * sy(tl));
+      ctx.drawImage(groundImg, 0, 0); ctx.restore(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    if (on.foot) {
+      const off = document.createElement("canvas"); off.width = cv.width; off.height = cv.height;
       const main = ctx; ctx = off.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      for (const f of foot) if (f.properties.frame <= now) poly(f._xy, css("--foot"), null);
+      ctx.fillStyle = css("--foot");
+      for (const f of foot) if (f.properties.frame <= now) { path(f._xy, true); ctx.fill(); }
       ctx = main; ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 0.16;
       ctx.drawImage(off, 0, 0); ctx.restore();
-      const cur = foot.filter((f) => f.properties.frame === now);
-      ctx.lineWidth = 1.5; for (const f of cur) poly(f._xy, null, css("--foot-line"));
     }
-    if (on("l-drone")) for (const f of drone) {
-      ctx.strokeStyle = css("--drone"); ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath();
-      f._xy.forEach((p, i) => i ? ctx.lineTo(sx(p), sy(p)) : ctx.moveTo(sx(p), sy(p)));
-      ctx.stroke(); ctx.setLineDash([]);
+    const cur = footByFrame.get(now);
+    if (cur) { ctx.lineWidth = 1.5; ctx.strokeStyle = css("--foot"); ctx.setLineDash([5, 4]); path(cur._xy, true); ctx.stroke(); ctx.setLineDash([]); }
+    if (on.drone) for (const f of drone) {
+      ctx.strokeStyle = css("--drone"); ctx.globalAlpha = 0.7; ctx.lineWidth = 1.2; ctx.setLineDash([4, 4]);
+      path(f._xy, false); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
     }
-    for (const pts of trackPts.values()) {
-      const seen = pts.filter((d) => d.properties.frame <= now);
-      if (!seen.length) continue;
-      const c = colour(seen[0].properties.class);
-      if (on("l-track") && seen.length > 1) {
-        ctx.strokeStyle = c; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.6; ctx.beginPath();
-        seen.forEach((d, i) => i ? ctx.lineTo(sx(d._xy), sy(d._xy)) : ctx.moveTo(sx(d._xy), sy(d._xy)));
-        ctx.stroke(); ctx.globalAlpha = 1;
+    if (on.drone && DR.drone_track) {
+      const i = idxOfFrame(now), p = DR.drone_track[i];
+      if (p) { const q = merc(p); ctx.fillStyle = css("--drone"); ctx.beginPath();
+        ctx.arc(sx(q), sy(q), 5, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    if (on.truth && DR.truth) {
+      const tr = DR.truth[String(now)] || DR.truth[String(frames[Math.max(0, +slider.value - 1)])] || [];
+      ctx.lineWidth = 1.5; ctx.strokeStyle = css("--truth");
+      for (const [lon, lat, c] of tr) {
+        const q = merc([lon, lat]), x = sx(q), y = sy(q);
+        ctx.beginPath();
+        if (c === "person") { ctx.moveTo(x, y - 5); ctx.lineTo(x + 5, y); ctx.lineTo(x, y + 5); ctx.lineTo(x - 5, y); ctx.closePath(); }
+        else ctx.rect(x - 4, y - 4, 8, 8);
+        ctx.stroke();
       }
-      const last = seen[seen.length - 1];
-      const live = last.properties.frame === now;
-      if (on("l-ell") && live) { ctx.strokeStyle = c; ctx.lineWidth = 1; ellipseAt(last); }
-      ctx.fillStyle = c; ctx.globalAlpha = live ? 1 : 0.45; ctx.beginPath();
-      ctx.arc(sx(last._xy), sy(last._xy), live ? 4 : 2.5, 0, 2 * Math.PI); ctx.fill();
-      ctx.globalAlpha = 1;
+    }
+    // objects seen so far: one marker each, at the most precise estimate
+    for (const o of objs) {
+      const p = o.properties;
+      if (p.first_frame > now || !visibleObj(o)) continue;
+      const c = colour(p.class), sel = selected === p.track_id;
+      if (on.trails || sel) {
+        const pts = (detByTrack.get(p.track_id) || []).filter((d) => d.properties.frame <= now);
+        if (pts.length > 1) { ctx.strokeStyle = c; ctx.globalAlpha = sel ? 0.9 : 0.5; ctx.lineWidth = sel ? 2 : 1.2;
+          path(pts.map((d) => d._xy), false); ctx.stroke(); ctx.globalAlpha = 1; }
+      }
+      if (sel && o._ring.length) { ctx.strokeStyle = css("--sel"); ctx.lineWidth = 2; path(o._ring, true); ctx.stroke(); }
+      const x = sx(o._xy), y = sy(o._xy), r = p.class === "person" ? 6.5 : 5;
+      ctx.beginPath(); ctx.arc(x, y, r + 2, 0, 2 * Math.PI); ctx.fillStyle = css("--panel"); ctx.fill();
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI);
+      ctx.globalAlpha = isReliable(o) ? 1 : 0.55; ctx.fillStyle = c; ctx.fill(); ctx.globalAlpha = 1;
+      if (marks[p.track_id] === "confirmed") { ctx.strokeStyle = css("--reliable"); ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, y, r + 3.5, 0, 2 * Math.PI); ctx.stroke(); }
+      if (sel) { ctx.strokeStyle = css("--sel"); ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, y, r + 5, 0, 2 * Math.PI); ctx.stroke(); }
+      if (p.class === "person" || sel) {
+        const label = `${p.class === "person" ? "P" : "V"}${p.track_id}`;
+        ctx.font = "600 12px system-ui"; ctx.lineWidth = 3; ctx.strokeStyle = css("--panel");
+        ctx.strokeText(label, x + r + 4, y + 4); ctx.fillStyle = css("--fg"); ctx.fillText(label, x + r + 4, y + 4);
+      }
+    }
+    // where each tracked object is in this frame
+    for (const d of detByFrame.get(now) || []) {
+      const o = objById.get(d.properties.track_id);
+      if (o && !visibleObj(o)) continue;
+      ctx.strokeStyle = colour(d.properties.class); ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(sx(d._xy), sy(d._xy), 9, 0, 2 * Math.PI); ctx.stroke();
     }
     scaleBar();
   }
-  function pick(e) {
+  function pickMap(e) {
     const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
-    const now = frames[+slider.value] ?? Infinity;
-    let best = null, bd = 12;
-    for (const pts of trackPts.values()) {
-      const seen = pts.filter((d) => d.properties.frame <= now);
-      if (!seen.length) continue;
-      const d = seen[seen.length - 1], dist = Math.hypot(sx(d._xy) - mx, sy(d._xy) - my);
-      if (dist < bd) { bd = dist; best = d; }
+    let best = null, bd = 14;
+    for (const o of objs) {
+      if (o.properties.first_frame > nowFrame() || !visibleObj(o)) continue;
+      const dd = Math.hypot(sx(o._xy) - mx, sy(o._xy) - my);
+      if (dd < bd) { bd = dd; best = o.properties.track_id; }
     }
-    const box = document.getElementById("info");
-    if (!best) { box.style.display = "none"; return; }
-    const p = best.properties, f = (x, u) => x == null ? "—" : `${x.toFixed(1)} ${u}`;
-    box.textContent = `${p.class} ${p.track_id}\nrange ${f(p.range_m, "m")}` +
-      (p.range_half_95_m != null ? ` ± ${p.range_half_95_m.toFixed(1)} m (95 %)` : "") +
-      `\n${p.flag}\nposition ellipse ${p.ellipse_major_m.toFixed(1)} × ${p.ellipse_minor_m.toFixed(1)} m (95 %)` +
-      (p.speed_ms != null ? `\nspeed ${f(p.speed_ms, "m/s")}, heading ${f(p.heading_deg, "°")}` : "") +
-      `\nframe ${p.frame}`;
-    box.style.display = "block";
+    select(best, false);
   }
   let drag = null;
-  cv.addEventListener("pointerdown", (e) => { drag = [e.clientX, e.clientY, cx, cy, false];
-    cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener("pointerdown", (e) => { drag = [e.clientX, e.clientY, cx, cy, false]; cv.setPointerCapture(e.pointerId); });
   cv.addEventListener("pointermove", (e) => { if (!drag) return;
     const dx = e.clientX - drag[0], dy = e.clientY - drag[1];
     if (Math.hypot(dx, dy) > 3) drag[4] = true;
-    cx = drag[2] - dx / scale; cy = drag[3] + dy / scale; draw(); });
-  cv.addEventListener("pointerup", (e) => { if (drag && !drag[4]) pick(e); drag = null; });
+    cx = drag[2] - dx / scale; cy = drag[3] + dy / scale; drawMap(); });
+  cv.addEventListener("pointerup", (e) => { if (drag && !drag[4]) pickMap(e); drag = null; });
   cv.addEventListener("wheel", (e) => { e.preventDefault();
     const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
     const wx = cx + (mx - cv.clientWidth / 2) / scale, wy = cy - (my - cv.clientHeight / 2) / scale;
     scale *= Math.exp(-e.deltaY * 0.0015);
-    cx = wx - (mx - cv.clientWidth / 2) / scale; cy = wy + (my - cv.clientHeight / 2) / scale; draw();
+    cx = wx - (mx - cv.clientWidth / 2) / scale; cy = wy + (my - cv.clientHeight / 2) / scale; drawMap();
   }, { passive: false });
-  slider.addEventListener("input", draw);
-  for (const id of ["l-foot", "l-track", "l-ell", "l-drone"])
-    document.getElementById(id).addEventListener("change", draw);
-  document.getElementById("fit").addEventListener("click", fit);
-  let timer = null;
-  document.getElementById("play").addEventListener("click", (e) => {
-    if (timer) { clearInterval(timer); timer = null; e.target.textContent = "Play"; return; }
-    if (+slider.value >= +slider.max) slider.value = 0;
-    e.target.textContent = "Pause";
-    timer = setInterval(() => { if (+slider.value >= +slider.max) { clearInterval(timer); timer = null;
-      e.target.textContent = "Play"; return; } slider.value = +slider.value + 1; draw(); }, 100);
+
+  // ---- video and its boxes ----
+  const vid = $("video"), bx = $("boxes"), V = DR.video;
+  if (!V) { $("vidpane").remove(); $("main").classList.add("novideo"); }
+  else { vid.src = V.src; $("vidpane").style.aspectRatio = `${V.width} / ${V.height}`; }
+  const vidIdx = new Map(V ? V.frames.map((f, i) => [f, i]) : []);
+  const flagCol = (f) => css(f === "reliable" ? "--reliable" : f === "uncertain" ? "--uncertain" : "--invalid");
+  let boxHits = [];
+  function drawBoxes() {
+    if (!V) return;
+    const dpr = window.devicePixelRatio || 1, W = bx.clientWidth, H = bx.clientHeight;
+    if (bx.width !== Math.round(W * dpr)) { bx.width = Math.round(W * dpr); bx.height = Math.round(H * dpr); }
+    const c = bx.getContext("2d"); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+    const k = W / V.width;
+    boxHits = [];
+    for (const [tid, l, t, w, h, cls, flag] of (DR.boxes || {})[String(nowFrame())] || []) {
+      const o = objById.get(tid);
+      if (o && marks[tid] === "dismissed" && !on.dismissed) continue;
+      const sel = selected === tid;
+      c.strokeStyle = sel ? css("--sel") : flagCol(flag); c.lineWidth = sel ? 3 : 1.6;
+      c.strokeRect(l * k, t * k, w * k, h * k);
+      boxHits.push([tid, l * k, t * k, w * k, h * k]);
+      if (cls === "person" || sel) {
+        const lab = `${cls === "person" ? "P" : "V"}${tid}`;
+        c.font = "600 11px system-ui"; const tw = c.measureText(lab).width + 6;
+        c.fillStyle = "rgba(0,0,0,0.65)"; c.fillRect(l * k, t * k - 15, tw, 14);
+        c.fillStyle = "#fff"; c.fillText(lab, l * k + 3, t * k - 4);
+      }
+    }
+  }
+  bx.addEventListener("click", (e) => {
+    const r = bx.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+    let best = null, area = Infinity;
+    for (const [tid, l, t, w, h] of boxHits) {
+      const pad = 6;
+      if (mx >= l - pad && mx <= l + w + pad && my >= t - pad && my <= t + h + pad && w * h < area) { best = tid; area = w * h; }
+    }
+    select(best, false);
   });
-  window.addEventListener("resize", draw);
+
+  // ---- time ----
+  const fmt = (s) => s == null ? "-" : `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+  let ownSeek = false, pendingSeek = null;
+  function setIndex(i, seek) {
+    slider.value = Math.max(0, Math.min(+slider.max, i));
+    const f = nowFrame();
+    $("time").textContent = `${fmt(tOf.get(f))}`;
+    if (V && seek) {
+      const vi = vidIdx.has(f) ? vidIdx.get(f) : V.frames.findIndex((x) => x >= f);
+      if (vi >= 0) {
+        // only the latest request counts; a seek made here does not move the slider back
+        const tt = (vi + 0.5) / V.fps;
+        if (vid.readyState >= 1) { ownSeek = true; vid.currentTime = tt; } else pendingSeek = tt;
+      }
+    }
+    drawAll();
+  }
+  function drawAll() { drawMap(); drawBoxes(); }
+  slider.addEventListener("input", () => setIndex(+slider.value, true));
+  if (V) {
+    const sync = () => {
+      const vi = Math.min(V.frames.length - 1, Math.floor(vid.currentTime * V.fps));
+      const i = idxOfFrame(V.frames[Math.max(0, vi)]);
+      if (i !== +slider.value) setIndex(i, false);
+      if (!vid.paused) requestAnimationFrame(sync);
+    };
+    vid.addEventListener("play", () => { $("play").textContent = "Pause"; requestAnimationFrame(sync); });
+    vid.addEventListener("pause", () => { $("play").textContent = "Play"; sync(); });
+    vid.addEventListener("seeked", () => { if (ownSeek) { ownSeek = false; return; } sync(); });
+    vid.addEventListener("loadedmetadata", () => {
+      if (pendingSeek != null) { ownSeek = true; vid.currentTime = pendingSeek; pendingSeek = null; }
+    });
+  }
+  let timer = null;
+  $("play").addEventListener("click", () => {
+    if (V) { if (vid.paused) { if (+slider.value >= +slider.max) setIndex(0, true); vid.play(); } else vid.pause(); return; }
+    if (timer) { clearInterval(timer); timer = null; $("play").textContent = "Play"; return; }
+    if (+slider.value >= +slider.max) setIndex(0, false);
+    $("play").textContent = "Pause";
+    timer = setInterval(() => { if (+slider.value >= +slider.max) { clearInterval(timer); timer = null; $("play").textContent = "Play"; return; }
+      setIndex(+slider.value + 1, false); }, 100);
+  });
+  $("fit").addEventListener("click", fit);
+
+  // ---- finds list, summary and selection ----
+  const sorted = [...objs].sort((a, b) => (a.properties.class === "person" ? 0 : 1) - (b.properties.class === "person" ? 0 : 1)
+    || (isReliable(b) - isReliable(a)) || a.properties.first_t_s - b.properties.first_t_s);
+  const people = objs.filter((o) => o.properties.class === "person");
+  const vehicles = objs.filter((o) => o.properties.class !== "person");
+  const chip = (html) => { const s = document.createElement("span"); s.className = "chip"; s.innerHTML = html; $("chips").appendChild(s); };
+  chip(`People: <b>${people.filter(isReliable).length}</b> reliable, ${people.length - people.filter(isReliable).length} uncertain`);
+  chip(`Vehicles: <b>${vehicles.length}</b>`);
+  if (DR.searched_km2 != null) chip(`Ground searched: <b>${DR.searched_km2.toFixed(3)} km²</b>`);
+  if (timeline.length) chip(`Flight: <b>${fmt(timeline[timeline.length - 1][1] - timeline[0][1])}</b>`);
+  if (DR.note) chip(DR.note);
+  const TM = DR.truth_match || null; // track -> "real" / "false alarm" (simulation only)
+  if (TM) {
+    const n = (lab) => people.filter((o) => TM[o.properties.track_id] === lab).length;
+    chip(`People finds in the simulation: <b>${n("real")}</b> real, <b>${n("near")}</b> near a real person, <b>${n("false alarm")}</b> false alarms`);
+  }
+  $("findsnote").textContent = "People first, then vehicles. Reliable means at least one range of the object was flagged reliable. " +
+    "Confirm or dismiss each find; marks are kept in this browser.";
+  function renderFinds() {
+    const rows = sorted.filter((o) => o.properties.class === "person" || on.reliable || on.uncertain);
+    const t = $("findtable");
+    t.innerHTML = "<tr><th>Find</th><th>First seen</th><th>Frames</th><th>Reliable</th>" +
+      (TM ? "<th>Simulation truth</th>" : "") + "<th>Mark</th></tr>";
+    for (const o of rows) {
+      const p = o.properties, m = marks[p.track_id] || "";
+      const tr = document.createElement("tr");
+      tr.className = `row${selected === p.track_id ? " sel" : ""}${m === "dismissed" ? " dismissed" : ""}`;
+      tr.innerHTML = `<td><span class="dot" style="background:${colour(p.class)}"></span>${p.class === "person" ? "Person" : "Vehicle"} ${p.track_id}</td>` +
+        `<td>${fmt(p.first_t_s)}</td><td>${p.frames_seen}</td><td>${Math.round(100 * p.reliable_share)} %</td>` +
+        (TM ? `<td>${({ real: "real", near: "near a real one", "false alarm": '<span style="color:var(--invalid)">false alarm</span>' })[TM[p.track_id]] || "not scored"}</td>` : "") +
+        `<td>${m ? `<span class="st ${m}">${m}</span>` : ""}</td>`;
+      tr.addEventListener("click", () => select(p.track_id, true));
+      t.appendChild(tr);
+    }
+  }
+  function select(tid, jump) {
+    selected = tid;
+    const box = $("info");
+    if (tid == null) { box.innerHTML = '<h2>Selected</h2><p class="note" style="color:var(--muted);margin:0">Click a marker, a box in the video, or a row.</p>'; renderFinds(); drawAll(); return; }
+    const o = objById.get(tid);
+    if (!o) { renderFinds(); drawAll(); return; }
+    const p = o.properties, [lon, lat] = o.geometry.coordinates;
+    box.innerHTML = `<h2>${p.class === "person" ? "Person" : "Vehicle"} ${p.track_id}</h2><dl>` +
+      `<dt>Position</dt><dd>${lat.toFixed(6)}, ${lon.toFixed(6)}</dd>` +
+      `<dt>95 % ellipse</dt><dd>${p.ellipse_major_m.toFixed(1)} × ${p.ellipse_minor_m.toFixed(1)} m</dd>` +
+      `<dt>Range then</dt><dd>${p.range_m == null ? "-" : p.range_m.toFixed(0) + " m"}</dd>` +
+      `<dt>First seen</dt><dd>${fmt(p.first_t_s)}</dd><dt>Last seen</dt><dd>${fmt(p.last_t_s)}</dd>` +
+      `<dt>Frames</dt><dd>${p.frames_seen}, ${Math.round(100 * p.reliable_share)} % reliable</dd></dl>` +
+      `<div class="acts"><button type="button" id="b-conf">Confirm</button><button type="button" id="b-dis">Dismiss</button>` +
+      `<button type="button" id="b-clear">Clear mark</button></div>`;
+    $("b-conf").onclick = () => { marks[tid] = "confirmed"; saveMarks(); select(tid, false); };
+    $("b-dis").onclick = () => { marks[tid] = "dismissed"; saveMarks(); select(tid, false); };
+    $("b-clear").onclick = () => { delete marks[tid]; saveMarks(); select(tid, false); };
+    if (jump) {
+      cx = o._xy[0]; cy = o._xy[1];
+      setIndex(idxOfFrame(p.first_frame), true);
+    }
+    renderFinds(); drawAll();
+  }
+  renderFinds();
+  window.addEventListener("resize", drawAll);
+  if (window.ResizeObserver) new ResizeObserver(drawAll).observe($("mappane"));
   fit();
+  setIndex(V ? 0 : frames.length - 1, true);
 })();
 </script>
 </body>

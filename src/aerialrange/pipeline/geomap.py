@@ -12,23 +12,32 @@ flight's origin fix (`geometry.frames.ned_to_geodetic`, exact), and writes:
     reliability flag, the error ellipse's semi-axes and orientation, and speed and heading
     only where the display rule shows the speed;
   - `ellipse`: each track's error ellipse at its last position (Polygon);
+  - `object`: one point per track at its most precise estimate (the valid row whose error
+    ellipse has the smallest area), with that ellipse as a property, the times it was first and
+    last seen, the number of frames and the share of them flagged reliable (D-750: one marker
+    per object, for a map read by a search crew);
   - `footprint`: the ground the camera saw in each frame, limited to the depressions at which
     ranging can be reliable (Polygon), which Phase 14's search builds on;
   - `drone`: the drone's path (LineString);
 - `map.html`, a self-contained viewer of the same data (`viz/map_viewer.html`): no network
   access unless a tile service is given (see that file).
 
-Error ellipse: the point's raw covariance, scaled where the run has calibrated range intervals
-by (calibrated 68 % half-width / raw range sigma)^2, so the ellipse agrees with the run's range
-intervals (D-737); drawn at `ELLIPSE_LEVEL` (chi-squared with 2 degrees of freedom).
+Error ellipse: the point's covariance from the measurement model; where the run has calibrated
+range intervals, rescaled along the line of sight so that its spread in that direction equals
+the calibrated 68 % range half-width (D-737), the bearing part unchanged
+(`calibrate_along_sight`; D-750 corrects an earlier scaling that assumed the covariance was
+built from the range sigma); drawn at `ELLIPSE_LEVEL` (chi-squared with 2 degrees of freedom).
 Privacy (build2 R16): people are a class and a track number only.
 """
 
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
+from typing import TYPE_CHECKING
 
+import cv2
 import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
@@ -38,11 +47,15 @@ from aerialrange.evaluate.auair_world import ground_offset_oblique
 from aerialrange.geometry.frames import ned_to_geodetic
 from aerialrange.pipeline.ranging import RangingModel
 
+if TYPE_CHECKING:
+    from aerialrange.pipeline.mosaic import GroundImage
+
 ELLIPSE_LEVEL = 0.95
 ELLIPSE_POINTS = 36
 FOOTPRINT_POINTS_PER_EDGE = 16
 COORD_DECIMALS = 7  # about 1 cm in latitude
 COV_COLS = ("ground_cov_nn_m2", "ground_cov_ne_m2", "ground_cov_ee_m2")
+SEARCH_GRID_M = 0.5  # grid for the area of the searched ground (as D-749's search measures)
 VIEWER = Path(__file__).resolve().parents[1] / "viz" / "map_viewer.html"
 
 
@@ -113,6 +126,46 @@ def footprint_ring(
     return ne if signed_area_en(ne) > 0 else ne[::-1]
 
 
+def calibrate_along_sight(covs: NDArray, t: pd.DataFrame, fl: pd.DataFrame) -> NDArray:
+    """Ground covariances rescaled along each line of sight so that their standard deviation in
+    that direction equals the row's calibrated 68 % range half-width (D-737), with the
+    perpendicular part (bearing error) left as the measurement model gives it. The covariance is
+    transformed by S = I + (k - 1) u u^T, with u the horizontal direction from the drone to the
+    point and k = half-width / current standard deviation along u, so it stays positive
+    definite. Rows without a calibrated half-width or a drone position are left raw."""
+    out = covs.copy()
+    pos = fl.reindex(t["frame"].to_numpy())[["n_m", "e_m"]].to_numpy(float)
+    d = t[["ground_n_m", "ground_e_m"]].to_numpy(float) - pos
+    norm = np.hypot(d[:, 0], d[:, 1])
+    half = t["range_half_68_m"].to_numpy(float)
+    for i in range(len(out)):
+        if not (np.isfinite(half[i]) and half[i] > 0 and np.isfinite(norm[i]) and norm[i] > 0):
+            continue
+        u = d[i] / norm[i]
+        var_u = float(u @ out[i] @ u)
+        if not var_u > 0:
+            continue
+        k = half[i] / np.sqrt(var_u)
+        S = np.eye(2) + (k - 1.0) * np.outer(u, u)
+        out[i] = S @ out[i] @ S.T
+    return out
+
+
+def union_area_m2(rings: list[NDArray], grid_m: float = SEARCH_GRID_M) -> float:
+    """Area (m2) of the union of ground outlines ((n, 2) north, east rings), measured on a grid
+    of `grid_m` cells."""
+    if not rings:
+        return 0.0
+    allp = np.vstack(rings)
+    lo = allp.min(axis=0)
+    size = np.ceil((allp.max(axis=0) - lo) / grid_m).astype(int) + 2
+    mask = np.zeros((size[0], size[1]), np.uint8)
+    for r in rings:
+        pts = np.round((r - lo) / grid_m).astype(np.int32)[:, ::-1]  # (east, north) = (x, y)
+        cv2.fillPoly(mask, [pts], 1)
+    return float(mask.sum()) * grid_m**2
+
+
 def _lonlat(ne: NDArray, origin: tuple[float, float, float], down: float) -> list[list[float]]:
     ned = np.c_[ne, np.full(len(ne), down)]
     lat, lon, _ = ned_to_geodetic(ned, *origin)
@@ -170,9 +223,7 @@ def build_geojson(
     covs = np.stack([cov[:, [0, 1]], cov[:, [1, 2]]], axis=1)
     calibrated = "range_half_68_m" in t.columns and t["range_half_68_m"].notna().any()
     if calibrated:
-        s = (t["range_half_68_m"] / t["range_sigma_m"]).to_numpy(float)
-        s = np.where(np.isfinite(s) & (s > 0), s, 1.0)
-        covs = covs * (s**2)[:, None, None]
+        covs = calibrate_along_sight(covs, t, fl)
     t["_i"] = np.arange(len(t))
     for tid, g in t.groupby("track_id", sort=True):
         g = g.sort_values("frame")
@@ -219,6 +270,35 @@ def build_geojson(
                     },
                 }
             )
+        gi = g["_i"].to_numpy(int)
+        dets = np.array([np.linalg.det(covs[k]) for k in gi])
+        bi = int(np.nanargmin(np.where(np.isfinite(dets), dets, np.inf)))
+        best = g.iloc[bi]
+        ba, bb, bbrg = ellipse_axes(covs[gi[bi]])
+        bring = ellipse_ring(float(ne[bi, 0]), float(ne[bi, 1]), covs[gi[bi]])
+        feats.append(
+            {
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": pts[bi]},
+                "properties": {
+                    "kind": "object",
+                    "track_id": int(tid),
+                    "class": cls,
+                    "frame": int(best["frame"]),
+                    "t_s": _num(best["t_s"]),
+                    "first_frame": int(g["frame"].iloc[0]),
+                    "first_t_s": _num(g["t_s"].iloc[0]),
+                    "last_t_s": _num(g["t_s"].iloc[-1]),
+                    "frames_seen": len(g),
+                    "reliable_share": float((g["flag"].astype(str) == "reliable").mean()),
+                    "range_m": _num(best["range_m"]),
+                    "ellipse_major_m": ba,
+                    "ellipse_minor_m": bb,
+                    "ellipse_bearing_deg": bbrg,
+                    "ellipse_ring": _lonlat(bring, origin, downs[bi]),
+                },
+            }
+        )
         last = g.iloc[-1]
         ring = ellipse_ring(float(ne[-1, 0]), float(ne[-1, 1]), covs[int(last["_i"])])
         feats.append(
@@ -239,14 +319,16 @@ def build_geojson(
             }
         )
     min_dep = min_reliable_depression_deg(model)
-    path = []
+    path, timeline, rings = [], [], []
     for frame, pose in fl.sort_index().iterrows():
         if not (np.isfinite(pose["n_m"]) and np.isfinite(pose["e_m"])):
             continue
         down = float(fl.at[frame, "d_m"]) if has_down else 0.0
         path.append(_lonlat(np.array([[pose["n_m"], pose["e_m"]]]), origin, down)[0])
+        timeline.append([int(frame), _num(pose.get("t_s"))])
         ring = footprint_ring(pose, model, w, h, min_dep)
         if ring is not None:
+            rings.append(ring)
             feats.append(
                 {
                     "type": "Feature",
@@ -280,6 +362,9 @@ def build_geojson(
             "ellipse_level": ELLIPSE_LEVEL,
             "ellipse_calibrated": bool(calibrated),
             "footprint_min_depression_deg": min_dep,
+            "searched_km2": union_area_m2(rings) / 1e6,
+            "timeline": timeline,  # [frame, t_s] of every frame with a pose
+            "drone_track": path,  # the drone's position in each of those frames
         },
     }
 
@@ -295,15 +380,58 @@ def write_map_from_frames(
     """Write map.geojson and map.html into `out` from a run's tables; returns the GeoJSON."""
     out = Path(out)
     gj = build_geojson(tracks, flight, origin, model, name=name or out.name)
+    write_search_map(out, gj)
+    return gj
+
+
+def ground_image_corners(
+    ground: GroundImage, origin: tuple[float, float, float], down: float = 0.0
+) -> dict:
+    """Longitude and latitude of a ground image's top-left, top-right and bottom-left corners,
+    as the viewer places it."""
+    n0, n1 = ground.north_max_m, ground.north_min_m
+    e0, e1 = ground.east_min_m, ground.east_max_m
+    tl, tr, bl = _lonlat(np.array([[n0, e0], [n0, e1], [n1, e0]]), origin, down)
+    return {"tl": tl, "tr": tr, "bl": bl}
+
+
+def write_search_map(
+    out: Path,
+    gj: dict,
+    extras: dict | None = None,
+    ground: GroundImage | None = None,
+    origin: tuple[float, float, float] | None = None,
+    video: Path | None = None,
+) -> None:
+    """Write map.geojson (the GeoJSON alone) and map.html with the viewer data: the GeoJSON plus
+    `extras` (for example per-frame boxes and truth positions, too bulky for the GeoJSON), and,
+    when given, the ground image (written as ground.webp, transparent where no frame covered
+    it) and the flight video (copied as video.mp4; `extras["video"]` must then describe its
+    frames)."""
+    out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
-    text = json.dumps(gj, separators=(",", ":"))
-    (out / "map.geojson").write_text(text, encoding="utf-8")
-    html = VIEWER.read_text(encoding="utf-8")
+    (out / "map.geojson").write_text(json.dumps(gj, separators=(",", ":")), encoding="utf-8")
+    data = json.loads(json.dumps(gj))
+    dr = data.setdefault("drone_ranger", {})
+    dr.update(extras or {})
+    if ground is not None:
+        if origin is None:
+            raise ValueError("a ground image needs the origin to be placed")
+        # WebP with an alpha channel: ground no frame covered stays transparent
+        bgra = np.dstack([ground.image, np.where(ground.covered, 255, 0).astype(np.uint8)])
+        cv2.imwrite(str(out / "ground.webp"), bgra, [cv2.IMWRITE_WEBP_QUALITY, 82])
+        dr["ground_image"] = {"src": "ground.webp", **ground_image_corners(ground, origin)}
+    if video is not None:
+        if Path(video).resolve() != (out / "video.mp4").resolve():
+            shutil.copy2(video, out / "video.mp4")
+        dr.setdefault("video", {})["src"] = "video.mp4"
+    text = json.dumps(data, separators=(",", ":"))
     # embedded, so the page works from a local file with no requests; "</" is escaped so the
     # data cannot close the script element
-    html = html.replace("/*__DATA__*/null", text.replace("</", r"<\/"))
-    (out / "map.html").write_text(html, encoding="utf-8")
-    return gj
+    html = VIEWER.read_text(encoding="utf-8")
+    (out / "map.html").write_text(
+        html.replace("/*__DATA__*/null", text.replace("</", r"<\/")), encoding="utf-8"
+    )
 
 
 def write_map(

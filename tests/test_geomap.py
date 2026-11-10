@@ -102,17 +102,54 @@ def test_ellipse_ring_is_closed_anticlockwise_and_on_the_ellipse() -> None:
     np.testing.assert_allclose(m, chi2.ppf(0.95, 2), rtol=1e-9)
 
 
-def test_calibrated_intervals_scale_the_ellipse() -> None:
-    t = tracks()
-    t["range_half_68_m"] = 4.0  # twice the raw sigma of 2 m
-    raw = geomap.build_geojson(tracks(), flight(), ORIGIN, MODEL)
+def test_calibration_sets_the_ellipse_along_the_line_of_sight() -> None:
+    # isotropic 0.5 m measurement error; calibrated 68 % range half-width 2 m. Track 1 is due
+    # north of the drone in frame 1 (both at east 0), so its ellipse must be 2 m (1 sigma) along
+    # north and keep 0.5 m across, whatever the raw range sigma (2 m here, unrelated, D-750)
+    t = tracks(cov=(0.25, 0.0, 0.25))
+    t["range_half_68_m"] = 2.0
+    raw = geomap.build_geojson(tracks(cov=(0.25, 0.0, 0.25)), flight(), ORIGIN, MODEL)
     cal = geomap.build_geojson(t, flight(), ORIGIN, MODEL)
-    a0 = kinds(raw, "detection")[0]["properties"]["ellipse_major_m"]
-    a1 = kinds(cal, "detection")[0]["properties"]["ellipse_major_m"]
-    assert a1 == pytest.approx(2 * a0)
+    k = np.sqrt(chi2.ppf(geomap.ELLIPSE_LEVEL, 2))
+    d = [f for f in kinds(cal, "detection") if f["properties"]["track_id"] == 1][0]["properties"]
+    assert d["frame"] == 1
+    assert d["ellipse_major_m"] == pytest.approx(k * 2.0, rel=1e-6)
+    assert d["ellipse_minor_m"] == pytest.approx(k * 0.5, rel=1e-6)
+    assert d["ellipse_bearing_deg"] % 180 == pytest.approx(0.0, abs=1e-6)
+    d0 = [f for f in kinds(raw, "detection") if f["properties"]["track_id"] == 1][0]["properties"]
+    assert d0["ellipse_major_m"] == pytest.approx(k * 0.5, rel=1e-6)
     assert (
         cal["drone_ranger"]["ellipse_calibrated"] and not raw["drone_ranger"]["ellipse_calibrated"]
     )
+
+
+def test_along_sight_calibration_keeps_correlated_covariances_valid() -> None:
+    rng = np.random.default_rng(0)
+    covs = []
+    for _ in range(50):
+        a = rng.normal(size=(2, 2))
+        covs.append(a @ a.T + 0.01 * np.eye(2))
+    covs = np.array(covs)
+    t = pd.DataFrame(
+        {
+            "frame": 1,
+            "ground_n_m": rng.normal(0, 50, 50),
+            "ground_e_m": rng.normal(0, 50, 50),
+            "range_half_68_m": rng.uniform(0.2, 5, 50),
+        }
+    )
+    fl = pd.DataFrame({"n_m": [3.0], "e_m": [-2.0]}, index=[1])
+    out = geomap.calibrate_along_sight(covs, t, fl)
+    d = t[["ground_n_m", "ground_e_m"]].to_numpy() - [3.0, -2.0]
+    u = d / np.linalg.norm(d, axis=1)[:, None]
+    w = np.c_[-u[:, 1], u[:, 0]]
+    for i in range(50):
+        assert np.all(np.linalg.eigvalsh(out[i]) > 0)
+        assert np.sqrt(u[i] @ out[i] @ u[i]) == pytest.approx(t["range_half_68_m"][i], rel=1e-9)
+        # the spread perpendicular to the line of sight, given the along-sight error, is kept
+        cond = lambda c: c[1, 1] - c[0, 1] ** 2 / c[0, 0]  # noqa: E731
+        R = np.c_[u[i], w[i]]
+        assert cond(R.T @ out[i] @ R) == pytest.approx(cond(R.T @ covs[i] @ R), rel=1e-9)
 
 
 def test_speed_and_heading_only_where_the_display_rule_shows_them() -> None:
@@ -177,3 +214,71 @@ def test_viewer_embeds_the_data_and_makes_no_requests_by_default(tmp_path) -> No
 def test_missing_columns_raise_a_clear_error() -> None:
     with pytest.raises(ValueError, match="re-run or replay"):
         geomap.build_geojson(tracks().drop(columns=["ground_cov_ee_m2"]), flight(), ORIGIN, MODEL)
+
+
+# ---- search map (D-750) ----
+
+
+def test_one_object_per_track_at_its_most_precise_estimate():
+    t = tracks()
+    # track 1's covariance shrinks in frame 2 only; its object sits there
+    sel = (t["track_id"] == 1) & (t["frame"] == 2)
+    t.loc[sel, ["ground_cov_nn_m2", "ground_cov_ne_m2", "ground_cov_ee_m2"]] = (0.5, 0.0, 0.5)
+    t.loc[(t["track_id"] == 1) & (t["frame"] == 3), "flag"] = "uncertain"
+    gj = geomap.build_geojson(t, flight(), ORIGIN, MODEL)
+    objs = {
+        f["properties"]["track_id"]: f
+        for f in gj["features"]
+        if f["properties"]["kind"] == "object"
+    }
+    assert sorted(objs) == [1, 2]
+    p = objs[1]["properties"]
+    assert p["frame"] == 2 and p["first_frame"] == 1 and p["frames_seen"] == 3
+    assert p["reliable_share"] == pytest.approx(2 / 3)
+    lon, lat = objs[1]["geometry"]["coordinates"]
+    n, e, _ = np.asarray(geodetic_to_ned(lat, lon, ORIGIN[2], *ORIGIN), float).ravel()
+    assert n == pytest.approx(102.0, abs=0.02) and e == pytest.approx(0.0, abs=0.02)
+    # the ellipse ring belongs to that estimate: 95 % semi-axis of variance 0.5
+    k = np.sqrt(chi2.ppf(0.95, 2))
+    assert p["ellipse_major_m"] == pytest.approx(k * np.sqrt(0.5), rel=1e-6)
+    assert len(p["ellipse_ring"]) == geomap.ELLIPSE_POINTS + 1
+
+
+def test_union_area():
+    def sq(n0: float, e0: float, s: float) -> np.ndarray:
+        return np.array([[n0, e0], [n0 + s, e0], [n0 + s, e0 + s], [n0, e0 + s], [n0, e0]])
+
+    assert geomap.union_area_m2([sq(0, 0, 10)]) == pytest.approx(100, rel=0.12)
+    # two overlapping squares: 100 + 100 - 25
+    assert geomap.union_area_m2([sq(0, 0, 10), sq(5, 5, 10)]) == pytest.approx(175, rel=0.12)
+    assert geomap.union_area_m2([]) == 0.0
+
+
+def test_timeline_and_drone_track():
+    gj = geomap.build_geojson(tracks(), flight(), ORIGIN, MODEL)
+    dr = gj["drone_ranger"]
+    assert [r[0] for r in dr["timeline"]] == [1, 2, 3]
+    assert len(dr["drone_track"]) == 3 and dr["searched_km2"] > 0
+
+
+def test_search_map_writes_its_files(tmp_path):
+    from aerialrange.pipeline.mosaic import GroundImage
+
+    gj = geomap.build_geojson(tracks(), flight(), ORIGIN, MODEL)
+    img = np.full((20, 30, 3), 120, np.uint8)
+    cov = np.zeros((20, 30), bool)
+    cov[5:15, 5:25] = True
+    ground = GroundImage(img, cov, north_max_m=10.0, east_min_m=-15.0, res_m=1.0, frames_used=1)
+    geomap.write_search_map(tmp_path, gj, {"boxes": {"1": []}}, ground, ORIGIN)
+    html = (tmp_path / "map.html").read_text(encoding="utf-8")
+    assert "/*__DATA__*/null" not in html
+    data = json.loads(html.split("const DATA = ", 1)[1].split(";\n(() =>", 1)[0])
+    gi = data["drone_ranger"]["ground_image"]
+    assert gi["src"] == "ground.webp" and (tmp_path / "ground.webp").exists()
+    # corners: top-left is (north 10, east -15); top-right 30 m further east
+    n, e, _ = np.asarray(geodetic_to_ned(gi["tl"][1], gi["tl"][0], ORIGIN[2], *ORIGIN)).ravel()
+    assert (n, e) == pytest.approx((10.0, -15.0), abs=0.01)
+    n, e, _ = np.asarray(geodetic_to_ned(gi["tr"][1], gi["tr"][0], ORIGIN[2], *ORIGIN)).ravel()
+    assert (n, e) == pytest.approx((10.0, 15.0), abs=0.01)
+    assert "boxes" in data["drone_ranger"]
+    assert "boxes" not in json.loads((tmp_path / "map.geojson").read_text())["drone_ranger"]

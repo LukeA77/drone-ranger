@@ -1,0 +1,26 @@
+{
+ "frozen_utc": "2026-11-10T16:17:35+00:00",
+ "phase": "phase10",
+ "git_commit": "c3ef52d",
+ "uncommitted_changes_to_frozen_files": [],
+ "files": {
+  "configs/run.yaml": "9419bcdca276b36d8d52fd1bf0ef1c8ef17382e07fd6a8e596bcf657a9e02b8e",
+  "configs/detector.yaml": "52782acd3d43267f9e239ad42f03954f739903ca4d5e701351373b1a18b7e3fd",
+  "configs/data.yaml": "b1e42729a9f05876b162e36b0cf2cf4e01baeeea2c9487e2d66784a8c252bd46",
+  "configs/syndrone.yaml": "2ec394b833825437cb076f191530137e4a783794928066e253b604b736e5e55d",
+  "configs/trackers/motion_dfine_n_640_by_group.yaml": "55dffe4fcf8e11ec6507c8b4a9400b9d0fedbcb268a8102961978a2b5eb597db",
+  "weights/dfine_n_640.onnx": "d85748ea79ad8a7168a4be1b4577a62c049ae5affc8c5644a402584c329c7c64",
+  "results/splits.json": "cdb52f4fb78e23b501f867a6d90b41afe8725a081ab9d6503c2f2288e7ca32ab",
+  "results/syndrone/calibration/interval_calibration_v2_dfine.json": "1beb46ad4947de4ed9e7e88df5de024243e34b425cbec1c2db6737b2fdc8d880",
+  "scripts/syndrone_run.py": "7519bd7a680a830016b7dd436d31e1b9335a40ecde5cb3e6e7bc8050b7c4af89",
+  "scripts/syndrone_refilter.py": "972bc7f2270a87e5c9bf6fce61b3d2f53be2278b5c1bc99c2b6baace11493f7f",
+  "scripts/syndrone_evaluate.py": "854c7c3cb500e8520c386f254f3290d6df9f04c800c1b301826d764c5b7dfc59",
+  "scripts/syndrone_breakdowns.py": "d2b48665c34ea9efd05e07ea5962c6f4dfdd1baabe44f0b5cf6bcd9dc9deaf2e",
+  "scripts/syndrone_search_metrics.py": "8cee84244b569bfe28bf26f15bb204744ccfd081261f41378e8329268b5e9e0d",
+  "scripts/terrain_pose_sweep.py": "db202d2f1b8e9e84b8d1e1fa9a0d2a7bbebd25dc19c986b23851487f95cea499",
+  "scripts/queues/phase10_syndrone_test.sh": "f7363e22a836744e941195fc22b1b7940de82cdab667846701d33a8d3e934e51",
+  "src/aerialrange/pipeline/run.py": "c3ca61eb4ddabe5efd83c0122c8d5f5e26a7b34e5ae79eaf094845881f982985",
+  "src/aerialrange/pipeline/range_speed.py": "41fd42586ba6336d7ed584e255cf8797f75e1c30fdfbb06bd0f1d970a3085689",
+  "src/aerialrange/evaluate/syndrone_eval.py": "ad1c88b50210c94152cdbd66045e01d02125d3dd68783cfd05b6be855d78d91b"
+ }
+}
