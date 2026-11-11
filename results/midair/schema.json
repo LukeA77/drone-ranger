@@ -1,0 +1,7201 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "results/midair/schema.json",
+ "title": "Mid-Air results: version 1 ranging (Phases 2 and 4) and version 2 fusion (Phase 11)",
+ "description": "x-files maps each file's path inside this folder to its definition (first match applies); tests/test_results_schema.py checks every file against it. Written by scripts/results_schema.py from the existing files: required keys are those every file has; shares and probabilities lie in 0 to 1; counts, sizes and times are not negative. Each definition's description names the script that writes the file.",
+ "x-files": {
+  "*/navigation/ranging_*.json": "#/$defs/nav_ranging",
+  "*/navigation/openvins_compare_*.json": "#/$defs/openvins_compare",
+  "*/navigation/gps_gate_check.json": "#/$defs/gps_gate_check",
+  "*/navigation/gnss_check.json": "#/$defs/gnss_check",
+  "*/navigation/gnss_fit.json": "#/$defs/gnss_fit",
+  "*/navigation/imu_frames.json": "#/$defs/imu_frames",
+  "*/navigation/imu_noise_check.json": "#/$defs/imu_noise_check",
+  "*/navigation/*.json": "#/$defs/nav_run",
+  "*/terrain/binned.json": "#/$defs/v1_terrain_binned",
+  "*/terrain/calibration.json": "#/$defs/v1_terrain_calibration",
+  "*/terrain/flag.json": "#/$defs/v1_terrain_flag",
+  "*/terrain/pose_sweep.json": "#/$defs/v1_terrain_pose_sweep",
+  "*/terrain/summary.json": "#/$defs/v1_terrain_summary",
+  "*/terrain/paired.json": "#/$defs/v1_terrain_paired",
+  "*/accuracy.json": "#/$defs/v1_accuracy",
+  "*/binned.json": "#/$defs/v1_binned",
+  "*/flag.json": "#/$defs/v1_flag",
+  "*/propagation.json": "#/$defs/v1_propagation",
+  "*/sensitivity.json": "#/$defs/v1_sensitivity",
+  "*/slope.json": "#/$defs/v1_slope",
+  "*/stability.json": "#/$defs/v1_stability",
+  "*/summary.json": "#/$defs/v1_summary",
+  "*/sweep.json": "#/$defs/v1_sweep",
+  "*/tracking_noise.json": "#/$defs/v1_tracking_noise",
+  "*/calibration_applied.json": "#/$defs/v1_calibration_applied",
+  "calibration_fit.json": "#/$defs/v1_calibration_fit",
+  "terrain_calibration_fit.json": "#/$defs/v1_terrain_calibration_fit",
+  "unknowns.json": "#/$defs/v1_unknowns"
+ },
+ "$defs": {
+  "nav_ranging": {
+   "description": "scripts/msckf_ranging.py: terrain-from-motion ranging with fused, exact and assumed poses (D-741)",
+   "type": "object",
+   "required": [
+    "conditions",
+    "decision",
+    "frame_step",
+    "generated_utc",
+    "land_samples",
+    "metric",
+    "n_boot",
+    "nav_grades",
+    "nav_run",
+    "seed",
+    "split",
+    "trajectories"
+   ],
+   "properties": {
+    "conditions": {
+     "type": "object",
+     "required": [
+      "exact",
+      "fused",
+      "fused_no_cov",
+      "nav_good",
+      "nav_poor",
+      "nav_typical"
+     ],
+     "properties": {
+      "exact": {
+       "type": "object",
+       "required": [
+        "flat",
+        "terrain"
+       ],
+       "properties": {
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "coverage_raw",
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction",
+          "z_rms"
+         ],
+         "properties": {
+          "coverage_raw": {
+           "type": "object"
+          },
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "z_rms": {
+           "type": "number"
+          }
+         }
+        }
+       }
+      },
+      "fused": {
+       "type": "object",
+       "required": [
+        "flat",
+        "terrain"
+       ],
+       "properties": {
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "coverage_raw",
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction",
+          "z_rms"
+         ],
+         "properties": {
+          "coverage_raw": {
+           "type": "object"
+          },
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "z_rms": {
+           "type": "number"
+          }
+         }
+        }
+       }
+      },
+      "fused_no_cov": {
+       "type": "object",
+       "required": [
+        "flat",
+        "terrain"
+       ],
+       "properties": {
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "coverage_raw",
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction",
+          "z_rms"
+         ],
+         "properties": {
+          "coverage_raw": {
+           "type": "object"
+          },
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "z_rms": {
+           "type": "number"
+          }
+         }
+        }
+       }
+      },
+      "nav_good": {
+       "type": "object",
+       "required": [
+        "flat",
+        "terrain"
+       ],
+       "properties": {
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "coverage_raw",
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction",
+          "z_rms"
+         ],
+         "properties": {
+          "coverage_raw": {
+           "type": "object"
+          },
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "z_rms": {
+           "type": "number"
+          }
+         }
+        }
+       }
+      },
+      "nav_poor": {
+       "type": "object",
+       "required": [
+        "flat",
+        "terrain"
+       ],
+       "properties": {
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "coverage_raw",
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction",
+          "z_rms"
+         ],
+         "properties": {
+          "coverage_raw": {
+           "type": "object"
+          },
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "z_rms": {
+           "type": "number"
+          }
+         }
+        }
+       }
+      },
+      "nav_typical": {
+       "type": "object",
+       "required": [
+        "flat",
+        "terrain"
+       ],
+       "properties": {
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "coverage_raw",
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction",
+          "z_rms"
+         ],
+         "properties": {
+          "coverage_raw": {
+           "type": "object"
+          },
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "z_rms": {
+           "type": "number"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "decision": {
+     "type": "string"
+    },
+    "frame_step": {
+     "type": "integer"
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "land_samples": {
+     "type": "integer"
+    },
+    "metric": {
+     "type": "string"
+    },
+    "n_boot": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "nav_grades": {
+     "type": "string"
+    },
+    "nav_run": {
+     "type": "string"
+    },
+    "seed": {
+     "type": "integer"
+    },
+    "split": {
+     "type": "string"
+    },
+    "trajectories": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "openvins_compare": {
+   "description": "scripts/msckf_openvins_compare.py: against OpenVINS (D-741)",
+   "type": "object",
+   "required": [
+    "decision",
+    "flights",
+    "generated_utc",
+    "nav_run",
+    "note",
+    "pooled_median_over_flights",
+    "split"
+   ],
+   "properties": {
+    "decision": {
+     "type": "string"
+    },
+    "flights": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "common_frames",
+       "openvins",
+       "openvins_first_frame",
+       "ours"
+      ],
+      "properties": {
+       "common_frames": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "openvins": {
+        "type": "object",
+        "required": [
+         "rpe",
+         "tilt_err_median_deg"
+        ],
+        "properties": {
+         "rpe": {
+          "type": "object"
+         },
+         "tilt_err_median_deg": {
+          "type": "number"
+         }
+        }
+       },
+       "openvins_first_frame": {
+        "type": "integer"
+       },
+       "ours": {
+        "type": "object",
+        "required": [
+         "rpe",
+         "tilt_err_median_deg"
+        ],
+        "properties": {
+         "rpe": {
+          "type": "object"
+         },
+         "tilt_err_median_deg": {
+          "type": "number"
+         }
+        }
+       }
+      }
+     }
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "nav_run": {
+     "type": "string"
+    },
+    "note": {
+     "type": "string"
+    },
+    "pooled_median_over_flights": {
+     "type": "object",
+     "required": [
+      "openvins",
+      "ours"
+     ],
+     "properties": {
+      "openvins": {
+       "type": "object",
+       "required": [
+        "rpe",
+        "tilt_err_median_deg"
+       ],
+       "properties": {
+        "rpe": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "object"
+         }
+        },
+        "tilt_err_median_deg": {
+         "type": "number"
+        }
+       }
+      },
+      "ours": {
+       "type": "object",
+       "required": [
+        "rpe",
+        "tilt_err_median_deg"
+       ],
+       "properties": {
+        "rpe": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "object"
+         }
+        },
+        "tilt_err_median_deg": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    },
+    "split": {
+     "type": "string"
+    }
+   }
+  },
+  "gps_gate_check": {
+   "description": "scripts/msckf_gps_gate_check.py: the GPS outlier gate rule (D-744)",
+   "type": "object",
+   "required": [
+    "adopted",
+    "burst_fixes_not_rejected",
+    "clean_gps_events_with_gate",
+    "conditions",
+    "decision",
+    "generated_utc",
+    "nees_in_band",
+    "runs",
+    "step",
+    "summary"
+   ],
+   "properties": {
+    "adopted": {
+     "type": "boolean"
+    },
+    "burst_fixes_not_rejected": {
+     "type": "object",
+     "required": [],
+     "properties": {}
+    },
+    "clean_gps_events_with_gate": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "pos_rejected",
+       "pos_reset",
+       "vel_rejected",
+       "vel_reset"
+      ],
+      "properties": {
+       "pos_rejected": {
+        "type": "array",
+        "items": {
+         "type": "integer"
+        }
+       },
+       "pos_reset": {
+        "type": "array"
+       },
+       "vel_rejected": {
+        "type": "array"
+       },
+       "vel_reset": {
+        "type": "array"
+       }
+      }
+     }
+    },
+    "conditions": {
+     "type": "object",
+     "required": [
+      "1_clean_consistent",
+      "2_bursts_rejected",
+      "3_step_reset"
+     ],
+     "properties": {
+      "1_clean_consistent": {
+       "type": "boolean"
+      },
+      "2_bursts_rejected": {
+       "type": "boolean"
+      },
+      "3_step_reset": {
+       "type": "boolean"
+      }
+     }
+    },
+    "decision": {
+     "type": "string"
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "nees_in_band": {
+     "type": "object",
+     "required": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+     ],
+     "properties": {
+      "A": {
+       "type": "object",
+       "required": [
+        "all9",
+        "attitude",
+        "position",
+        "velocity"
+       ],
+       "properties": {
+        "all9": {
+         "type": "boolean"
+        },
+        "attitude": {
+         "type": "boolean"
+        },
+        "position": {
+         "type": "boolean"
+        },
+        "velocity": {
+         "type": "boolean"
+        }
+       }
+      },
+      "B": {
+       "type": "object",
+       "required": [
+        "all9",
+        "attitude",
+        "position",
+        "velocity"
+       ],
+       "properties": {
+        "all9": {
+         "type": "boolean"
+        },
+        "attitude": {
+         "type": "boolean"
+        },
+        "position": {
+         "type": "boolean"
+        },
+        "velocity": {
+         "type": "boolean"
+        }
+       }
+      },
+      "C": {
+       "type": "object",
+       "required": [
+        "all9",
+        "attitude",
+        "position",
+        "velocity"
+       ],
+       "properties": {
+        "all9": {
+         "type": "boolean"
+        },
+        "attitude": {
+         "type": "boolean"
+        },
+        "position": {
+         "type": "boolean"
+        },
+        "velocity": {
+         "type": "boolean"
+        }
+       }
+      },
+      "D": {
+       "type": "object",
+       "required": [
+        "all9",
+        "attitude",
+        "position",
+        "velocity"
+       ],
+       "properties": {
+        "all9": {
+         "type": "boolean"
+        },
+        "attitude": {
+         "type": "boolean"
+        },
+        "position": {
+         "type": "boolean"
+        },
+        "velocity": {
+         "type": "boolean"
+        }
+       }
+      },
+      "E": {
+       "type": "object",
+       "required": [
+        "all9",
+        "attitude",
+        "position",
+        "velocity"
+       ],
+       "properties": {
+        "all9": {
+         "type": "boolean"
+        },
+        "attitude": {
+         "type": "boolean"
+        },
+        "position": {
+         "type": "boolean"
+        },
+        "velocity": {
+         "type": "boolean"
+        }
+       }
+      }
+     }
+    },
+    "runs": {
+     "type": "object",
+     "required": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+     ],
+     "properties": {
+      "A": {
+       "type": "string"
+      },
+      "B": {
+       "type": "string"
+      },
+      "C": {
+       "type": "string"
+      },
+      "D": {
+       "type": "string"
+      },
+      "E": {
+       "type": "string"
+      }
+     }
+    },
+    "step": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "fixes_to_reset",
+       "later_resets",
+       "longest_rejection_after_reset",
+       "reset_fix",
+       "step_fix"
+      ],
+      "properties": {
+       "fixes_to_reset": {
+        "type": "integer"
+       },
+       "later_resets": {
+        "type": "array"
+       },
+       "longest_rejection_after_reset": {
+        "type": "integer"
+       },
+       "reset_fix": {
+        "type": "integer"
+       },
+       "step_fix": {
+        "type": "integer"
+       }
+      }
+     }
+    },
+    "summary": {
+     "type": "object",
+     "required": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+     ],
+     "properties": {
+      "A": {
+       "type": "object",
+       "required": [
+        "horizontal_rmse_m",
+        "nees",
+        "nees_band_95",
+        "rpe_0.04s_trans_median_m",
+        "rpe_0.4s_trans_median_m",
+        "tilt_median_deg",
+        "yaw_median_deg"
+       ],
+       "properties": {
+        "horizontal_rmse_m": {
+         "type": "number"
+        },
+        "nees": {
+         "type": "object",
+         "required": [
+          "all9",
+          "attitude",
+          "position",
+          "velocity"
+         ],
+         "properties": {
+          "all9": {
+           "type": "number"
+          },
+          "attitude": {
+           "type": "number"
+          },
+          "position": {
+           "type": "number"
+          },
+          "velocity": {
+           "type": "number"
+          }
+         }
+        },
+        "nees_band_95": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "rpe_0.04s_trans_median_m": {
+         "type": "number"
+        },
+        "rpe_0.4s_trans_median_m": {
+         "type": "number"
+        },
+        "tilt_median_deg": {
+         "type": "number"
+        },
+        "yaw_median_deg": {
+         "type": "number"
+        }
+       }
+      },
+      "B": {
+       "type": "object",
+       "required": [
+        "horizontal_rmse_m",
+        "nees",
+        "nees_band_95",
+        "rpe_0.04s_trans_median_m",
+        "rpe_0.4s_trans_median_m",
+        "tilt_median_deg",
+        "yaw_median_deg"
+       ],
+       "properties": {
+        "horizontal_rmse_m": {
+         "type": "number"
+        },
+        "nees": {
+         "type": "object",
+         "required": [
+          "all9",
+          "attitude",
+          "position",
+          "velocity"
+         ],
+         "properties": {
+          "all9": {
+           "type": "number"
+          },
+          "attitude": {
+           "type": "number"
+          },
+          "position": {
+           "type": "number"
+          },
+          "velocity": {
+           "type": "number"
+          }
+         }
+        },
+        "nees_band_95": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "rpe_0.04s_trans_median_m": {
+         "type": "number"
+        },
+        "rpe_0.4s_trans_median_m": {
+         "type": "number"
+        },
+        "tilt_median_deg": {
+         "type": "number"
+        },
+        "yaw_median_deg": {
+         "type": "number"
+        }
+       }
+      },
+      "C": {
+       "type": "object",
+       "required": [
+        "horizontal_rmse_m",
+        "nees",
+        "nees_band_95",
+        "rpe_0.04s_trans_median_m",
+        "rpe_0.4s_trans_median_m",
+        "tilt_median_deg",
+        "yaw_median_deg"
+       ],
+       "properties": {
+        "horizontal_rmse_m": {
+         "type": "number"
+        },
+        "nees": {
+         "type": "object",
+         "required": [
+          "all9",
+          "attitude",
+          "position",
+          "velocity"
+         ],
+         "properties": {
+          "all9": {
+           "type": "number"
+          },
+          "attitude": {
+           "type": "number"
+          },
+          "position": {
+           "type": "number"
+          },
+          "velocity": {
+           "type": "number"
+          }
+         }
+        },
+        "nees_band_95": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "rpe_0.04s_trans_median_m": {
+         "type": "number"
+        },
+        "rpe_0.4s_trans_median_m": {
+         "type": "number"
+        },
+        "tilt_median_deg": {
+         "type": "number"
+        },
+        "yaw_median_deg": {
+         "type": "number"
+        }
+       }
+      },
+      "D": {
+       "type": "object",
+       "required": [
+        "horizontal_rmse_m",
+        "nees",
+        "nees_band_95",
+        "rpe_0.04s_trans_median_m",
+        "rpe_0.4s_trans_median_m",
+        "tilt_median_deg",
+        "yaw_median_deg"
+       ],
+       "properties": {
+        "horizontal_rmse_m": {
+         "type": "number"
+        },
+        "nees": {
+         "type": "object",
+         "required": [
+          "all9",
+          "attitude",
+          "position",
+          "velocity"
+         ],
+         "properties": {
+          "all9": {
+           "type": "number"
+          },
+          "attitude": {
+           "type": "number"
+          },
+          "position": {
+           "type": "number"
+          },
+          "velocity": {
+           "type": "number"
+          }
+         }
+        },
+        "nees_band_95": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "rpe_0.04s_trans_median_m": {
+         "type": "number"
+        },
+        "rpe_0.4s_trans_median_m": {
+         "type": "number"
+        },
+        "tilt_median_deg": {
+         "type": "number"
+        },
+        "yaw_median_deg": {
+         "type": "number"
+        }
+       }
+      },
+      "E": {
+       "type": "object",
+       "required": [
+        "horizontal_rmse_m",
+        "nees",
+        "nees_band_95",
+        "rpe_0.04s_trans_median_m",
+        "rpe_0.4s_trans_median_m",
+        "tilt_median_deg",
+        "yaw_median_deg"
+       ],
+       "properties": {
+        "horizontal_rmse_m": {
+         "type": "number"
+        },
+        "nees": {
+         "type": "object",
+         "required": [
+          "all9",
+          "attitude",
+          "position",
+          "velocity"
+         ],
+         "properties": {
+          "all9": {
+           "type": "number"
+          },
+          "attitude": {
+           "type": "number"
+          },
+          "position": {
+           "type": "number"
+          },
+          "velocity": {
+           "type": "number"
+          }
+         }
+        },
+        "nees_band_95": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "rpe_0.04s_trans_median_m": {
+         "type": "number"
+        },
+        "rpe_0.4s_trans_median_m": {
+         "type": "number"
+        },
+        "tilt_median_deg": {
+         "type": "number"
+        },
+        "yaw_median_deg": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "gnss_check": {
+   "description": "scripts/msckf_gnss_check.py: GPS jumps in the data",
+   "type": "object",
+   "required": [
+    "decision",
+    "flights",
+    "generated_utc",
+    "jump_threshold_m",
+    "split"
+   ],
+   "properties": {
+    "decision": {
+     "type": "string"
+    },
+    "flights": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "fixes",
+       "fixes_over_10m_from_median",
+       "max_abs_deviation_m",
+       "mean_m",
+       "sd_m"
+      ],
+      "properties": {
+       "fixes": {
+        "type": "integer"
+       },
+       "fixes_over_10m_from_median": {
+        "type": "array",
+        "items": {
+         "type": "integer"
+        }
+       },
+       "max_abs_deviation_m": {
+        "type": "array",
+        "items": {
+         "type": "number",
+         "minimum": 0
+        }
+       },
+       "mean_m": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        }
+       },
+       "sd_m": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "jump_threshold_m": {
+     "type": "number"
+    },
+    "split": {
+     "type": "string"
+    }
+   }
+  },
+  "gnss_fit": {
+   "description": "scripts/msckf_gnss_fit.py: GPS noise model",
+   "type": "object",
+   "required": [
+    "autocovariance_m2_lags_0_to_10s",
+    "chosen_units",
+    "decision",
+    "flights",
+    "generated_utc",
+    "gps_velocity_max_abs_diff_from_truth_ms",
+    "model",
+    "split",
+    "variants"
+   ],
+   "properties": {
+    "autocovariance_m2_lags_0_to_10s": {
+     "type": "array"
+    },
+    "chosen_units": {
+     "type": "string"
+    },
+    "decision": {
+     "type": "string"
+    },
+    "flights": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "gps_velocity_max_abs_diff_from_truth_ms": {
+     "type": "number",
+     "minimum": 0
+    },
+    "model": {
+     "type": "object",
+     "required": [
+      "const_sigma_m",
+      "gm_sigma_m",
+      "gm_tau_s",
+      "white_sigma_m"
+     ],
+     "properties": {
+      "const_sigma_m": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "gm_sigma_m": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "gm_tau_s": {
+       "type": "number",
+       "minimum": 0
+      },
+      "white_sigma_m": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      }
+     }
+    },
+    "split": {
+     "type": "string"
+    },
+    "variants": {
+     "type": "object",
+     "required": [
+      "metres",
+      "per_dop"
+     ],
+     "properties": {
+      "metres": {
+       "type": "object",
+       "required": [
+        "flight_mean_mean",
+        "flight_mean_rms",
+        "within_sd_coefficient_of_variation"
+       ],
+       "properties": {
+        "flight_mean_mean": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "flight_mean_rms": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "within_sd_coefficient_of_variation": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        }
+       }
+      },
+      "per_dop": {
+       "type": "object",
+       "required": [
+        "flight_mean_mean",
+        "flight_mean_rms",
+        "within_sd_coefficient_of_variation"
+       ],
+       "properties": {
+        "flight_mean_mean": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "flight_mean_rms": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "within_sd_coefficient_of_variation": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "imu_frames": {
+   "description": "scripts/msckf_imu_frames.py: IMU frame check",
+   "type": "object",
+   "required": [
+    "decision",
+    "flights",
+    "generated_utc",
+    "note"
+   ],
+   "properties": {
+    "decision": {
+     "type": "string"
+    },
+    "flights": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "additionalProperties": {
+       "type": [
+        "object",
+        "array"
+       ],
+       "required": [
+        "body_held",
+        "body_mean",
+        "world_held",
+        "world_mean"
+       ],
+       "properties": {
+        "body_held": {
+         "type": "array"
+        },
+        "body_mean": {
+         "type": "array"
+        },
+        "world_held": {
+         "type": "array"
+        },
+        "world_mean": {
+         "type": "array"
+        }
+       }
+      }
+     }
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "note": {
+     "type": "string"
+    }
+   }
+  },
+  "imu_noise_check": {
+   "description": "scripts/msckf_noise_check.py: IMU noise check",
+   "type": "object",
+   "required": [
+    "axes",
+    "decision",
+    "flights",
+    "generated_utc",
+    "ratio_first_3s_min_max",
+    "ratio_full_flight_min_max",
+    "truth_range_acc_m_s2",
+    "truth_range_gyr_rad_s"
+   ],
+   "properties": {
+    "axes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "decision": {
+     "type": "string"
+    },
+    "flights": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "ratio_first_3s",
+       "ratio_full_flight",
+       "truth_gyr_acc"
+      ],
+      "properties": {
+       "ratio_first_3s": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        }
+       },
+       "ratio_full_flight": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        }
+       },
+       "truth_gyr_acc": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "ratio_first_3s_min_max": {
+     "type": "array",
+     "items": {
+      "type": "number"
+     }
+    },
+    "ratio_full_flight_min_max": {
+     "type": "array",
+     "items": {
+      "type": "number"
+     }
+    },
+    "truth_range_acc_m_s2": {
+     "type": "array",
+     "items": {
+      "type": "number"
+     }
+    },
+    "truth_range_gyr_rad_s": {
+     "type": "array",
+     "items": {
+      "type": "number",
+      "minimum": 0
+     }
+    }
+   }
+  },
+  "nav_run": {
+   "description": "scripts/msckf_midair.py: one filter run, per flight and pooled (D-741)",
+   "type": "object",
+   "required": [
+    "alignment",
+    "camera",
+    "decision",
+    "flights",
+    "generated_utc",
+    "gnss_model",
+    "gps_velocity_noise",
+    "name",
+    "pooled",
+    "settings",
+    "split",
+    "tracker"
+   ],
+   "properties": {
+    "alignment": {
+     "type": "object",
+     "required": [
+      "max_sigma_rad",
+      "max_window_s",
+      "min_window_s"
+     ],
+     "properties": {
+      "max_sigma_rad": {
+       "type": "number"
+      },
+      "max_window_s": {
+       "type": "number",
+       "minimum": 0
+      },
+      "min_window_s": {
+       "type": "number",
+       "minimum": 0
+      }
+     }
+    },
+    "camera": {
+     "type": "boolean"
+    },
+    "decision": {
+     "type": "string"
+    },
+    "flights": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "align_sigma_deg",
+       "align_window_s",
+       "ate_horizontal_rmse_m",
+       "ate_rmse_m",
+       "ate_rmse_per_axis_m",
+       "frames",
+       "info",
+       "nees",
+       "rpe",
+       "start_s",
+       "tilt_err_median_deg",
+       "tilt_err_p90_deg",
+       "vel_rmse_ms",
+       "yaw_err_median_abs_deg",
+       "yaw_err_p90_abs_deg"
+      ],
+      "properties": {
+       "align_sigma_deg": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        }
+       },
+       "align_window_s": {
+        "type": "number",
+        "minimum": 0
+       },
+       "ate_horizontal_rmse_m": {
+        "type": "number"
+       },
+       "ate_rmse_m": {
+        "type": "number"
+       },
+       "ate_rmse_per_axis_m": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        }
+       },
+       "frames": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "info": {
+        "type": "object",
+        "required": [
+         "feature_nis_mean",
+         "features_tried",
+         "features_used",
+         "gps_nis_mean",
+         "imu_noise_final",
+         "rejected_chi2",
+         "rejected_triangulation"
+        ],
+        "properties": {
+         "feature_nis_mean": {
+          "type": [
+           "number",
+           "null"
+          ]
+         },
+         "features_tried": {
+          "type": "integer"
+         },
+         "features_used": {
+          "type": "integer"
+         },
+         "gps_events": {
+          "type": "object"
+         },
+         "gps_fixes": {
+          "type": "integer"
+         },
+         "gps_fixes_used_from": {
+          "type": "integer"
+         },
+         "gps_nis_mean": {
+          "type": [
+           "number",
+           "null"
+          ]
+         },
+         "imu_noise_final": {
+          "type": "object"
+         },
+         "rejected_chi2": {
+          "type": "integer"
+         },
+         "rejected_triangulation": {
+          "type": "integer"
+         }
+        }
+       },
+       "injected_fixes": {
+        "type": "array",
+        "items": {
+         "type": "integer"
+        }
+       },
+       "nees": {
+        "type": "object",
+        "required": [
+         "all9",
+         "attitude",
+         "position",
+         "velocity"
+        ],
+        "properties": {
+         "all9": {
+          "type": "object"
+         },
+         "attitude": {
+          "type": "object"
+         },
+         "position": {
+          "type": "object"
+         },
+         "velocity": {
+          "type": "object"
+         }
+        }
+       },
+       "rpe": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "object"
+        }
+       },
+       "start_s": {
+        "type": "number",
+        "minimum": 0
+       },
+       "tilt_err_median_deg": {
+        "type": "number"
+       },
+       "tilt_err_p90_deg": {
+        "type": "number"
+       },
+       "vel_rmse_ms": {
+        "type": "number",
+        "minimum": 0
+       },
+       "yaw_err_median_abs_deg": {
+        "type": "number",
+        "minimum": 0
+       },
+       "yaw_err_p90_abs_deg": {
+        "type": "number",
+        "minimum": 0
+       }
+      }
+     }
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "gnss_model": {
+     "type": "object",
+     "required": [
+      "const_sigma_m",
+      "gm_sigma_m",
+      "gm_tau_s",
+      "white_sigma_m"
+     ],
+     "properties": {
+      "const_sigma_m": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "gm_sigma_m": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "gm_tau_s": {
+       "type": "number",
+       "minimum": 0
+      },
+      "white_sigma_m": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      }
+     }
+    },
+    "gps_velocity_noise": {
+     "type": "string"
+    },
+    "inject": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "name": {
+     "type": "string"
+    },
+    "pooled": {
+     "type": "object",
+     "required": [
+      "ate_horizontal_rmse_m_median",
+      "ate_rmse_m_median",
+      "nees_mean",
+      "rpe",
+      "tilt_err_median_deg_median",
+      "vel_rmse_ms_median",
+      "yaw_err_median_abs_deg_median"
+     ],
+     "properties": {
+      "ate_horizontal_rmse_m_median": {
+       "type": "number"
+      },
+      "ate_rmse_m_median": {
+       "type": "number"
+      },
+      "nees_mean": {
+       "type": "object",
+       "required": [
+        "all9",
+        "all9_band_95",
+        "attitude",
+        "attitude_band_95",
+        "position",
+        "position_band_95",
+        "velocity",
+        "velocity_band_95"
+       ],
+       "properties": {
+        "all9": {
+         "type": "number"
+        },
+        "all9_band_95": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "attitude": {
+         "type": "number"
+        },
+        "attitude_band_95": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "position": {
+         "type": "number"
+        },
+        "position_band_95": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        },
+        "velocity": {
+         "type": "number"
+        },
+        "velocity_band_95": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         }
+        }
+       }
+      },
+      "rpe": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "required": [
+         "rot_median_deg",
+         "rot_p90_deg",
+         "trans_median_m",
+         "trans_p90_m"
+        ],
+        "properties": {
+         "rot_median_deg": {
+          "type": "number"
+         },
+         "rot_p90_deg": {
+          "type": "number"
+         },
+         "trans_median_m": {
+          "type": "number"
+         },
+         "trans_p90_m": {
+          "type": "number"
+         }
+        }
+       }
+      },
+      "tilt_err_median_deg_median": {
+       "type": "number"
+      },
+      "vel_rmse_ms_median": {
+       "type": "number",
+       "minimum": 0
+      },
+      "yaw_err_median_abs_deg_median": {
+       "type": "number",
+       "minimum": 0
+      }
+     }
+    },
+    "settings": {
+     "type": "object",
+     "required": [
+      "chi2_multiplier",
+      "fej",
+      "gate_prob",
+      "gn_iterations",
+      "gyro_frame",
+      "max_clones",
+      "max_cond",
+      "max_features_per_update",
+      "min_depth_m",
+      "min_obs",
+      "sigma_px",
+      "use_gps_velocity"
+     ],
+     "properties": {
+      "chi2_multiplier": {
+       "type": "number"
+      },
+      "fej": {
+       "type": "boolean"
+      },
+      "gate_prob": {
+       "type": "number"
+      },
+      "gn_iterations": {
+       "type": "integer"
+      },
+      "gps_gate_sd": {
+       "type": [
+        "number",
+        "null"
+       ]
+      },
+      "gps_reset_s": {
+       "type": "number",
+       "minimum": 0
+      },
+      "gps_updates": {
+       "type": "boolean"
+      },
+      "gyro_frame": {
+       "type": "string"
+      },
+      "max_clones": {
+       "type": "integer"
+      },
+      "max_cond": {
+       "type": "number"
+      },
+      "max_features_per_update": {
+       "type": "integer"
+      },
+      "min_depth_m": {
+       "type": "number"
+      },
+      "min_obs": {
+       "type": "integer"
+      },
+      "sigma_px": {
+       "type": "number",
+       "minimum": 0
+      },
+      "use_gps_velocity": {
+       "type": "boolean"
+      }
+     }
+    },
+    "split": {
+     "type": "string"
+    },
+    "tracker": {
+     "type": "object",
+     "required": [
+      "fb_max_px",
+      "max_features",
+      "min_distance_px",
+      "quality",
+      "ransac_conf",
+      "ransac_px"
+     ],
+     "properties": {
+      "fb_max_px": {
+       "type": "number",
+       "minimum": 0
+      },
+      "max_features": {
+       "type": "integer"
+      },
+      "min_distance_px": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "quality": {
+       "type": "number"
+      },
+      "ransac_conf": {
+       "type": "number"
+      },
+      "ransac_px": {
+       "type": "number",
+       "minimum": 0
+      }
+     }
+    }
+   }
+  },
+  "v1_terrain_binned": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "data",
+    "meta"
+   ],
+   "properties": {
+    "data": {
+     "type": "object",
+     "required": [
+      "slope_deg",
+      "true_depression_deg"
+     ],
+     "properties": {
+      "slope_deg": {
+       "type": "object",
+       "required": [
+        "flat_altimeter",
+        "flat_true_height",
+        "terrain_motion"
+       ],
+       "properties": {
+        "flat_altimeter": {
+         "type": "array"
+        },
+        "flat_true_height": {
+         "type": "array"
+        },
+        "terrain_motion": {
+         "type": "array"
+        }
+       }
+      },
+      "true_depression_deg": {
+       "type": "object",
+       "required": [
+        "flat_altimeter",
+        "flat_true_height",
+        "terrain_motion"
+       ],
+       "properties": {
+        "flat_altimeter": {
+         "type": "array"
+        },
+        "flat_true_height": {
+         "type": "array"
+        },
+        "terrain_motion": {
+         "type": "array"
+        }
+       }
+      }
+     }
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "err_threshold_frac",
+      "generated_utc",
+      "n_boot",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "err_threshold_frac": {
+       "type": "number"
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_terrain_calibration": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "data",
+    "meta"
+   ],
+   "properties": {
+    "data": {
+     "type": "object",
+     "required": [
+      "conformal",
+      "raw"
+     ],
+     "properties": {
+      "conformal": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "number"
+       }
+      },
+      "raw": {
+       "type": "object",
+       "required": [
+        "coverage",
+        "z_robust_spread",
+        "z_std"
+       ],
+       "properties": {
+        "coverage": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+         }
+        },
+        "z_robust_spread": {
+         "type": "number"
+        },
+        "z_std": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "err_threshold_frac",
+      "generated_utc",
+      "n_boot",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "err_threshold_frac": {
+       "type": "number"
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_terrain_flag": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "data",
+    "meta"
+   ],
+   "properties": {
+    "data": {
+     "type": "object",
+     "required": [
+      "auroc",
+      "coefficients",
+      "flagged_fraction",
+      "precision",
+      "recall"
+     ],
+     "properties": {
+      "auroc": {
+       "type": "number"
+      },
+      "coefficients": {
+       "type": "object",
+       "required": [
+        "log_n_points",
+        "rel_sigma",
+        "roughness_over_range",
+        "support_over_range"
+       ],
+       "properties": {
+        "log_n_points": {
+         "type": "number"
+        },
+        "rel_sigma": {
+         "type": "number"
+        },
+        "roughness_over_range": {
+         "type": "number"
+        },
+        "support_over_range": {
+         "type": "number"
+        }
+       }
+      },
+      "flagged_fraction": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "precision": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "recall": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      }
+     }
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "err_threshold_frac",
+      "generated_utc",
+      "n_boot",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "err_threshold_frac": {
+       "type": "number"
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_terrain_pose_sweep": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "conditions",
+    "meta"
+   ],
+   "properties": {
+    "conditions": {
+     "type": "object",
+     "required": [
+      "att_bias_0.25deg",
+      "att_bias_0.5deg",
+      "att_bias_1deg",
+      "att_bias_2deg",
+      "att_jitter_0.02deg",
+      "att_jitter_0.05deg",
+      "att_jitter_0.1deg",
+      "att_jitter_0.2deg",
+      "att_jitter_0.5deg",
+      "att_jitter_1deg",
+      "exact",
+      "nav_good",
+      "nav_poor",
+      "nav_typical",
+      "pos_bias_1m",
+      "pos_bias_3m",
+      "pos_bias_5m",
+      "pos_jitter_0.02m",
+      "pos_jitter_0.05m",
+      "pos_jitter_0.1m",
+      "pos_jitter_0.2m",
+      "pos_jitter_0.5m",
+      "pos_jitter_1m"
+     ],
+     "properties": {
+      "att_bias_0.25deg": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "number"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "att_bias_0.5deg": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "number"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "att_bias_1deg": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "number"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "att_bias_2deg": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "number"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "att_jitter_0.02deg": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "number"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "att_jitter_0.05deg": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "number"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "att_jitter_0.1deg": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "number"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "att_jitter_0.2deg": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "number"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "att_jitter_0.5deg": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "number"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "att_jitter_1deg": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "number"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "exact": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "nav_good": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "number"
+        },
+        "att_jitter_deg": {
+         "type": "number"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "number"
+        },
+        "pos_jitter_m": {
+         "type": "number"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "nav_poor": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "number"
+        },
+        "att_jitter_deg": {
+         "type": "number"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "number"
+        },
+        "pos_jitter_m": {
+         "type": "number"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "nav_typical": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "number"
+        },
+        "att_jitter_deg": {
+         "type": "number"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "number"
+        },
+        "pos_jitter_m": {
+         "type": "number"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "pos_bias_1m": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "number"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "pos_bias_3m": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "number"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "pos_bias_5m": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "number"
+        },
+        "pos_jitter_m": {
+         "type": "integer"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "pos_jitter_0.02m": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "number"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "pos_jitter_0.05m": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "number"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "pos_jitter_0.1m": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "number"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "pos_jitter_0.2m": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "number"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "pos_jitter_0.5m": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "number"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      },
+      "pos_jitter_1m": {
+       "type": "object",
+       "required": [
+        "att_bias_deg",
+        "att_jitter_deg",
+        "flat",
+        "pos_bias_m",
+        "pos_jitter_m",
+        "terrain"
+       ],
+       "properties": {
+        "att_bias_deg": {
+         "type": "integer"
+        },
+        "att_jitter_deg": {
+         "type": "integer"
+        },
+        "flat": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        },
+        "pos_bias_m": {
+         "type": "integer"
+        },
+        "pos_jitter_m": {
+         "type": "number"
+        },
+        "terrain": {
+         "type": "object",
+         "required": [
+          "median",
+          "median_ci",
+          "p90",
+          "valid_fraction"
+         ],
+         "properties": {
+          "median": {
+           "type": "number"
+          },
+          "median_ci": {
+           "type": "array"
+          },
+          "p90": {
+           "type": "number"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "decision",
+      "frame_step",
+      "generated_utc",
+      "metric",
+      "n_boot",
+      "nav_grades",
+      "noise",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "decision": {
+       "type": "string"
+      },
+      "frame_step": {
+       "type": "integer"
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "metric": {
+       "type": "string"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "nav_grades": {
+       "type": "string"
+      },
+      "noise": {
+       "type": "string"
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_terrain_summary": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "data",
+    "meta"
+   ],
+   "properties": {
+    "data": {
+     "type": "object",
+     "required": [
+      "flat_altimeter",
+      "flat_true_height",
+      "terrain_motion"
+     ],
+     "properties": {
+      "flat_altimeter": {
+       "type": "object",
+       "required": [
+        "abs_rel_err_median",
+        "abs_rel_err_median_ci",
+        "abs_rel_err_p90",
+        "abs_rel_err_p90_ci",
+        "valid_fraction"
+       ],
+       "properties": {
+        "abs_rel_err_median": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_rel_err_median_ci": {
+         "type": "array",
+         "items": {
+          "type": "number",
+          "minimum": 0
+         }
+        },
+        "abs_rel_err_p90": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_rel_err_p90_ci": {
+         "type": "array",
+         "items": {
+          "type": "number",
+          "minimum": 0
+         }
+        },
+        "valid_fraction": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        }
+       }
+      },
+      "flat_true_height": {
+       "type": "object",
+       "required": [
+        "abs_rel_err_median",
+        "abs_rel_err_median_ci",
+        "abs_rel_err_p90",
+        "abs_rel_err_p90_ci",
+        "valid_fraction"
+       ],
+       "properties": {
+        "abs_rel_err_median": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_rel_err_median_ci": {
+         "type": "array",
+         "items": {
+          "type": "number",
+          "minimum": 0
+         }
+        },
+        "abs_rel_err_p90": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_rel_err_p90_ci": {
+         "type": "array",
+         "items": {
+          "type": "number",
+          "minimum": 0
+         }
+        },
+        "valid_fraction": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        }
+       }
+      },
+      "terrain_motion": {
+       "type": "object",
+       "required": [
+        "abs_rel_err_median",
+        "abs_rel_err_median_ci",
+        "abs_rel_err_p90",
+        "abs_rel_err_p90_ci",
+        "valid_fraction"
+       ],
+       "properties": {
+        "abs_rel_err_median": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_rel_err_median_ci": {
+         "type": "array",
+         "items": {
+          "type": "number",
+          "minimum": 0
+         }
+        },
+        "abs_rel_err_p90": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_rel_err_p90_ci": {
+         "type": "array",
+         "items": {
+          "type": "number",
+          "minimum": 0
+         }
+        },
+        "valid_fraction": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        }
+       }
+      }
+     }
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "err_threshold_frac",
+      "generated_utc",
+      "n_boot",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "err_threshold_frac": {
+       "type": "number"
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_terrain_paired": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "additionalProperties": {
+    "type": "object",
+    "required": [],
+    "properties": {
+     "decision": {
+      "type": "string"
+     },
+     "flights_where_terrain_median_lower": {
+      "type": "integer"
+     },
+     "generated_utc": {
+      "type": "string"
+     },
+     "median_difference_ci": {
+      "type": "array",
+      "items": {
+       "type": "number"
+      }
+     },
+     "median_difference_flat_minus_terrain": {
+      "type": "number"
+     },
+     "methods": {
+      "type": "object",
+      "required": [
+       "flat_true_height",
+       "terrain_motion"
+      ],
+      "properties": {
+       "flat_altimeter": {
+        "type": "object",
+        "required": [
+         "median",
+         "median_ci",
+         "p90",
+         "p90_ci",
+         "per_flight_median"
+        ],
+        "properties": {
+         "median": {
+          "type": "number"
+         },
+         "median_ci": {
+          "type": "array"
+         },
+         "p90": {
+          "type": "number"
+         },
+         "p90_ci": {
+          "type": "array"
+         },
+         "per_flight_median": {
+          "type": "object"
+         }
+        }
+       },
+       "flat_true_height": {
+        "type": "object",
+        "required": [
+         "median",
+         "median_ci",
+         "p90",
+         "p90_ci",
+         "per_flight_median"
+        ],
+        "properties": {
+         "median": {
+          "type": "number"
+         },
+         "median_ci": {
+          "type": "array"
+         },
+         "p90": {
+          "type": "number"
+         },
+         "p90_ci": {
+          "type": "array"
+         },
+         "per_flight_median": {
+          "type": "object"
+         }
+        }
+       },
+       "terrain_motion": {
+        "type": "object",
+        "required": [
+         "median",
+         "median_ci",
+         "p90",
+         "p90_ci",
+         "per_flight_median"
+        ],
+        "properties": {
+         "median": {
+          "type": "number"
+         },
+         "median_ci": {
+          "type": "array"
+         },
+         "p90": {
+          "type": "number"
+         },
+         "p90_ci": {
+          "type": "array"
+         },
+         "per_flight_median": {
+          "type": "object"
+         }
+        }
+       }
+      }
+     },
+     "n_boot": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "n_flights": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "n_samples": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "samples": {
+      "type": "string"
+     },
+     "seed": {
+      "type": "integer"
+     },
+     "share_of_land_samples": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     },
+     "share_samples_terrain_closer": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     },
+     "split": {
+      "type": "string"
+     },
+     "trajectories": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "v1_accuracy": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "climate",
+    "config_hash",
+    "generated_utc",
+    "git_commit",
+    "note",
+    "per_trajectory",
+    "pooled",
+    "sampling",
+    "seed",
+    "split",
+    "trajectories",
+    "trajectories_missing"
+   ],
+   "properties": {
+    "climate": {
+     "type": "string"
+    },
+    "config_hash": {
+     "type": "string"
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "git_commit": {
+     "type": "string"
+    },
+    "note": {
+     "type": "string"
+    },
+    "per_trajectory": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "oracle_plane",
+       "relative_altitude"
+      ],
+      "properties": {
+       "oracle_plane": {
+        "type": "object",
+        "required": [
+         "abs_range_err_mean_m",
+         "abs_range_err_median_m",
+         "abs_range_err_p90_m",
+         "abs_range_err_p95_m",
+         "horiz_err_median_m",
+         "horiz_err_p95_m",
+         "n_samples",
+         "range_rmse_m",
+         "rel_range_err_median",
+         "rel_range_err_p90",
+         "signed_range_err_median_m",
+         "valid_fraction"
+        ],
+        "properties": {
+         "abs_range_err_mean_m": {
+          "type": "number",
+          "minimum": 0
+         },
+         "abs_range_err_median_m": {
+          "type": "number",
+          "minimum": 0
+         },
+         "abs_range_err_p90_m": {
+          "type": "number",
+          "minimum": 0
+         },
+         "abs_range_err_p95_m": {
+          "type": "number",
+          "minimum": 0
+         },
+         "horiz_err_median_m": {
+          "type": "number"
+         },
+         "horiz_err_p95_m": {
+          "type": "number"
+         },
+         "n_samples": {
+          "type": "integer",
+          "minimum": 0
+         },
+         "range_rmse_m": {
+          "type": "number"
+         },
+         "rel_range_err_median": {
+          "type": "number"
+         },
+         "rel_range_err_p90": {
+          "type": "number"
+         },
+         "signed_range_err_median_m": {
+          "type": "number"
+         },
+         "valid_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+         }
+        }
+       },
+       "relative_altitude": {
+        "type": "object",
+        "required": [
+         "abs_range_err_mean_m",
+         "abs_range_err_median_m",
+         "abs_range_err_p90_m",
+         "abs_range_err_p95_m",
+         "horiz_err_median_m",
+         "horiz_err_p95_m",
+         "n_samples",
+         "range_rmse_m",
+         "rel_range_err_median",
+         "rel_range_err_p90",
+         "signed_range_err_median_m",
+         "valid_fraction"
+        ],
+        "properties": {
+         "abs_range_err_mean_m": {
+          "type": "number"
+         },
+         "abs_range_err_median_m": {
+          "type": "number"
+         },
+         "abs_range_err_p90_m": {
+          "type": "number"
+         },
+         "abs_range_err_p95_m": {
+          "type": "number"
+         },
+         "horiz_err_median_m": {
+          "type": "number"
+         },
+         "horiz_err_p95_m": {
+          "type": "number"
+         },
+         "n_samples": {
+          "type": "integer",
+          "minimum": 0
+         },
+         "range_rmse_m": {
+          "type": "number"
+         },
+         "rel_range_err_median": {
+          "type": "number"
+         },
+         "rel_range_err_p90": {
+          "type": "number"
+         },
+         "signed_range_err_median_m": {
+          "type": "number"
+         },
+         "valid_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+         }
+        }
+       }
+      }
+     }
+    },
+    "pooled": {
+     "type": "object",
+     "required": [
+      "oracle_plane",
+      "relative_altitude"
+     ],
+     "properties": {
+      "oracle_plane": {
+       "type": "object",
+       "required": [
+        "abs_range_err_mean_m",
+        "abs_range_err_median_m",
+        "abs_range_err_p90_m",
+        "abs_range_err_p95_m",
+        "horiz_err_median_m",
+        "horiz_err_p95_m",
+        "n_samples",
+        "range_rmse_m",
+        "rel_range_err_median",
+        "rel_range_err_p90",
+        "signed_range_err_median_m",
+        "valid_fraction"
+       ],
+       "properties": {
+        "abs_range_err_mean_m": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_range_err_median_m": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_range_err_p90_m": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_range_err_p95_m": {
+         "type": "number",
+         "minimum": 0
+        },
+        "horiz_err_median_m": {
+         "type": "number"
+        },
+        "horiz_err_p95_m": {
+         "type": "number"
+        },
+        "n_samples": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "range_rmse_m": {
+         "type": "number"
+        },
+        "rel_range_err_median": {
+         "type": "number"
+        },
+        "rel_range_err_p90": {
+         "type": "number"
+        },
+        "signed_range_err_median_m": {
+         "type": "number"
+        },
+        "valid_fraction": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        }
+       }
+      },
+      "relative_altitude": {
+       "type": "object",
+       "required": [
+        "abs_range_err_mean_m",
+        "abs_range_err_median_m",
+        "abs_range_err_p90_m",
+        "abs_range_err_p95_m",
+        "horiz_err_median_m",
+        "horiz_err_p95_m",
+        "n_samples",
+        "range_rmse_m",
+        "rel_range_err_median",
+        "rel_range_err_p90",
+        "signed_range_err_median_m",
+        "valid_fraction"
+       ],
+       "properties": {
+        "abs_range_err_mean_m": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_range_err_median_m": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_range_err_p90_m": {
+         "type": "number",
+         "minimum": 0
+        },
+        "abs_range_err_p95_m": {
+         "type": "number",
+         "minimum": 0
+        },
+        "horiz_err_median_m": {
+         "type": "number"
+        },
+        "horiz_err_p95_m": {
+         "type": "number"
+        },
+        "n_samples": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "range_rmse_m": {
+         "type": "number"
+        },
+        "rel_range_err_median": {
+         "type": "number"
+        },
+        "rel_range_err_p90": {
+         "type": "number"
+        },
+        "signed_range_err_median_m": {
+         "type": "number"
+        },
+        "valid_fraction": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        }
+       }
+      }
+     }
+    },
+    "sampling": {
+     "type": "object",
+     "required": [
+      "depth_edge_rel",
+      "edge_margin_px",
+      "frame_stride",
+      "normal_patch_px",
+      "pix_per_frame"
+     ],
+     "properties": {
+      "depth_edge_rel": {
+       "type": "number"
+      },
+      "edge_margin_px": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "frame_stride": {
+       "type": "integer"
+      },
+      "normal_patch_px": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "pix_per_frame": {
+       "type": "integer"
+      }
+     }
+    },
+    "seed": {
+     "type": "integer"
+    },
+    "split": {
+     "type": "string"
+    },
+    "trajectories": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "trajectories_missing": {
+     "type": "array"
+    }
+   }
+  },
+  "v1_binned": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "data",
+    "meta"
+   ],
+   "properties": {
+    "data": {
+     "type": "object",
+     "required": [
+      "h_oracle_m",
+      "slope_deg",
+      "true_depression_deg",
+      "true_range_m"
+     ],
+     "properties": {
+      "h_oracle_m": {
+       "type": "object",
+       "required": [
+        "oracle_plane",
+        "relative_altitude"
+       ],
+       "properties": {
+        "oracle_plane": {
+         "type": "array"
+        },
+        "relative_altitude": {
+         "type": "array"
+        }
+       }
+      },
+      "slope_deg": {
+       "type": "object",
+       "required": [
+        "oracle_plane",
+        "relative_altitude"
+       ],
+       "properties": {
+        "oracle_plane": {
+         "type": "array"
+        },
+        "relative_altitude": {
+         "type": "array"
+        }
+       }
+      },
+      "true_depression_deg": {
+       "type": "object",
+       "required": [
+        "oracle_plane",
+        "relative_altitude"
+       ],
+       "properties": {
+        "oracle_plane": {
+         "type": "array"
+        },
+        "relative_altitude": {
+         "type": "array"
+        }
+       }
+      },
+      "true_range_m": {
+       "type": "object",
+       "required": [
+        "oracle_plane",
+        "relative_altitude"
+       ],
+       "properties": {
+        "oracle_plane": {
+         "type": "array"
+        },
+        "relative_altitude": {
+         "type": "array"
+        }
+       }
+      }
+     }
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "config_hash",
+      "generated_utc",
+      "git_commit",
+      "min_groups_per_bin",
+      "min_samples_per_bin",
+      "n_boot",
+      "n_mc",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "config_hash": {
+       "type": "object",
+       "required": [
+        "data",
+        "uncertainty"
+       ],
+       "properties": {
+        "data": {
+         "type": "string"
+        },
+        "uncertainty": {
+         "type": "string"
+        }
+       }
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "git_commit": {
+       "type": "string"
+      },
+      "min_groups_per_bin": {
+       "type": "integer"
+      },
+      "min_samples_per_bin": {
+       "type": "integer"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "n_mc": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_flag": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "data",
+    "meta"
+   ],
+   "properties": {
+    "data": {
+     "type": "object",
+     "additionalProperties": {
+      "type": [
+       "object",
+       "number"
+      ],
+      "required": [
+       "auroc",
+       "positive_fraction",
+       "pr_curve"
+      ],
+      "properties": {
+       "auroc": {
+        "type": "number"
+       },
+       "positive_fraction": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+       },
+       "pr_curve": {
+        "type": "object",
+        "required": [
+         "precision",
+         "recall",
+         "threshold"
+        ],
+        "properties": {
+         "precision": {
+          "type": "array"
+         },
+         "recall": {
+          "type": "array"
+         },
+         "threshold": {
+          "type": "array"
+         }
+        }
+       }
+      }
+     }
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "config_hash",
+      "generated_utc",
+      "git_commit",
+      "min_groups_per_bin",
+      "min_samples_per_bin",
+      "n_boot",
+      "n_mc",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "config_hash": {
+       "type": "object",
+       "required": [
+        "data",
+        "uncertainty"
+       ],
+       "properties": {
+        "data": {
+         "type": "string"
+        },
+        "uncertainty": {
+         "type": "string"
+        }
+       }
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "git_commit": {
+       "type": "string"
+      },
+      "min_groups_per_bin": {
+       "type": "integer"
+      },
+      "min_samples_per_bin": {
+       "type": "integer"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "n_mc": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_propagation": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "data",
+    "meta"
+   ],
+   "properties": {
+    "data": {
+     "type": "array"
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "config_hash",
+      "generated_utc",
+      "git_commit",
+      "min_groups_per_bin",
+      "min_samples_per_bin",
+      "n_boot",
+      "n_mc",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "config_hash": {
+       "type": "object",
+       "required": [
+        "data",
+        "uncertainty"
+       ],
+       "properties": {
+        "data": {
+         "type": "string"
+        },
+        "uncertainty": {
+         "type": "string"
+        }
+       }
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "git_commit": {
+       "type": "string"
+      },
+      "min_groups_per_bin": {
+       "type": "integer"
+      },
+      "min_samples_per_bin": {
+       "type": "integer"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "n_mc": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_sensitivity": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "data",
+    "meta"
+   ],
+   "properties": {
+    "data": {
+     "type": "object",
+     "required": [
+      "fx",
+      "fy",
+      "h",
+      "pitch",
+      "roll",
+      "tilt",
+      "u",
+      "v",
+      "yaw"
+     ],
+     "properties": {
+      "fx": {
+       "type": "object",
+       "required": [
+        "median_m",
+        "p90_m",
+        "sigma"
+       ],
+       "properties": {
+        "median_m": {
+         "type": "number"
+        },
+        "p90_m": {
+         "type": "number"
+        },
+        "sigma": {
+         "type": "number"
+        }
+       }
+      },
+      "fy": {
+       "type": "object",
+       "required": [
+        "median_m",
+        "p90_m",
+        "sigma"
+       ],
+       "properties": {
+        "median_m": {
+         "type": "number"
+        },
+        "p90_m": {
+         "type": "number"
+        },
+        "sigma": {
+         "type": "number"
+        }
+       }
+      },
+      "h": {
+       "type": "object",
+       "required": [
+        "median_m",
+        "p90_m",
+        "sigma"
+       ],
+       "properties": {
+        "median_m": {
+         "type": "number"
+        },
+        "p90_m": {
+         "type": "number"
+        },
+        "sigma": {
+         "type": "number"
+        }
+       }
+      },
+      "pitch": {
+       "type": "object",
+       "required": [
+        "median_m",
+        "p90_m",
+        "sigma"
+       ],
+       "properties": {
+        "median_m": {
+         "type": "number"
+        },
+        "p90_m": {
+         "type": "number"
+        },
+        "sigma": {
+         "type": "number"
+        }
+       }
+      },
+      "roll": {
+       "type": "object",
+       "required": [
+        "median_m",
+        "p90_m",
+        "sigma"
+       ],
+       "properties": {
+        "median_m": {
+         "type": "number"
+        },
+        "p90_m": {
+         "type": "number"
+        },
+        "sigma": {
+         "type": "number"
+        }
+       }
+      },
+      "tilt": {
+       "type": "object",
+       "required": [
+        "median_m",
+        "p90_m",
+        "sigma"
+       ],
+       "properties": {
+        "median_m": {
+         "type": "number"
+        },
+        "p90_m": {
+         "type": "number"
+        },
+        "sigma": {
+         "type": "number"
+        }
+       }
+      },
+      "u": {
+       "type": "object",
+       "required": [
+        "median_m",
+        "p90_m",
+        "sigma"
+       ],
+       "properties": {
+        "median_m": {
+         "type": "number"
+        },
+        "p90_m": {
+         "type": "number"
+        },
+        "sigma": {
+         "type": "number"
+        }
+       }
+      },
+      "v": {
+       "type": "object",
+       "required": [
+        "median_m",
+        "p90_m",
+        "sigma"
+       ],
+       "properties": {
+        "median_m": {
+         "type": "number"
+        },
+        "p90_m": {
+         "type": "number"
+        },
+        "sigma": {
+         "type": "number"
+        }
+       }
+      },
+      "yaw": {
+       "type": "object",
+       "required": [
+        "median_m",
+        "p90_m",
+        "sigma"
+       ],
+       "properties": {
+        "median_m": {
+         "type": "number"
+        },
+        "p90_m": {
+         "type": "number"
+        },
+        "sigma": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "config_hash",
+      "generated_utc",
+      "git_commit",
+      "min_groups_per_bin",
+      "min_samples_per_bin",
+      "n_boot",
+      "n_mc",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "config_hash": {
+       "type": "object",
+       "required": [
+        "data",
+        "uncertainty"
+       ],
+       "properties": {
+        "data": {
+         "type": "string"
+        },
+        "uncertainty": {
+         "type": "string"
+        }
+       }
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "git_commit": {
+       "type": "string"
+      },
+      "min_groups_per_bin": {
+       "type": "integer"
+      },
+      "min_samples_per_bin": {
+       "type": "integer"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "n_mc": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_slope": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "data",
+    "meta"
+   ],
+   "properties": {
+    "data": {
+     "type": "object",
+     "required": [
+      "flat oracle",
+      "local slope",
+      "tilted plane"
+     ],
+     "properties": {
+      "flat oracle": {
+       "type": "object",
+       "required": [
+        "bins",
+        "valid_fraction"
+       ],
+       "properties": {
+        "bins": {
+         "type": "array"
+        },
+        "valid_fraction": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        }
+       }
+      },
+      "local slope": {
+       "type": "object",
+       "required": [
+        "bins",
+        "valid_fraction"
+       ],
+       "properties": {
+        "bins": {
+         "type": "array"
+        },
+        "valid_fraction": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        }
+       }
+      },
+      "tilted plane": {
+       "type": "object",
+       "required": [
+        "bins",
+        "valid_fraction"
+       ],
+       "properties": {
+        "bins": {
+         "type": "array"
+        },
+        "valid_fraction": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        }
+       }
+      }
+     }
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "config_hash",
+      "generated_utc",
+      "git_commit",
+      "min_groups_per_bin",
+      "min_samples_per_bin",
+      "n_boot",
+      "n_mc",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "config_hash": {
+       "type": "object",
+       "required": [
+        "data",
+        "uncertainty"
+       ],
+       "properties": {
+        "data": {
+         "type": "string"
+        },
+        "uncertainty": {
+         "type": "string"
+        }
+       }
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "git_commit": {
+       "type": "string"
+      },
+      "min_groups_per_bin": {
+       "type": "integer"
+      },
+      "min_samples_per_bin": {
+       "type": "integer"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "n_mc": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_stability": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "n_boot_check",
+    "n_mc_check",
+    "seed",
+    "split",
+    "trajectories"
+   ],
+   "properties": {
+    "n_boot_check": {
+     "type": "array"
+    },
+    "n_mc_check": {
+     "type": "object",
+     "required": [
+      "noise_level",
+      "rows",
+      "subsample"
+     ],
+     "properties": {
+      "noise_level": {
+       "type": "string"
+      },
+      "rows": {
+       "type": "array"
+      },
+      "subsample": {
+       "type": "integer"
+      }
+     }
+    },
+    "seed": {
+     "type": "integer"
+    },
+    "split": {
+     "type": "string"
+    },
+    "trajectories": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "v1_summary": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "data",
+    "meta"
+   ],
+   "properties": {
+    "data": {
+     "type": "object",
+     "required": [
+      "oracle_plane",
+      "relative_altitude"
+     ],
+     "properties": {
+      "oracle_plane": {
+       "type": "object",
+       "required": [
+        "land",
+        "water"
+       ],
+       "properties": {
+        "land": {
+         "type": "object",
+         "required": [
+          "abs_range_err_median_m",
+          "abs_range_err_median_m_ci",
+          "abs_range_err_p95_m",
+          "abs_range_err_p95_m_ci",
+          "abs_rel_err_median",
+          "abs_rel_err_median_ci",
+          "abs_rel_err_p90",
+          "abs_rel_err_p90_ci",
+          "horiz_err_median_m",
+          "horiz_err_median_m_ci",
+          "n_samples",
+          "range_rmse_m",
+          "range_rmse_m_ci",
+          "signed_range_err_median_m",
+          "signed_range_err_median_m_ci",
+          "valid_fraction",
+          "valid_fraction_ci"
+         ],
+         "properties": {
+          "abs_range_err_median_m": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_range_err_median_m_ci": {
+           "type": "array"
+          },
+          "abs_range_err_p95_m": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_range_err_p95_m_ci": {
+           "type": "array"
+          },
+          "abs_rel_err_median": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_rel_err_median_ci": {
+           "type": "array"
+          },
+          "abs_rel_err_p90": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_rel_err_p90_ci": {
+           "type": "array"
+          },
+          "horiz_err_median_m": {
+           "type": "number"
+          },
+          "horiz_err_median_m_ci": {
+           "type": "array"
+          },
+          "n_samples": {
+           "type": "integer",
+           "minimum": 0
+          },
+          "range_rmse_m": {
+           "type": "number"
+          },
+          "range_rmse_m_ci": {
+           "type": "array"
+          },
+          "signed_range_err_median_m": {
+           "type": "number"
+          },
+          "signed_range_err_median_m_ci": {
+           "type": "array"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "valid_fraction_ci": {
+           "type": "array"
+          }
+         }
+        },
+        "water": {
+         "type": "object",
+         "required": [
+          "abs_range_err_median_m",
+          "abs_range_err_median_m_ci",
+          "abs_range_err_p95_m",
+          "abs_range_err_p95_m_ci",
+          "abs_rel_err_median",
+          "abs_rel_err_median_ci",
+          "abs_rel_err_p90",
+          "abs_rel_err_p90_ci",
+          "horiz_err_median_m",
+          "horiz_err_median_m_ci",
+          "n_samples",
+          "range_rmse_m",
+          "range_rmse_m_ci",
+          "signed_range_err_median_m",
+          "signed_range_err_median_m_ci",
+          "valid_fraction",
+          "valid_fraction_ci"
+         ],
+         "properties": {
+          "abs_range_err_median_m": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_range_err_median_m_ci": {
+           "type": "array"
+          },
+          "abs_range_err_p95_m": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_range_err_p95_m_ci": {
+           "type": "array"
+          },
+          "abs_rel_err_median": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_rel_err_median_ci": {
+           "type": "array"
+          },
+          "abs_rel_err_p90": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_rel_err_p90_ci": {
+           "type": "array"
+          },
+          "horiz_err_median_m": {
+           "type": "number"
+          },
+          "horiz_err_median_m_ci": {
+           "type": "array"
+          },
+          "n_samples": {
+           "type": "integer",
+           "minimum": 0
+          },
+          "range_rmse_m": {
+           "type": "number"
+          },
+          "range_rmse_m_ci": {
+           "type": "array"
+          },
+          "signed_range_err_median_m": {
+           "type": "number"
+          },
+          "signed_range_err_median_m_ci": {
+           "type": "array"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "valid_fraction_ci": {
+           "type": "array"
+          }
+         }
+        }
+       }
+      },
+      "relative_altitude": {
+       "type": "object",
+       "required": [
+        "land",
+        "water"
+       ],
+       "properties": {
+        "land": {
+         "type": "object",
+         "required": [
+          "abs_range_err_median_m",
+          "abs_range_err_median_m_ci",
+          "abs_range_err_p95_m",
+          "abs_range_err_p95_m_ci",
+          "abs_rel_err_median",
+          "abs_rel_err_median_ci",
+          "abs_rel_err_p90",
+          "abs_rel_err_p90_ci",
+          "horiz_err_median_m",
+          "horiz_err_median_m_ci",
+          "n_samples",
+          "range_rmse_m",
+          "range_rmse_m_ci",
+          "signed_range_err_median_m",
+          "signed_range_err_median_m_ci",
+          "valid_fraction",
+          "valid_fraction_ci"
+         ],
+         "properties": {
+          "abs_range_err_median_m": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_range_err_median_m_ci": {
+           "type": "array"
+          },
+          "abs_range_err_p95_m": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_range_err_p95_m_ci": {
+           "type": "array"
+          },
+          "abs_rel_err_median": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_rel_err_median_ci": {
+           "type": "array"
+          },
+          "abs_rel_err_p90": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_rel_err_p90_ci": {
+           "type": "array"
+          },
+          "horiz_err_median_m": {
+           "type": "number"
+          },
+          "horiz_err_median_m_ci": {
+           "type": "array"
+          },
+          "n_samples": {
+           "type": "integer",
+           "minimum": 0
+          },
+          "range_rmse_m": {
+           "type": "number"
+          },
+          "range_rmse_m_ci": {
+           "type": "array"
+          },
+          "signed_range_err_median_m": {
+           "type": "number"
+          },
+          "signed_range_err_median_m_ci": {
+           "type": "array"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "valid_fraction_ci": {
+           "type": "array"
+          }
+         }
+        },
+        "water": {
+         "type": "object",
+         "required": [
+          "abs_range_err_median_m",
+          "abs_range_err_median_m_ci",
+          "abs_range_err_p95_m",
+          "abs_range_err_p95_m_ci",
+          "abs_rel_err_median",
+          "abs_rel_err_median_ci",
+          "abs_rel_err_p90",
+          "abs_rel_err_p90_ci",
+          "horiz_err_median_m",
+          "horiz_err_median_m_ci",
+          "n_samples",
+          "range_rmse_m",
+          "range_rmse_m_ci",
+          "signed_range_err_median_m",
+          "signed_range_err_median_m_ci",
+          "valid_fraction",
+          "valid_fraction_ci"
+         ],
+         "properties": {
+          "abs_range_err_median_m": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_range_err_median_m_ci": {
+           "type": "array"
+          },
+          "abs_range_err_p95_m": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_range_err_p95_m_ci": {
+           "type": "array"
+          },
+          "abs_rel_err_median": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_rel_err_median_ci": {
+           "type": "array"
+          },
+          "abs_rel_err_p90": {
+           "type": "number",
+           "minimum": 0
+          },
+          "abs_rel_err_p90_ci": {
+           "type": "array"
+          },
+          "horiz_err_median_m": {
+           "type": "number"
+          },
+          "horiz_err_median_m_ci": {
+           "type": "array"
+          },
+          "n_samples": {
+           "type": "integer",
+           "minimum": 0
+          },
+          "range_rmse_m": {
+           "type": "number"
+          },
+          "range_rmse_m_ci": {
+           "type": "array"
+          },
+          "signed_range_err_median_m": {
+           "type": "number"
+          },
+          "signed_range_err_median_m_ci": {
+           "type": "array"
+          },
+          "valid_fraction": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "valid_fraction_ci": {
+           "type": "array"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "config_hash",
+      "generated_utc",
+      "git_commit",
+      "min_groups_per_bin",
+      "min_samples_per_bin",
+      "n_boot",
+      "n_mc",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "config_hash": {
+       "type": "object",
+       "required": [
+        "data",
+        "uncertainty"
+       ],
+       "properties": {
+        "data": {
+         "type": "string"
+        },
+        "uncertainty": {
+         "type": "string"
+        }
+       }
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "git_commit": {
+       "type": "string"
+      },
+      "min_groups_per_bin": {
+       "type": "integer"
+      },
+      "min_samples_per_bin": {
+       "type": "integer"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "n_mc": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_sweep": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "data",
+    "meta"
+   ],
+   "properties": {
+    "data": {
+     "type": "object",
+     "required": [
+      "high",
+      "low",
+      "mid"
+     ],
+     "properties": {
+      "high": {
+       "type": "object",
+       "required": [
+        "oracle_plane",
+        "relative_altitude",
+        "sigmas_internal_units"
+       ],
+       "properties": {
+        "oracle_plane": {
+         "type": "object",
+         "required": [
+          "accuracy",
+          "coverage",
+          "mean_halfwidth_95_m",
+          "scale_ml_this_split",
+          "z_mad_sigma",
+          "z_std",
+          "z_std_ci"
+         ],
+         "properties": {
+          "accuracy": {
+           "type": "object"
+          },
+          "coverage": {
+           "type": "object"
+          },
+          "mean_halfwidth_95_m": {
+           "type": "number"
+          },
+          "scale_ml_this_split": {
+           "type": "number"
+          },
+          "z_mad_sigma": {
+           "type": "number"
+          },
+          "z_std": {
+           "type": "number"
+          },
+          "z_std_ci": {
+           "type": "array"
+          }
+         }
+        },
+        "relative_altitude": {
+         "type": "object",
+         "required": [
+          "accuracy",
+          "coverage",
+          "mean_halfwidth_95_m",
+          "scale_ml_this_split",
+          "z_mad_sigma",
+          "z_std",
+          "z_std_ci"
+         ],
+         "properties": {
+          "accuracy": {
+           "type": "object"
+          },
+          "coverage": {
+           "type": "object"
+          },
+          "mean_halfwidth_95_m": {
+           "type": "number"
+          },
+          "scale_ml_this_split": {
+           "type": "number"
+          },
+          "z_mad_sigma": {
+           "type": "number"
+          },
+          "z_std": {
+           "type": "number"
+          },
+          "z_std_ci": {
+           "type": "array"
+          }
+         }
+        },
+        "sigmas_internal_units": {
+         "type": "object",
+         "required": [
+          "fx",
+          "fy",
+          "h",
+          "pitch",
+          "roll",
+          "tilt",
+          "u",
+          "v",
+          "yaw"
+         ],
+         "properties": {
+          "fx": {
+           "type": "number"
+          },
+          "fy": {
+           "type": "number"
+          },
+          "h": {
+           "type": "number"
+          },
+          "pitch": {
+           "type": "number"
+          },
+          "roll": {
+           "type": "number"
+          },
+          "tilt": {
+           "type": "number"
+          },
+          "u": {
+           "type": "number"
+          },
+          "v": {
+           "type": "number"
+          },
+          "yaw": {
+           "type": "number"
+          }
+         }
+        }
+       }
+      },
+      "low": {
+       "type": "object",
+       "required": [
+        "oracle_plane",
+        "relative_altitude",
+        "sigmas_internal_units"
+       ],
+       "properties": {
+        "oracle_plane": {
+         "type": "object",
+         "required": [
+          "accuracy",
+          "coverage",
+          "mean_halfwidth_95_m",
+          "scale_ml_this_split",
+          "z_mad_sigma",
+          "z_std",
+          "z_std_ci"
+         ],
+         "properties": {
+          "accuracy": {
+           "type": "object"
+          },
+          "coverage": {
+           "type": "object"
+          },
+          "mean_halfwidth_95_m": {
+           "type": "number"
+          },
+          "scale_ml_this_split": {
+           "type": "number"
+          },
+          "z_mad_sigma": {
+           "type": "number"
+          },
+          "z_std": {
+           "type": "number"
+          },
+          "z_std_ci": {
+           "type": "array"
+          }
+         }
+        },
+        "relative_altitude": {
+         "type": "object",
+         "required": [
+          "accuracy",
+          "coverage",
+          "mean_halfwidth_95_m",
+          "scale_ml_this_split",
+          "z_mad_sigma",
+          "z_std",
+          "z_std_ci"
+         ],
+         "properties": {
+          "accuracy": {
+           "type": "object"
+          },
+          "coverage": {
+           "type": "object"
+          },
+          "mean_halfwidth_95_m": {
+           "type": "number"
+          },
+          "scale_ml_this_split": {
+           "type": "number"
+          },
+          "z_mad_sigma": {
+           "type": "number"
+          },
+          "z_std": {
+           "type": "number"
+          },
+          "z_std_ci": {
+           "type": "array"
+          }
+         }
+        },
+        "sigmas_internal_units": {
+         "type": "object",
+         "required": [
+          "fx",
+          "fy",
+          "h",
+          "pitch",
+          "roll",
+          "tilt",
+          "u",
+          "v",
+          "yaw"
+         ],
+         "properties": {
+          "fx": {
+           "type": "number"
+          },
+          "fy": {
+           "type": "number"
+          },
+          "h": {
+           "type": "number"
+          },
+          "pitch": {
+           "type": "number"
+          },
+          "roll": {
+           "type": "number"
+          },
+          "tilt": {
+           "type": "number"
+          },
+          "u": {
+           "type": "number"
+          },
+          "v": {
+           "type": "number"
+          },
+          "yaw": {
+           "type": "number"
+          }
+         }
+        }
+       }
+      },
+      "mid": {
+       "type": "object",
+       "required": [
+        "oracle_plane",
+        "relative_altitude",
+        "sigmas_internal_units"
+       ],
+       "properties": {
+        "oracle_plane": {
+         "type": "object",
+         "required": [
+          "accuracy",
+          "coverage",
+          "mean_halfwidth_95_m",
+          "scale_ml_this_split",
+          "z_mad_sigma",
+          "z_std",
+          "z_std_ci"
+         ],
+         "properties": {
+          "accuracy": {
+           "type": "object"
+          },
+          "coverage": {
+           "type": "object"
+          },
+          "mean_halfwidth_95_m": {
+           "type": "number"
+          },
+          "scale_ml_this_split": {
+           "type": "number"
+          },
+          "z_mad_sigma": {
+           "type": "number"
+          },
+          "z_std": {
+           "type": "number"
+          },
+          "z_std_ci": {
+           "type": "array"
+          }
+         }
+        },
+        "relative_altitude": {
+         "type": "object",
+         "required": [
+          "accuracy",
+          "coverage",
+          "mean_halfwidth_95_m",
+          "scale_ml_this_split",
+          "z_mad_sigma",
+          "z_std",
+          "z_std_ci"
+         ],
+         "properties": {
+          "accuracy": {
+           "type": "object"
+          },
+          "coverage": {
+           "type": "object"
+          },
+          "mean_halfwidth_95_m": {
+           "type": "number"
+          },
+          "scale_ml_this_split": {
+           "type": "number"
+          },
+          "z_mad_sigma": {
+           "type": "number"
+          },
+          "z_std": {
+           "type": "number"
+          },
+          "z_std_ci": {
+           "type": "array"
+          }
+         }
+        },
+        "sigmas_internal_units": {
+         "type": "object",
+         "required": [
+          "fx",
+          "fy",
+          "h",
+          "pitch",
+          "roll",
+          "tilt",
+          "u",
+          "v",
+          "yaw"
+         ],
+         "properties": {
+          "fx": {
+           "type": "number"
+          },
+          "fy": {
+           "type": "number"
+          },
+          "h": {
+           "type": "number"
+          },
+          "pitch": {
+           "type": "number"
+          },
+          "roll": {
+           "type": "number"
+          },
+          "tilt": {
+           "type": "number"
+          },
+          "u": {
+           "type": "number"
+          },
+          "v": {
+           "type": "number"
+          },
+          "yaw": {
+           "type": "number"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "meta": {
+     "type": "object",
+     "required": [
+      "config_hash",
+      "generated_utc",
+      "git_commit",
+      "min_groups_per_bin",
+      "min_samples_per_bin",
+      "n_boot",
+      "n_mc",
+      "seed",
+      "split",
+      "trajectories"
+     ],
+     "properties": {
+      "config_hash": {
+       "type": "object",
+       "required": [
+        "data",
+        "uncertainty"
+       ],
+       "properties": {
+        "data": {
+         "type": "string"
+        },
+        "uncertainty": {
+         "type": "string"
+        }
+       }
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "git_commit": {
+       "type": "string"
+      },
+      "min_groups_per_bin": {
+       "type": "integer"
+      },
+      "min_samples_per_bin": {
+       "type": "integer"
+      },
+      "n_boot": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "n_mc": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "seed": {
+       "type": "integer"
+      },
+      "split": {
+       "type": "string"
+      },
+      "trajectories": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_tracking_noise": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "by_gap",
+    "frame_step",
+    "generated_utc",
+    "smooth_rel",
+    "split",
+    "trajectories"
+   ],
+   "properties": {
+    "by_gap": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "bias_px",
+       "median_norm_px",
+       "n",
+       "p90_norm_px",
+       "robust_sigma_u_px",
+       "robust_sigma_v_px"
+      ],
+      "properties": {
+       "bias_px": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        }
+       },
+       "median_norm_px": {
+        "type": "number",
+        "minimum": 0
+       },
+       "n": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "p90_norm_px": {
+        "type": "number",
+        "minimum": 0
+       },
+       "robust_sigma_u_px": {
+        "type": "number",
+        "minimum": 0
+       },
+       "robust_sigma_v_px": {
+        "type": "number",
+        "minimum": 0
+       }
+      }
+     }
+    },
+    "frame_step": {
+     "type": "integer"
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "smooth_rel": {
+     "type": "number"
+    },
+    "split": {
+     "type": "string"
+    },
+    "trajectories": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "v1_calibration_applied": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "fit",
+    "flag_at_fixed_threshold",
+    "flag_auroc_test",
+    "test_split"
+   ],
+   "properties": {
+    "fit": {
+     "type": "string"
+    },
+    "flag_at_fixed_threshold": {
+     "type": "object",
+     "required": [
+      "flagged_fraction",
+      "precision",
+      "recall",
+      "threshold"
+     ],
+     "properties": {
+      "flagged_fraction": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "precision": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "recall": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "threshold": {
+       "type": "number"
+      }
+     }
+    },
+    "flag_auroc_test": {
+     "type": "number"
+    },
+    "test_split": {
+     "type": "object",
+     "required": [
+      "after",
+      "before"
+     ],
+     "properties": {
+      "after": {
+       "type": "object",
+       "required": [
+        "coverage",
+        "mean_halfwidth_95_m",
+        "z_std"
+       ],
+       "properties": {
+        "coverage": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+         }
+        },
+        "mean_halfwidth_95_m": {
+         "type": "number"
+        },
+        "z_std": {
+         "type": "number"
+        }
+       }
+      },
+      "before": {
+       "type": "object",
+       "required": [
+        "coverage",
+        "mean_halfwidth_95_m",
+        "z_std"
+       ],
+       "properties": {
+        "coverage": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+         }
+        },
+        "mean_halfwidth_95_m": {
+         "type": "number"
+        },
+        "z_std": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "v1_calibration_fit": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "base",
+    "calibration_split",
+    "err_threshold_frac",
+    "flag_auroc_calibration",
+    "flag_operating_point",
+    "generated_utc",
+    "level",
+    "limits_development",
+    "sigma_scale",
+    "sigmas_internal_units"
+   ],
+   "properties": {
+    "base": {
+     "type": "string"
+    },
+    "calibration_split": {
+     "type": "object",
+     "required": [
+      "after",
+      "before"
+     ],
+     "properties": {
+      "after": {
+       "type": "object",
+       "required": [
+        "coverage",
+        "mean_halfwidth_95_m",
+        "z_std"
+       ],
+       "properties": {
+        "coverage": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+         }
+        },
+        "mean_halfwidth_95_m": {
+         "type": "number"
+        },
+        "z_std": {
+         "type": "number"
+        }
+       }
+      },
+      "before": {
+       "type": "object",
+       "required": [
+        "coverage",
+        "mean_halfwidth_95_m",
+        "z_std"
+       ],
+       "properties": {
+        "coverage": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+         }
+        },
+        "mean_halfwidth_95_m": {
+         "type": "number"
+        },
+        "z_std": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    },
+    "err_threshold_frac": {
+     "type": "number"
+    },
+    "flag_auroc_calibration": {
+     "type": "number"
+    },
+    "flag_operating_point": {
+     "type": "object",
+     "required": [
+      "f1",
+      "precision",
+      "recall",
+      "rule",
+      "score",
+      "threshold"
+     ],
+     "properties": {
+      "f1": {
+       "type": "number"
+      },
+      "precision": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "recall": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "rule": {
+       "type": "string"
+      },
+      "score": {
+       "type": "string"
+      },
+      "threshold": {
+       "type": "number"
+      }
+     }
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "level": {
+     "type": "string"
+    },
+    "limits_development": {
+     "type": "object",
+     "required": [
+      "depression_bins",
+      "max_range_m",
+      "min_depression_deg",
+      "range_bins",
+      "rule"
+     ],
+     "properties": {
+      "depression_bins": {
+       "type": "array"
+      },
+      "max_range_m": {
+       "type": "null"
+      },
+      "min_depression_deg": {
+       "type": "null"
+      },
+      "range_bins": {
+       "type": "array"
+      },
+      "rule": {
+       "type": "string"
+      }
+     }
+    },
+    "sigma_scale": {
+     "type": "number"
+    },
+    "sigmas_internal_units": {
+     "type": "object",
+     "required": [
+      "fx",
+      "fy",
+      "h",
+      "pitch",
+      "roll",
+      "tilt",
+      "u",
+      "v",
+      "yaw"
+     ],
+     "properties": {
+      "fx": {
+       "type": "number"
+      },
+      "fy": {
+       "type": "number"
+      },
+      "h": {
+       "type": "number"
+      },
+      "pitch": {
+       "type": "number"
+      },
+      "roll": {
+       "type": "number"
+      },
+      "tilt": {
+       "type": "number"
+      },
+      "u": {
+       "type": "number"
+      },
+      "v": {
+       "type": "number"
+      },
+      "yaw": {
+       "type": "number"
+      }
+     }
+    }
+   }
+  },
+  "v1_terrain_calibration_fit": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "conformal",
+    "err_threshold_frac",
+    "flag_auroc_calibration",
+    "flag_model",
+    "flag_threshold",
+    "generated_utc",
+    "trajectories"
+   ],
+   "properties": {
+    "conformal": {
+     "type": "object",
+     "required": [
+      "global",
+      "groups",
+      "levels",
+      "n"
+     ],
+     "properties": {
+      "global": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "number"
+       }
+      },
+      "groups": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "number"
+        }
+       }
+      },
+      "levels": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "n": {
+       "type": "integer",
+       "minimum": 0
+      }
+     }
+    },
+    "err_threshold_frac": {
+     "type": "number"
+    },
+    "flag_auroc_calibration": {
+     "type": "number"
+    },
+    "flag_model": {
+     "type": "object",
+     "required": [
+      "coef",
+      "intercept",
+      "mean",
+      "names",
+      "std"
+     ],
+     "properties": {
+      "coef": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "intercept": {
+       "type": "number"
+      },
+      "mean": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "names": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "std": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      }
+     }
+    },
+    "flag_threshold": {
+     "type": "object",
+     "required": [
+      "f1",
+      "precision",
+      "recall",
+      "threshold"
+     ],
+     "properties": {
+      "f1": {
+       "type": "number"
+      },
+      "precision": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "recall": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "threshold": {
+       "type": "number"
+      }
+     }
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "trajectories": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "v1_unknowns": {
+   "description": "version 1 result (Phases 2 and 4), scripts/midair_*.py and scripts/terrain_*.py; docs/limitations.md and the version 1 sections of the README",
+   "type": "object",
+   "required": [
+    "climate",
+    "frame_mapping",
+    "generated_utc",
+    "git_commit",
+    "normals_water",
+    "quaternion_rms_ms2",
+    "seed",
+    "settings",
+    "sky",
+    "trajectories",
+    "water_plane"
+   ],
+   "properties": {
+    "climate": {
+     "type": "string"
+    },
+    "frame_mapping": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "frames",
+       "gt_rows"
+      ],
+      "properties": {
+       "frames": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "gt_rows": {
+        "type": "integer"
+       }
+      }
+     }
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "git_commit": {
+     "type": "string"
+    },
+    "normals_water": {
+     "type": "object",
+     "required": [
+      "frames",
+      "mean_normal_tilt_deg",
+      "median_tilt_deg",
+      "n_frames"
+     ],
+     "properties": {
+      "frames": {
+       "type": "array"
+      },
+      "mean_normal_tilt_deg": {
+       "type": "object",
+       "required": [
+        "max",
+        "median",
+        "p95"
+       ],
+       "properties": {
+        "max": {
+         "type": "number"
+        },
+        "median": {
+         "type": "number"
+        },
+        "p95": {
+         "type": "number"
+        }
+       }
+      },
+      "median_tilt_deg": {
+       "type": "object",
+       "required": [
+        "max",
+        "median",
+        "p95"
+       ],
+       "properties": {
+        "max": {
+         "type": "number"
+        },
+        "median": {
+         "type": "number"
+        },
+        "p95": {
+         "type": "number"
+        }
+       }
+      },
+      "n_frames": {
+       "type": "integer",
+       "minimum": 0
+      }
+     }
+    },
+    "quaternion_rms_ms2": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "R_bw_world_to_body",
+       "R_wb_body_to_world"
+      ],
+      "properties": {
+       "R_bw_world_to_body": {
+        "type": "number"
+       },
+       "R_wb_body_to_world": {
+        "type": "number"
+       }
+      }
+     }
+    },
+    "seed": {
+     "type": "integer"
+    },
+    "settings": {
+     "type": "object",
+     "required": [
+      "max_pixels",
+      "min_pixels",
+      "stride"
+     ],
+     "properties": {
+      "max_pixels": {
+       "type": "integer"
+      },
+      "min_pixels": {
+       "type": "integer"
+      },
+      "stride": {
+       "type": "integer"
+      }
+     }
+    },
+    "sky": {
+     "type": "array"
+    },
+    "trajectories": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "water_plane": {
+     "type": "object",
+     "required": [
+      "frames",
+      "n_frames",
+      "planar_rms_m",
+      "planar_tilt_deg",
+      "radial_better_fraction",
+      "radial_rms_m",
+      "radial_tilt_deg"
+     ],
+     "properties": {
+      "frames": {
+       "type": "array"
+      },
+      "n_frames": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "planar_rms_m": {
+       "type": "object",
+       "required": [
+        "max",
+        "median",
+        "p95"
+       ],
+       "properties": {
+        "max": {
+         "type": "number"
+        },
+        "median": {
+         "type": "number"
+        },
+        "p95": {
+         "type": "number"
+        }
+       }
+      },
+      "planar_tilt_deg": {
+       "type": "object",
+       "required": [
+        "max",
+        "median",
+        "p95"
+       ],
+       "properties": {
+        "max": {
+         "type": "number"
+        },
+        "median": {
+         "type": "number"
+        },
+        "p95": {
+         "type": "number"
+        }
+       }
+      },
+      "radial_better_fraction": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "radial_rms_m": {
+       "type": "object",
+       "required": [
+        "max",
+        "median",
+        "p95"
+       ],
+       "properties": {
+        "max": {
+         "type": "number"
+        },
+        "median": {
+         "type": "number"
+        },
+        "p95": {
+         "type": "number"
+        }
+       }
+      },
+      "radial_tilt_deg": {
+       "type": "object",
+       "required": [
+        "max",
+        "median",
+        "p95"
+       ],
+       "properties": {
+        "max": {
+         "type": "number"
+        },
+        "median": {
+         "type": "number"
+        },
+        "p95": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

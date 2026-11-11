@@ -122,6 +122,8 @@ def run_sequence_custom(
     t_total = 0.0
     for k, f in enumerate(frames, start=1):
         img = cv2.imread(str(f)) if not isinstance(f, np.ndarray) else f
+        if img is None:  # imread returns None, not an error, for a missing file or low memory
+            raise OSError(f"could not read frame {f}")
         t0 = time.perf_counter()
         if (k - 1) % det_stride:
             if hasattr(detect, "skip"):  # keep frame-indexed detection sources in step

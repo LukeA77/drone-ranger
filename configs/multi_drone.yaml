@@ -1,0 +1,54 @@
+# Phase 14 multi-drone search simulation (D-752). Design choices are made on development seeds
+# (scripts/multidrone_run.py design) and frozen before the test seeds run once.
+frozen:
+  value: true
+  placeholder: null
+  source: "Frozen 2026-11-11 after the design stage (results/multi_drone/design_p10_v2_cal.json, D-752 addendum 3), before any test seed ran"
+speed_ms:
+  value: 21.9
+  placeholder: null
+  source: "Median ground speed of the SynDrone flights (every development town, all three cameras: 21.9 m/s, 10th to 90th percentile 21.2 to 23.0, from the cached poses, 2026-11-10); the detection probability per pass was measured at this speed, so the simulated drones fly at it"
+area_ring:
+  value: 0
+  placeholder: null
+  source: "The search area is a square around the IPP whose half-side is this ring of the prior (0: the 25 % ring, 1.1 km, so 4.8 km2): the first area a team would search, and small enough for the swept settings to cover it several times"
+height:
+  value: 20
+  placeholder: null
+  source: "Design stage, development seeds 0 to 199: the only height at which people are found (found by the horizon: 0.98 for the auction with 8-lane blocks at 20 m, at most 0.18 at 50 m, at most 0.005 at 80 m; D-752 addendum 3)"
+planner:
+  value: auction
+  placeholder: null
+  source: "Design stage rule (D-752): lowest restricted mean time to find with sharing on at 20 m; auction with 8-lane blocks 966 s (95 % interval 851 to 1094), next best auction with 4-lane blocks 1072 s; every greedy configuration higher"
+block_lanes:
+  value: 4
+  placeholder: null
+  source: "Design stage rule (D-752): 4 lanes (1072 s) lies within the bootstrap interval of the best, 8 lanes (851 to 1094 s), so the tie goes to the smaller block; the paired difference on the same seeds agrees (+106 s, 95 % interval -22 to +233)"
+n_drones:
+  value: 4
+  placeholder: null
+  source: "Team size for the design stage and the radio sweeps; the test stage also runs test_n_drones"
+design_heights:
+  value: [20, 50, 80]
+  placeholder: null
+  source: "The three SynDrone camera heights at which detection was measured (Phase 10); no other height has a measured sensor"
+design_block_lanes:
+  value: [2, 4, 8]
+  placeholder: null
+  source: "Block side in lanes, a planner setting chosen on development seeds; doubling steps"
+test_n_drones:
+  value: [1, 2, 4, 8]
+  placeholder: null
+  source: "Team sizes, doubling"
+test_loss:
+  value: [0.0, 0.25, 0.5, 0.75, 0.9]
+  placeholder: null
+  source: "Packet loss probabilities swept (H12: graceful degradation); no single field value is assumed"
+test_range_m:
+  value: [250.0, 500.0, 1000.0, 2000.0]
+  placeholder: null
+  source: "Radio ranges swept, doubling, from a few lane widths to about the area's side; no single value is assumed"
+test_budget_bytes:
+  value: [415, 208, 104, 52]
+  placeholder: null
+  source: "Halves of the measured use of sharing with no limit for the chosen configuration on development seeds (830 bytes per drone per second; auction_b4_share_h20): 1/2, 1/4, 1/8, 1/16"

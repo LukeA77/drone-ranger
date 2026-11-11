@@ -38,13 +38,15 @@ def save_sequence(path: Path, dets: Sequence[Dets], shapes: Sequence[tuple[int, 
 
 def load_sequence(path: Path) -> tuple[list[Dets], np.ndarray]:
     """Per-frame detections and the (height, width) of each frame."""
-    z = np.load(path)
-    edges = np.concatenate([[0], np.cumsum(z["counts"])])
-    dets = [
-        (z["ltwh"][a:b], z["conf"][a:b], z["cls"][a:b])
-        for a, b in zip(edges[:-1], edges[1:], strict=True)
-    ]
-    return dets, z["shapes"]
+    # Read each array once: NpzFile decompresses the whole array on every `z[key]`, and each
+    # frame's slice would keep its own full copy alive (memory = frames x detections).
+    with np.load(path) as z:
+        counts, ltwh, conf, cls, shapes = (
+            z[k] for k in ("counts", "ltwh", "conf", "cls", "shapes")
+        )
+    edges = np.concatenate([[0], np.cumsum(counts)])
+    dets = [(ltwh[a:b], conf[a:b], cls[a:b]) for a, b in zip(edges[:-1], edges[1:], strict=True)]
+    return dets, shapes
 
 
 class Replay:

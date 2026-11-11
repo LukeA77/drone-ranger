@@ -6,7 +6,7 @@ Every AU-AIR result depends on the assumptions below. Values come from `results/
 
 Parrot Bebop 2: retail listings describe a 180° fisheye lens from which a Full HD (1920 × 1080) frame is cropped, with electronic (digital) stabilisation. No focal length is published (searched 2026-10-21; retail listings, for example B&H Photo product 1206694-REG). The prior therefore only says "cropped from a fisheye, digitally stabilised"; it gives no number.
 
-## 2. Focal length (`{{FOCAL_PX_AUAIR}}`)
+## 2. Focal length (`FOCAL_PX_AUAIR`)
 
 **f = 1,259 px (95 % interval 1,155 to 1,308 px, bootstrap over clips), horizontal field of view about 75°.**
 
@@ -22,11 +22,11 @@ True height = recorded altitude + h0. h0 is estimated from the image scale chang
 
 The offset is not constant within a flight, so any range that uses the altimeter carries an error of a few metres at 10 to 30 m (10 to 30 %).
 
-## 4. Distortion (`{{DIST_COEFFS_AUAIR}}`)
+## 4. Distortion (`DIST_COEFFS_AUAIR`)
 
 No visible curvature of straight lines in any clip (the manual labels, D-504), but the tilt test shows distortion matters for geometry fitted over the whole frame: restricting to the central 60 % moved the straight-down estimate of clip 0 from 85° to 88.5° (D-514). No coefficients are fitted; analyses that depend on precise geometry use the central region. A numerical test against image radius is still to do.
 
-## 5. Orientation (`{{CAMERA_TILT_DEG_BY_CLIP}}`)
+## 5. Orientation (`CAMERA_TILT_DEG_BY_CLIP`)
 
 AU-AIR records body angles only, not the camera tilt (D-503).
 - **Mount and model (D-511):** image up is the drone's forward, no mirror; **digitally stabilised** (the six best of 72 hypotheses on the calibration clips are all stabilised).

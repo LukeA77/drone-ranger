@@ -1,0 +1,132 @@
+{
+ "name": "p10_v2_cal",
+ "split": "test",
+ "sequences": [
+  "Town02_h20",
+  "Town02_h50",
+  "Town02_h80",
+  "Town03_h20",
+  "Town03_h50",
+  "Town03_h80",
+  "Town06_h20",
+  "Town06_h50",
+  "Town06_h80"
+ ],
+ "group": "person",
+ "min_depression_deg": 10.0,
+ "pass_split_gap_frames": 30,
+ "n_boot": 1000,
+ "by_height": {
+  "h20": {
+   "n_passes": 1060,
+   "n_people": 435,
+   "pd_per_pass": 0.3886792452830189,
+   "pd_ci95_resample_sequences": [
+    0.11353711790393013,
+    0.4891640866873065
+   ],
+   "pass_frames_quartiles": [
+    27.0,
+    53.0,
+    84.0
+   ],
+   "pd_by_pass_frames": {
+    "1-27": {
+     "n": 278,
+     "pd": 0.1366906474820144
+    },
+    "27-53": {
+     "n": 263,
+     "pd": 0.3726235741444867
+    },
+    "53-84": {
+     "n": 257,
+     "pd": 0.4474708171206226
+    },
+    "84-129": {
+     "n": 262,
+     "pd": 0.6145038167938931
+    }
+   },
+   "box_h_px_median": 27.0,
+   "false_alarms_per_km2": 572.2748453284851,
+   "false_alarm_tracks": 623,
+   "ground_searched_km2": 1.08863775,
+   "range_half_68_m_median": 0.371628461748032
+  },
+  "h50": {
+   "n_passes": 1385,
+   "n_people": 454,
+   "pd_per_pass": 0.019494584837545126,
+   "pd_ci95_resample_sequences": [
+    0.012432681242807837,
+    0.04201680672268908
+   ],
+   "pass_frames_quartiles": [
+    19.0,
+    56.0,
+    91.0
+   ],
+   "pd_by_pass_frames": {
+    "1-19": {
+     "n": 352,
+     "pd": 0.002840909090909091
+    },
+    "19-56": {
+     "n": 341,
+     "pd": 0.002932551319648094
+    },
+    "56-91": {
+     "n": 362,
+     "pd": 0.019337016574585635
+    },
+    "91-153": {
+     "n": 330,
+     "pd": 0.05454545454545454
+    }
+   },
+   "box_h_px_median": 19.0,
+   "false_alarms_per_km2": 347.13816555749935,
+   "false_alarm_tracks": 304,
+   "ground_searched_km2": 0.875732,
+   "range_half_68_m_median": 0.425006828230023
+  },
+  "h80": {
+   "n_passes": 1508,
+   "n_people": 458,
+   "pd_per_pass": 0.001326259946949602,
+   "pd_ci95_resample_sequences": [
+    0.0,
+    0.002207505518763797
+   ],
+   "pass_frames_quartiles": [
+    37.0,
+    81.5,
+    116.0
+   ],
+   "pd_by_pass_frames": {
+    "1-37": {
+     "n": 388,
+     "pd": 0.0
+    },
+    "37-81": {
+     "n": 366,
+     "pd": 0.0
+    },
+    "81-116": {
+     "n": 383,
+     "pd": 0.0
+    },
+    "116-404": {
+     "n": 371,
+     "pd": 0.005390835579514825
+    }
+   },
+   "box_h_px_median": 9.0,
+   "false_alarms_per_km2": 192.69016994309538,
+   "false_alarm_tracks": 150,
+   "ground_searched_km2": 0.77845175,
+   "range_half_68_m_median": 1.0011648587384951
+  }
+ }
+}

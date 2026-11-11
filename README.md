@@ -37,6 +37,8 @@ Every number on this page is generated from a results file in [`results/`](resul
 | **With realistic errors** | With assumed typical navigation errors the median rises to **11.7%** (flat ground: 40%); ranging a detected car's box rather than a ground point adds a 3% short bias, 5.6% end to end even with exact poses | Mid-Air, 11 development flights; simulated boxes |
 | **Error bars** | After calibration, nominal 90 % intervals contain the truth **84%** of the time (74% before): short of 90 %, a sign that flights differ more than calibration assumes | Mid-Air test |
 | **Tracking** | Identity F1 **0.692** for vehicles, 0.321 for people, with a detector and tracker that contain no copyleft code; 38% of people 16 to 32 pixels tall are detected but only 6% tracked. Version 1 reached 0.760 and 0.436 at higher input resolution, with AGPL-licensed code ([version 1 results](#version-1-results)) | VisDrone test-dev, run once |
+| **End to end** | Ranges of found objects within **0.6%** (people) and **0.4%** (vehicles) median, calibrated error bars holding (90 % intervals: 95% and 93%); but people found only **47%** of the time from 20 m, 6% from 50 m and 0.4% from 80 m, with 393 false person tracks per km2; vehicles found 69% to 81% at every height | SynDrone, 3 rendered test towns, 9 flights, exact poses, run once |
+| **Search with several drones** | Sharing what each drone has seen lets four map-guided drones find a missing person sooner (mean time to find **1,065 s** against 1,464 s without sharing), and losing a quarter of radio packets costs nothing measurable, though too little bandwidth undoes the gain; but a plain lawnmower sweep, one strip per drone, is faster still (**645 s**), because the detector's false alarms (572 per km2 from 20 m) keep pulling map-guided drones back to check them ([multi-drone search](docs/multi_drone.md)) | Simulation with the camera measured on SynDrone, 300 searches per setting, run once |
 | **Real footage** | Parked vehicles' positions repeat to **7.6%** of their distance (repeatability, not accuracy); version 1's detector reaches AP50 only **0.21** for vehicles and 0.02 for people here | AU-AIR, held-out flights |
 | **Speed** | **12.7 frames per second** on a laptop CPU with detection on every second frame. On a Raspberry Pi 5 the detector is *estimated* (not measured) at about 285 ms per frame; the same program runs on ARM64 with outputs matching x86 | AMD Ryzen 7 5700U with Radeon Graphics, no GPU; ARM64 under emulation |
 
@@ -165,6 +167,9 @@ With the weights in place, run on a real flight (frames or a video, plus a fligh
 | [Limitations, and questions and answers](docs/limitations.md) | Where it breaks, by how much, and the questions an engineer is likely to ask |
 | [Model and data](docs/model_and_data.md) | Detector, tracker, datasets and licences |
 | [AU-AIR camera model](docs/auair_camera_model.md) | Focal length, tilt and altitude inferred from footage |
+| [Hypotheses H6 to H12](docs/hypotheses.md) | Each version 2 hypothesis, its test and its outcome |
+| [Multi-drone search](docs/multi_drone.md) | Simulated search by a team of drones sharing observations over a lossy radio (Phase 14) |
+| [Thermal detection](docs/thermal.md) | Thermal detector and tracker on HIT-UAV and BIRDSAI (Phase 13, in progress) |
 | [Decision log](docs/decisions.md) | Every design choice, with its reason and evidence |
 | [Runbook](docs/runbook.md) | The commands that reproduce each result, in order |
 
@@ -198,7 +203,11 @@ Version 1's test-dev run (night clip, held out) and, on a validation clip, the o
 
 ## The main gap
 
-No single test runs detect, track and range end to end against known object distances. Tracking is scored on VisDrone (boxes, no distances), ranging on Mid-Air (distances, no objects; exact poses) and real footage on AU-AIR (neither true distances nor a well-transferred detector). The box-to-ground simulation and the pose-noise sweep narrow the gap but are still separate pieces. The most valuable next step is one setup where every object's distance is known: a drone flown past a car carrying a GPS logger, or a simulator with vehicles and people (for example CARLA), scored through the whole pipeline.
+**Finding people from above 20 m.** The whole pipeline has now been scored end to end against known distances, once, on three held-out SynDrone towns ([docs/syndrone_eval.md](docs/syndrone_eval.md), Phase 10). Where an object is found, its distance is right: median error under 1 % for people and vehicles, with error bars that hold on unseen towns. But people are found 47% of the time from 20 m, 6% from 50 m and almost never from 80 m, and most person tracks are false alarms (393 per km2 searched, in mostly urban towns). Vehicles are found 69% to 81% of the time at every height. For search and rescue, where a missed person costs most and each false alarm costs a crew's time, person detection is the gap. The multi-drone simulation (Phase 14) shows the cost directly: false alarms make map-guided search slower than a plain sweep.
+
+Two more limits stand behind it. These are rendered towns with exact camera poses; real navigation errors move ranges by several per cent and the error bars must be refitted for them. And the only real footage (AU-AIR) has no true distances. The next steps are thermal imaging (Phase 13), where people stand out against cool ground, and a real flight past objects with known positions.
+
+Version 1's gap, now closed by this test: no single test ran detect, track and range end to end against known object distances.
 
 ## Scope
 
@@ -211,6 +220,10 @@ No datasets or model weights are stored in this repository; the short clips in `
 - **VisDrone2019**: P. Zhu, L. Wen, D. Du et al., "Detection and tracking meet drones challenge", *IEEE TPAMI*, 2021. Research use.
 - **Mid-Air**: M. Fonder and M. Van Droogenbroeck, "Mid-Air: a multi-modal dataset for extremely low altitude drone flights", *CVPR Workshops*, 2019. CC BY-NC-SA 4.0.
 - **AU-AIR**: I. Bozcan and E. Kayacan, "AU-AIR: a multi-modal unmanned aerial vehicle dataset for low altitude traffic surveillance", *ICRA*, 2020. CC BY 4.0.
+- **SynDrone**: G. Rizzoli, F. Barbato, M. Caligiuri and P. Zanuttigh, "SynDrone: multi-modal UAV dataset for urban scenarios", *ICCV Workshops*, 2023. Creative Commons Attribution (the authors' statement; no version given).
+- **HIT-UAV**: J. Suo, T. Wang, X. Zhang, H. Chen, W. Zhou and W. Shi, "HIT-UAV: a high-altitude infrared thermal dataset for unmanned aerial vehicle-based object detection", *Scientific Data* 10, 227, 2023. CC BY 4.0.
+- **BIRDSAI**: E. Bondi, R. Jain, P. Aggrawal, S. Anand, R. Hannaford, A. Kapoor, J. Piavis, S. Shah, L. Joppa, B. Dilkina and M. Tambe, "BIRDSAI: a dataset for detection and tracking in aerial thermal infrared videos", *WACV*, 2020. Hosted by LILA as Conservation Drones; Community Data License Agreement (permissive).
+- **Lost-person statistics** for the search simulation: R. J. Koester, *Lost Person Behavior Instructor Activity Guide*, 2010; the distance-ring model as in E. Sava, C. Twardy, R. Koester and M. Sonwalkar, *Transactions in GIS* 20(1), 2016.
 - **D-FINE**: Y. Peng, H. Li, P. Wu, Y. Zhang, X. Sun and F. Wu, "D-FINE: redefine regression task in DETRs as fine-grained distribution refinement", *ICLR*, 2025. Code and COCO weights Apache-2.0.
 - Version 1's detector and trackers: [Ultralytics](https://github.com/ultralytics/ultralytics) (AGPL-3.0), used only by version 1's scripts in a separate environment.
 

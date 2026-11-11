@@ -1,0 +1,40 @@
+{
+ "file": "cache/video/demo_v2.mp4",
+ "seconds": 79.12,
+ "size_mb": 10.07,
+ "size": [
+  1280,
+  720
+ ],
+ "encoding": "H.264 crf 26",
+ "limits": {
+  "max_mb": 20.0,
+  "max_s": 90.0
+ },
+ "within_limits": true,
+ "on_screen_text": "none (D-618)",
+ "scene1_one_drone": {
+  "source": "cache/maps/syndrone_Town07_h50",
+  "flight": "SynDrone Town07, 50 m (simulated)",
+  "split": "development",
+  "speed": 1.5,
+  "output_frames": 1000,
+  "tracks_by_truth_match": {
+   "false alarm": 79,
+   "near": 7,
+   "real": 130
+  }
+ },
+ "scene2_team": {
+  "config": "auction, 4-lane blocks, 20 m, sharing on, perfect radio (configs/multi_drone.yaml, frozen)",
+  "sensor": "results/multi_drone/sensor_p10_v2_cal.json",
+  "seed": 88,
+  "found": true,
+  "t_found_s": 927.0,
+  "false_alarms_before_find": 11832,
+  "output_frames": 978,
+  "seed_rule": "development seed whose time to find is closest to the median of the chosen configuration with sharing and no byte limit (budget_check_p10_v2_cal_seeds.json 'unlimited'); ties to the lower seed",
+  "median_time_s": 928.5,
+  "seed_time_s_in_results": 927.0
+ }
+}

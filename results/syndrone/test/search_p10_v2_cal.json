@@ -1,0 +1,284 @@
+{
+ "name": "p10_v2_cal",
+ "split": "test",
+ "min_depression_deg": 10.0,
+ "grid_m": 0.5,
+ "n_boot": 1000,
+ "ground_searched_km2_per_sequence": {
+  "Town02_h20": 0.212363,
+  "Town02_h50": 0.159111,
+  "Town02_h80": 0.132621,
+  "Town03_h20": 0.375848,
+  "Town03_h50": 0.30601175,
+  "Town03_h80": 0.2741215,
+  "Town06_h20": 0.50042675,
+  "Town06_h50": 0.41060925,
+  "Town06_h80": 0.37170925
+ },
+ "person": {
+  "pooled": {
+   "ground_searched_km2": 2.7428215000000002,
+   "n_tracks": 1667,
+   "n_false_alarm_tracks": 1077,
+   "false_alarms_per_km2": 392.66135255247195,
+   "n_truth_objects": 1371,
+   "n_truth_found": 245,
+   "found_share": 0.1787016776075857
+  },
+  "ci95_resample_sequences": {
+   "false_alarms_per_km2": [
+    234.1605971147615,
+    657.8835308784627
+   ],
+   "found_share": [
+    0.033790654909606525,
+    0.3896340739238008
+   ]
+  },
+  "by_height": {
+   "h20": {
+    "ground_searched_km2": 1.08863775,
+    "n_tracks": 1179,
+    "n_false_alarm_tracks": 623,
+    "false_alarms_per_km2": 572.2748453284851,
+    "n_truth_objects": 459,
+    "n_truth_found": 217,
+    "found_share": 0.47276688453159044
+   },
+   "h50": {
+    "ground_searched_km2": 0.875732,
+    "n_tracks": 336,
+    "n_false_alarm_tracks": 304,
+    "false_alarms_per_km2": 347.13816555749935,
+    "n_truth_objects": 454,
+    "n_truth_found": 26,
+    "found_share": 0.05726872246696035
+   },
+   "h80": {
+    "ground_searched_km2": 0.77845175,
+    "n_tracks": 152,
+    "n_false_alarm_tracks": 150,
+    "false_alarms_per_km2": 192.69016994309538,
+    "n_truth_objects": 458,
+    "n_truth_found": 2,
+    "found_share": 0.004366812227074236
+   }
+  },
+  "per_sequence": {
+   "Town02_h20": {
+    "ground_searched_km2": 0.212363,
+    "n_tracks": 743,
+    "n_false_alarm_tracks": 310,
+    "false_alarms_per_km2": 1459.7646482673536,
+    "n_truth_objects": 158,
+    "n_truth_found": 138,
+    "found_share": 0.8734177215189873
+   },
+   "Town02_h50": {
+    "ground_searched_km2": 0.159111,
+    "n_tracks": 181,
+    "n_false_alarm_tracks": 163,
+    "false_alarms_per_km2": 1024.4420561746201,
+    "n_truth_objects": 158,
+    "n_truth_found": 15,
+    "found_share": 0.0949367088607595
+   },
+   "Town02_h80": {
+    "ground_searched_km2": 0.132621,
+    "n_tracks": 29,
+    "n_false_alarm_tracks": 27,
+    "false_alarms_per_km2": 203.58766711154342,
+    "n_truth_objects": 158,
+    "n_truth_found": 2,
+    "found_share": 0.012658227848101266
+   },
+   "Town03_h20": {
+    "ground_searched_km2": 0.375848,
+    "n_tracks": 248,
+    "n_false_alarm_tracks": 154,
+    "false_alarms_per_km2": 409.740107703114,
+    "n_truth_objects": 109,
+    "n_truth_found": 56,
+    "found_share": 0.5137614678899083
+   },
+   "Town03_h50": {
+    "ground_searched_km2": 0.30601175,
+    "n_tracks": 88,
+    "n_false_alarm_tracks": 75,
+    "false_alarms_per_km2": 245.08862813274325,
+    "n_truth_objects": 108,
+    "n_truth_found": 10,
+    "found_share": 0.09259259259259259
+   },
+   "Town03_h80": {
+    "ground_searched_km2": 0.2741215,
+    "n_tracks": 74,
+    "n_false_alarm_tracks": 74,
+    "false_alarms_per_km2": 269.95328713727304,
+    "n_truth_objects": 106,
+    "n_truth_found": 0,
+    "found_share": 0.0
+   },
+   "Town06_h20": {
+    "ground_searched_km2": 0.50042675,
+    "n_tracks": 188,
+    "n_false_alarm_tracks": 159,
+    "false_alarms_per_km2": 317.72881845344995,
+    "n_truth_objects": 192,
+    "n_truth_found": 23,
+    "found_share": 0.11979166666666667
+   },
+   "Town06_h50": {
+    "ground_searched_km2": 0.41060925,
+    "n_tracks": 67,
+    "n_false_alarm_tracks": 66,
+    "false_alarms_per_km2": 160.73675885285098,
+    "n_truth_objects": 188,
+    "n_truth_found": 1,
+    "found_share": 0.005319148936170213
+   },
+   "Town06_h80": {
+    "ground_searched_km2": 0.37170925,
+    "n_tracks": 49,
+    "n_false_alarm_tracks": 49,
+    "false_alarms_per_km2": 131.82346148232793,
+    "n_truth_objects": 194,
+    "n_truth_found": 0,
+    "found_share": 0.0
+   }
+  }
+ },
+ "vehicle": {
+  "pooled": {
+   "ground_searched_km2": 2.7428215000000002,
+   "n_tracks": 525,
+   "n_false_alarm_tracks": 105,
+   "false_alarms_per_km2": 38.28174746333292,
+   "n_truth_objects": 316,
+   "n_truth_found": 232,
+   "found_share": 0.7341772151898734
+  },
+  "ci95_resample_sequences": {
+   "false_alarms_per_km2": [
+    22.31288440013798,
+    59.80529126777967
+   ],
+   "found_share": [
+    0.6781023198779462,
+    0.8087247397428047
+   ]
+  },
+  "by_height": {
+   "h20": {
+    "ground_searched_km2": 1.08863775,
+    "n_tracks": 171,
+    "n_false_alarm_tracks": 20,
+    "false_alarms_per_km2": 18.371584119694546,
+    "n_truth_objects": 108,
+    "n_truth_found": 76,
+    "found_share": 0.7037037037037037
+   },
+   "h50": {
+    "ground_searched_km2": 0.875732,
+    "n_tracks": 207,
+    "n_false_alarm_tracks": 59,
+    "false_alarms_per_km2": 67.37220976280415,
+    "n_truth_objects": 104,
+    "n_truth_found": 84,
+    "found_share": 0.8076923076923077
+   },
+   "h80": {
+    "ground_searched_km2": 0.77845175,
+    "n_tracks": 147,
+    "n_false_alarm_tracks": 26,
+    "false_alarms_per_km2": 33.3996294568032,
+    "n_truth_objects": 104,
+    "n_truth_found": 72,
+    "found_share": 0.6923076923076923
+   }
+  },
+  "per_sequence": {
+   "Town02_h20": {
+    "ground_searched_km2": 0.212363,
+    "n_tracks": 51,
+    "n_false_alarm_tracks": 6,
+    "false_alarms_per_km2": 28.253509321303618,
+    "n_truth_objects": 13,
+    "n_truth_found": 12,
+    "found_share": 0.9230769230769231
+   },
+   "Town02_h50": {
+    "ground_searched_km2": 0.159111,
+    "n_tracks": 50,
+    "n_false_alarm_tracks": 14,
+    "false_alarms_per_km2": 87.98888826039683,
+    "n_truth_objects": 13,
+    "n_truth_found": 10,
+    "found_share": 0.7692307692307693
+   },
+   "Town02_h80": {
+    "ground_searched_km2": 0.132621,
+    "n_tracks": 27,
+    "n_false_alarm_tracks": 8,
+    "false_alarms_per_km2": 60.32227173675361,
+    "n_truth_objects": 12,
+    "n_truth_found": 6,
+    "found_share": 0.5
+   },
+   "Town03_h20": {
+    "ground_searched_km2": 0.375848,
+    "n_tracks": 91,
+    "n_false_alarm_tracks": 11,
+    "false_alarms_per_km2": 29.26715055022243,
+    "n_truth_objects": 64,
+    "n_truth_found": 46,
+    "found_share": 0.71875
+   },
+   "Town03_h50": {
+    "ground_searched_km2": 0.30601175,
+    "n_tracks": 114,
+    "n_false_alarm_tracks": 31,
+    "false_alarms_per_km2": 101.30329962820055,
+    "n_truth_objects": 70,
+    "n_truth_found": 54,
+    "found_share": 0.7714285714285715
+   },
+   "Town03_h80": {
+    "ground_searched_km2": 0.2741215,
+    "n_tracks": 83,
+    "n_false_alarm_tracks": 11,
+    "false_alarms_per_km2": 40.128191331216264,
+    "n_truth_objects": 68,
+    "n_truth_found": 46,
+    "found_share": 0.6764705882352942
+   },
+   "Town06_h20": {
+    "ground_searched_km2": 0.50042675,
+    "n_tracks": 29,
+    "n_false_alarm_tracks": 3,
+    "false_alarms_per_km2": 5.994883367046226,
+    "n_truth_objects": 31,
+    "n_truth_found": 18,
+    "found_share": 0.5806451612903226
+   },
+   "Town06_h50": {
+    "ground_searched_km2": 0.41060925,
+    "n_tracks": 43,
+    "n_false_alarm_tracks": 14,
+    "false_alarms_per_km2": 34.095676120301725,
+    "n_truth_objects": 21,
+    "n_truth_found": 20,
+    "found_share": 0.9523809523809523
+   },
+   "Town06_h80": {
+    "ground_searched_km2": 0.37170925,
+    "n_tracks": 37,
+    "n_false_alarm_tracks": 7,
+    "false_alarms_per_km2": 18.83192306890399,
+    "n_truth_objects": 24,
+    "n_truth_found": 20,
+    "found_share": 0.8333333333333334
+   }
+  }
+ }
+}

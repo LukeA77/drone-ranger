@@ -1,0 +1,30 @@
+{
+ "frozen_utc": "2026-11-11T00:43:43+00:00",
+ "phase": "phase14",
+ "git_commit": "c91aedc",
+ "uncommitted_changes_to_frozen_files": [
+  "?? configs/multi_drone.yaml",
+  "?? results/multi_drone/sensor_p10_v2_cal.json",
+  "?? results/multi_drone/sensor_v2_dfine_cal_rural.json",
+  "?? scripts/multidrone_run.py",
+  "?? src/aerialrange/search/belief.py",
+  "?? src/aerialrange/search/comms.py",
+  "?? src/aerialrange/search/grid.py",
+  "?? src/aerialrange/search/prior.py",
+  "?? src/aerialrange/search/sensor.py",
+  "?? src/aerialrange/search/sim.py"
+ ],
+ "files": {
+  "configs/multi_drone.yaml": "de3c555b23bb7a2c810dd1e2abe2a6eebbf5e60c7b7708b21699f2e975296f94",
+  "results/multi_drone/sensor_p10_v2_cal.json": "10040435b60f0ad3f49b484ae6581b483d4c8232e434e07f98b9cab115ff4cd1",
+  "results/multi_drone/sensor_v2_dfine_cal_rural.json": "a678e294db817498e5247b57e45a87490ae7ddf20cc530d12a6b316e012304fa",
+  "scripts/multidrone_run.py": "09d2656c31b0987d56cb3272d429bd05651bc87c6a1cfbea2d7496367ab9194b",
+  "src/aerialrange/search/belief.py": "2ac13a51e5c6cd6405e81a670b7a49d87386a4d1b0de7ba0e922a81a60b5b80b",
+  "src/aerialrange/search/comms.py": "64b804b3c1d9afc0f31cf2ad5da4572b495ec09a66e338620eb40aa2e83e50d6",
+  "src/aerialrange/search/grid.py": "aea5fbaa83c7c838e6444b4743fdc3188a4ace6bb988703db703497b7768c605",
+  "src/aerialrange/search/prior.py": "67c6b7d4ecca2ae1c337f7874cca3865742be5def215a35db1dd92ff5837d200",
+  "src/aerialrange/search/sensor.py": "66ed1080b4f85d17203f43fbc3112e2e3cb971e6f9bb27e47068c65f4c2aaae9",
+  "src/aerialrange/search/sim.py": "ee9d318b6790c6e830f72b675fc777657836352d850ac954eddc0cb6df6e9700",
+  "src/aerialrange/pipeline/mosaic.py": "2850eae8e3a63ac8c7058f801aa78d68b3e4da6f7ba82c8c3391742e3f13f1e8"
+ }
+}

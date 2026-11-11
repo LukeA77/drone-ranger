@@ -1,0 +1,141 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "results/multi_drone/schema.json",
+ "title": "Phase 14 multi-drone search simulation results (D-752)",
+ "description": "One schema per kind of file in results/multi_drone/. x-files maps each file-name pattern to its definition (the first matching pattern applies); tests/test_results_schema.py checks every file against it. Times are seconds, rates per km2 or per drone per second as named; probabilities are 0 to 1; ci95 values are [low, high] 95 % bootstrap intervals over seeds (searches) unless named otherwise.",
+ "x-files": {
+  "sensor_*.json": "#/$defs/sensor",
+  "design_check_*.json": "#/$defs/design_check",
+  "design_*.json": "#/$defs/stage",
+  "test_*_seeds.json": "#/$defs/seeds",
+  "test_*.json": "#/$defs/stage",
+  "budget_check_*_seeds.json": "#/$defs/seeds",
+  "budget_check_*.json": "#/$defs/stage"
+ },
+ "$defs": {
+  "interval": {
+   "type": "array",
+   "items": {"type": "number"},
+   "minItems": 2,
+   "maxItems": 2
+  },
+  "probability": {"type": "number", "minimum": 0, "maximum": 1},
+  "sensor": {
+   "description": "Camera model measured from a frozen run's outputs (scripts/multidrone_sensor_fit.py): per camera height, detection probability per pass and false alarms per km2 searched.",
+   "type": "object",
+   "required": ["name", "split", "sequences", "group", "min_depression_deg", "pass_split_gap_frames", "n_boot", "by_height"],
+   "properties": {
+    "name": {"type": "string"},
+    "split": {"type": "string"},
+    "sequences": {"type": "array", "items": {"type": "string"}},
+    "group": {"type": "string"},
+    "min_depression_deg": {"type": "number"},
+    "pass_split_gap_frames": {"type": "integer"},
+    "n_boot": {"type": "integer"},
+    "by_height": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": ["n_passes", "n_people", "pd_per_pass", "pd_by_pass_frames", "false_alarms_per_km2", "ground_searched_km2"],
+      "properties": {
+       "n_passes": {"type": "integer", "minimum": 0},
+       "n_people": {"type": "integer", "minimum": 0},
+       "pd_per_pass": {"$ref": "#/$defs/probability"},
+       "pd_ci95_resample_sequences": {"type": ["array", "null"], "items": {"type": "number"}, "minItems": 2, "maxItems": 2, "description": "null when the sensor comes from one sequence per height (the rural Town07 model), so sequences cannot be resampled"},
+       "pass_frames_quartiles": {"type": "array", "items": {"type": "number"}},
+       "pd_by_pass_frames": {
+        "type": "object",
+        "description": "Bins of frames in view, (a, b], keyed 'a-b'.",
+        "additionalProperties": {
+         "type": "object",
+         "required": ["n", "pd"],
+         "properties": {"n": {"type": "integer"}, "pd": {"$ref": "#/$defs/probability"}}
+        }
+       },
+       "box_h_px_median": {"type": ["number", "null"]},
+       "false_alarms_per_km2": {"type": "number", "minimum": 0},
+       "false_alarm_tracks": {"type": "integer", "minimum": 0},
+       "ground_searched_km2": {"type": "number", "minimum": 0},
+       "range_half_68_m_median": {"type": ["number", "null"]}
+      }
+     }
+    }
+   }
+  },
+  "summary": {
+   "description": "One configuration over its seeds (scripts/multidrone_run.py summarise).",
+   "type": "object",
+   "required": ["n_seeds", "T1_s", "horizon_s", "p_found_by_T1", "p_found_by_horizon", "restricted_mean_time_s", "false_alarms_before_find_mean", "repeated_coverage", "bytes_per_drone_s_mean", "ci95", "curve_t_s", "curve_p_found"],
+   "properties": {
+    "n_seeds": {"type": "integer", "minimum": 1},
+    "T1_s": {"type": "number", "minimum": 0, "description": "Time for the fleet to sweep the area once."},
+    "horizon_s": {"type": "number", "minimum": 0, "description": "3 x T1; searches without a find count as this."},
+    "p_found_by_T1": {"$ref": "#/$defs/probability"},
+    "p_found_by_horizon": {"$ref": "#/$defs/probability"},
+    "restricted_mean_time_s": {"type": "number", "minimum": 0},
+    "false_alarms_before_find_mean": {"type": "number", "minimum": 0},
+    "repeated_coverage": {"$ref": "#/$defs/probability"},
+    "bytes_per_drone_s_mean": {"type": "number", "minimum": 0},
+    "ci95": {"type": "object", "additionalProperties": {"$ref": "#/$defs/interval"}},
+    "curve_t_s": {"type": "array", "items": {"type": "number"}},
+    "curve_p_found": {"type": "array", "items": {"$ref": "#/$defs/probability"}}
+   }
+  },
+  "paired": {
+   "description": "Configuration minus reference on the same seeds.",
+   "type": "object",
+   "required": ["restricted_mean_time_diff_s", "restricted_mean_time_diff_ci95", "p_found_by_T1_diff", "p_found_by_T1_diff_ci95"],
+   "properties": {
+    "restricted_mean_time_diff_s": {"type": "number"},
+    "restricted_mean_time_diff_ci95": {"$ref": "#/$defs/interval"},
+    "p_found_by_T1_diff": {"type": "number"},
+    "p_found_by_T1_diff_ci95": {"$ref": "#/$defs/interval"}
+   }
+  },
+  "stage": {
+   "description": "A stage of runs: design (development seeds 0..199), test (10000..10299, once) or the budget check (development seeds, D-756).",
+   "type": "object",
+   "required": ["stage", "sensor", "settings", "seeds", "results", "paired"],
+   "properties": {
+    "stage": {"type": "string"},
+    "sensor": {"type": "string"},
+    "settings": {"type": "object"},
+    "seeds": {"type": "array", "items": {"type": "integer"}, "minItems": 2, "maxItems": 2},
+    "configs": {"type": "object"},
+    "results": {"type": "object", "additionalProperties": {"$ref": "#/$defs/summary"}},
+    "paired": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": {"$ref": "#/$defs/paired"}}},
+    "not_run": {"type": "object", "additionalProperties": {"type": "string"}}
+   }
+  },
+  "seeds": {
+   "description": "Per-seed outcomes of each configuration: time of the find, or the horizon when found is false.",
+   "type": "object",
+   "additionalProperties": {
+    "type": "object",
+    "required": ["t_s", "found"],
+    "properties": {
+     "seed": {"type": "array", "items": {"type": "integer"}},
+     "t_s": {"type": "array", "items": {"type": "number"}},
+     "found": {"type": "array", "items": {"type": "boolean"}}
+    }
+   }
+  },
+  "design_check": {
+   "description": "scripts/multidrone_design_check.py (development seeds): paired 4 minus 8 lanes, and mean time to find (rmt, s) and repeated coverage with false alarms on or off and detection probability by pass length or constant.",
+   "type": "object",
+   "required": ["paired_b4_minus_b8"],
+   "properties": {
+    "paired_b4_minus_b8": {
+     "type": "object",
+     "required": ["mean_s", "ci95"],
+     "properties": {"mean_s": {"type": "number"}, "ci95": {"$ref": "#/$defs/interval"}}
+    }
+   },
+   "additionalProperties": {
+    "type": "object",
+    "required": ["rmt", "repeat"],
+    "properties": {"rmt": {"type": "number"}, "repeat": {"$ref": "#/$defs/probability"}}
+   }
+  }
+ }
+}

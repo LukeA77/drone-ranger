@@ -1,0 +1,179 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "results/birdsai/schema.json",
+ "title": "Thermal tracking on BIRDSAI (Phase 13, D-754)",
+ "description": "x-files maps each file's path inside this folder to its definition (first match applies); tests/test_results_schema.py checks every file against it. Written by scripts/results_schema.py from the existing files: required keys are those every file has; shares and probabilities lie in 0 to 1; counts, sizes and times are not negative. Each definition's description names the script that writes the file.",
+ "x-files": {
+  "*/grid_*.json": "#/$defs/grid"
+ },
+ "$defs": {
+  "grid": {
+   "description": "scripts/track_grid.py --dataset birdsai: the tracker threshold grid for people on the training videos, each point's metrics and the selected point (D-733 rule)",
+   "type": "object",
+   "required": [
+    "dataset",
+    "default",
+    "detector",
+    "dets",
+    "generated_utc",
+    "grid",
+    "group",
+    "iou_match",
+    "points",
+    "selected",
+    "selection_rule",
+    "split",
+    "tracker"
+   ],
+   "properties": {
+    "dataset": {
+     "type": "string"
+    },
+    "default": {
+     "type": "null"
+    },
+    "detector": {
+     "type": "object",
+     "required": [
+      "class_map",
+      "conf_floor",
+      "detect_seconds_this_call",
+      "frames_this_call",
+      "generated_utc",
+      "imgsz",
+      "kind",
+      "library",
+      "max_det",
+      "nms_ios",
+      "run",
+      "tiled",
+      "tiling",
+      "weights"
+     ],
+     "properties": {
+      "class_map": {
+       "type": "string"
+      },
+      "conf_floor": {
+       "type": "number"
+      },
+      "detect_seconds_this_call": {
+       "type": "number",
+       "minimum": 0
+      },
+      "frames_this_call": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "generated_utc": {
+       "type": "string"
+      },
+      "imgsz": {
+       "type": "integer"
+      },
+      "kind": {
+       "type": "string"
+      },
+      "library": {
+       "type": "object",
+       "required": [
+        "onnxruntime"
+       ],
+       "properties": {
+        "onnxruntime": {
+         "type": "string"
+        }
+       }
+      },
+      "max_det": {
+       "type": "integer"
+      },
+      "nms_ios": {
+       "type": "null"
+      },
+      "run": {
+       "type": "string"
+      },
+      "tiled": {
+       "type": "boolean"
+      },
+      "tiling": {
+       "type": "null"
+      },
+      "weights": {
+       "type": "string"
+      }
+     }
+    },
+    "dets": {
+     "type": "string"
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "grid": {
+     "type": "object",
+     "required": [
+      "constraint",
+      "new_track_thresh",
+      "track_high_thresh"
+     ],
+     "properties": {
+      "constraint": {
+       "type": "string"
+      },
+      "new_track_thresh": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      },
+      "track_high_thresh": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       }
+      }
+     }
+    },
+    "group": {
+     "type": "string"
+    },
+    "iou_match": {
+     "type": "number"
+    },
+    "points": {
+     "type": "array"
+    },
+    "selected": {
+     "type": "object",
+     "required": [
+      "group",
+      "new_track_thresh",
+      "track_high_thresh"
+     ],
+     "properties": {
+      "group": {
+       "type": "string"
+      },
+      "new_track_thresh": {
+       "type": "number"
+      },
+      "track_high_thresh": {
+       "type": "number"
+      }
+     }
+    },
+    "selection_rule": {
+     "type": "string"
+    },
+    "split": {
+     "type": "string"
+    },
+    "tracker": {
+     "type": "string"
+    }
+   }
+  }
+ }
+}

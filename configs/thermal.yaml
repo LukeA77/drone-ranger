@@ -1,0 +1,9 @@
+# Thermal detection (Phase 13). Kept apart from configs/data.yaml, which is frozen for Phase 10.
+hituav_subdir:
+  value: hituav
+  placeholder: DATA_ROOT
+  source: "2026-11-10; git clone of https://github.com/suojiashun/HIT-UAV-Infrared-Thermal-Dataset (CC BY 4.0, D-748), under data_root (configs/data.yaml)"
+hituav_commit:
+  value: 669259659b21a2737ca9f5e4bc81892acbe6ecd8
+  placeholder: null
+  source: "HIT-UAV repository commit cloned on 2026-11-10 (dated 2026-06-12); scripts/hituav_coco_package.py refuses another"

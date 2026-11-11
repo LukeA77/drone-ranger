@@ -1,0 +1,1651 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "results/edge/schema.json",
+ "title": "Edge results: speed, parity, quantisation and the cross-platform check (Phases 5, 8 and 12)",
+ "description": "x-files maps each file's path inside this folder to its definition (first match applies); tests/test_results_schema.py checks every file against it. Written by scripts/results_schema.py from the existing files: required keys are those every file has; shares and probabilities lie in 0 to 1; counts, sizes and times are not negative. Each definition's description names the script that writes the file.",
+ "x-files": {
+  "benchmark_*.json": "#/$defs/benchmark",
+  "parity_*.json": "#/$defs/parity",
+  "quantize_*.json": "#/$defs/quantize",
+  "platform_compare_*.json": "#/$defs/platform_compare",
+  "platform_*.json": "#/$defs/platform",
+  "pi_estimate.json": "#/$defs/pi_estimate",
+  "candidates.json": "#/$defs/candidates",
+  "pareto.json": "#/$defs/pareto",
+  "ranging_kalman_cost.json": "#/$defs/ranging_kalman_cost"
+ },
+ "$defs": {
+  "benchmark": {
+   "description": "scripts/benchmark_pipeline.py, benchmark_threaded.py, benchmark_v2.py: pipeline timing on one machine (D-724)",
+   "type": "object",
+   "required": [
+    "budget",
+    "frames",
+    "generated_utc",
+    "machine",
+    "not_timed",
+    "other_processes",
+    "peak_rss_mb",
+    "protocol",
+    "throughput_fps",
+    "tracker"
+   ],
+   "properties": {
+    "background_measured": {
+     "type": "object",
+     "required": [
+      "busiest",
+      "other_processes_cpu_percent_of_one_core",
+      "window_s"
+     ],
+     "properties": {
+      "busiest": {
+       "type": "array"
+      },
+      "other_processes_cpu_percent_of_one_core": {
+       "type": "number"
+      },
+      "window_s": {
+       "type": "number",
+       "minimum": 0
+      }
+     }
+    },
+    "budget": {
+     "type": "object",
+     "required": [
+      "10_fps",
+      "30_fps"
+     ],
+     "properties": {
+      "10_fps": {
+       "type": "object",
+       "required": [
+        "budget_ms"
+       ],
+       "properties": {
+        "budget_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "latency_median_within": {
+         "type": "boolean"
+        },
+        "latency_p99_within": {
+         "type": "boolean"
+        },
+        "meets_at_median": {
+         "type": "boolean"
+        },
+        "meets_at_p99": {
+         "type": "boolean"
+        },
+        "throughput_keeps_up": {
+         "type": "boolean"
+        }
+       }
+      },
+      "30_fps": {
+       "type": "object",
+       "required": [
+        "budget_ms"
+       ],
+       "properties": {
+        "budget_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "latency_median_within": {
+         "type": "boolean"
+        },
+        "latency_p99_within": {
+         "type": "boolean"
+        },
+        "meets_at_median": {
+         "type": "boolean"
+        },
+        "meets_at_p99": {
+         "type": "boolean"
+        },
+        "throughput_keeps_up": {
+         "type": "boolean"
+        }
+       }
+      }
+     }
+    },
+    "config": {
+     "type": "string"
+    },
+    "det_stride": {
+     "type": "integer"
+    },
+    "detect_library_split_median_ms": {
+     "type": "object",
+     "required": [
+      "inference",
+      "postprocess",
+      "preprocess"
+     ],
+     "properties": {
+      "inference": {
+       "type": "number"
+      },
+      "postprocess": {
+       "type": "number"
+      },
+      "preprocess": {
+       "type": "number"
+      }
+     }
+    },
+    "detect_split_median_ms": {
+     "type": "object",
+     "required": [
+      "inference",
+      "postprocess",
+      "preprocess"
+     ],
+     "properties": {
+      "inference": {
+       "type": "number"
+      },
+      "postprocess": {
+       "type": "number"
+      },
+      "preprocess": {
+       "type": "number"
+      }
+     }
+    },
+    "detector": {
+     "type": "object",
+     "required": [
+      "imgsz",
+      "input_hw",
+      "kind",
+      "runner",
+      "score_floor",
+      "weights"
+     ],
+     "properties": {
+      "imgsz": {
+       "type": "integer"
+      },
+      "input_hw": {
+       "type": "array",
+       "items": {
+        "type": "integer"
+       }
+      },
+      "kind": {
+       "type": "string"
+      },
+      "runner": {
+       "type": "string"
+      },
+      "score_floor": {
+       "type": "number"
+      },
+      "weights": {
+       "type": "string"
+      }
+     }
+    },
+    "end_to_end_median_by_repeat_ms": {
+     "type": "array",
+     "items": {
+      "type": "number",
+      "minimum": 0
+     }
+    },
+    "frames": {
+     "type": "string"
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "imgsz": {
+     "type": "integer"
+    },
+    "latency": {
+     "type": "object",
+     "required": [
+      "max_ms",
+      "median_ms",
+      "p95_ms",
+      "p99_ms"
+     ],
+     "properties": {
+      "max_ms": {
+       "type": "number",
+       "minimum": 0
+      },
+      "median_ms": {
+       "type": "number",
+       "minimum": 0
+      },
+      "p95_ms": {
+       "type": "number",
+       "minimum": 0
+      },
+      "p99_ms": {
+       "type": "number",
+       "minimum": 0
+      }
+     }
+    },
+    "machine": {
+     "type": "object",
+     "required": [
+      "cpu",
+      "os"
+     ],
+     "properties": {
+      "cpu": {
+       "type": "string"
+      },
+      "logical_cores": {
+       "type": "integer"
+      },
+      "machine": {
+       "type": "string"
+      },
+      "onnxruntime": {
+       "type": "string"
+      },
+      "onnxruntime_threads": {
+       "type": "string"
+      },
+      "opencv": {
+       "type": "string"
+      },
+      "os": {
+       "type": "string"
+      },
+      "torch": {
+       "type": "string"
+      },
+      "torch_threads": {
+       "type": "integer"
+      },
+      "ultralytics": {
+       "type": "string"
+      }
+     }
+    },
+    "mode": {
+     "type": "string"
+    },
+    "n_samples": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "not_timed": {
+     "type": "string"
+    },
+    "other_processes": {
+     "type": "string"
+    },
+    "peak_rss_mb": {
+     "type": "number",
+     "minimum": 0
+    },
+    "protocol": {
+     "type": "object",
+     "required": [
+      "n_repeats",
+      "n_timed",
+      "n_warmup"
+     ],
+     "properties": {
+      "n_repeats": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "n_timed": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "n_warmup": {
+       "type": "integer",
+       "minimum": 0
+      }
+     }
+    },
+    "queue": {
+     "type": "integer"
+    },
+    "run": {
+     "type": "string"
+    },
+    "smoke": {
+     "type": "boolean"
+    },
+    "stages": {
+     "type": "object",
+     "required": [
+      "detect",
+      "end_to_end",
+      "read",
+      "track"
+     ],
+     "properties": {
+      "detect": {
+       "type": "object",
+       "required": [
+        "max_ms",
+        "mean_ms",
+        "median_ms",
+        "p95_ms",
+        "p99_ms"
+       ],
+       "properties": {
+        "max_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "mean_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "median_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "p95_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "p99_ms": {
+         "type": "number",
+         "minimum": 0
+        }
+       }
+      },
+      "end_to_end": {
+       "type": "object",
+       "required": [
+        "max_ms",
+        "mean_ms",
+        "median_ms",
+        "p95_ms",
+        "p99_ms"
+       ],
+       "properties": {
+        "max_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "mean_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "median_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "p95_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "p99_ms": {
+         "type": "number",
+         "minimum": 0
+        }
+       }
+      },
+      "read": {
+       "type": "object",
+       "required": [
+        "max_ms",
+        "mean_ms",
+        "median_ms",
+        "p95_ms",
+        "p99_ms"
+       ],
+       "properties": {
+        "max_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "mean_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "median_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "p95_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "p99_ms": {
+         "type": "number",
+         "minimum": 0
+        }
+       }
+      },
+      "track": {
+       "type": "object",
+       "required": [
+        "max_ms",
+        "mean_ms",
+        "median_ms",
+        "p95_ms",
+        "p99_ms"
+       ],
+       "properties": {
+        "max_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "mean_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "median_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "p95_ms": {
+         "type": "number",
+         "minimum": 0
+        },
+        "p99_ms": {
+         "type": "number",
+         "minimum": 0
+        }
+       }
+      }
+     }
+    },
+    "tag": {
+     "type": "string"
+    },
+    "throughput_by_repeat": {
+     "type": "array",
+     "items": {
+      "type": "number"
+     }
+    },
+    "throughput_fps": {
+     "type": "number"
+    },
+    "tracker": {
+     "type": "object",
+     "required": [
+      "config"
+     ],
+     "properties": {
+      "config": {
+       "type": "string"
+      },
+      "det_stride": {
+       "type": "integer"
+      },
+      "gmc_downscale": {
+       "type": "integer"
+      },
+      "overrides": {
+       "type": "object",
+       "required": [
+        "new_track_thresh",
+        "track_high_thresh"
+       ],
+       "properties": {
+        "gmc_downscale": {
+         "type": "integer"
+        },
+        "new_track_thresh": {
+         "type": "number"
+        },
+        "track_high_thresh": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    },
+    "weights": {
+     "type": "string"
+    }
+   }
+  },
+  "parity": {
+   "description": "scripts/export_*.py and check_yolo_onnx.py: ONNX against the training code on the same frames",
+   "type": "object",
+   "required": [
+    "generated_utc",
+    "max_box_diff_px",
+    "max_score_diff",
+    "n_frames",
+    "onnx",
+    "onnxruntime"
+   ],
+   "properties": {
+    "agreement_library_side": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "agreement_onnx_side": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "agreement_original_side": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "agreement_own_side": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "checkpoint": {
+     "type": "string"
+    },
+    "commit": {
+     "type": "string"
+    },
+    "detections_library": {
+     "type": "integer"
+    },
+    "detections_onnx": {
+     "type": "integer"
+    },
+    "detections_original": {
+     "type": "integer"
+    },
+    "detections_own": {
+     "type": "integer"
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "imgsz": {
+     "type": "integer"
+    },
+    "input_hw": {
+     "type": "array",
+     "items": {
+      "type": "integer"
+     }
+    },
+    "max_box_diff_px": {
+     "type": "number",
+     "minimum": 0
+    },
+    "max_score_diff": {
+     "type": "number"
+    },
+    "n_frames": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "onnx": {
+     "type": "string"
+    },
+    "onnx_input_hw": {
+     "type": "array",
+     "items": {
+      "type": "integer"
+     }
+    },
+    "onnxruntime": {
+     "type": "string"
+    },
+    "p99_box_diff_px": {
+     "type": "number",
+     "minimum": 0
+    },
+    "parity_images": {
+     "type": "string"
+    },
+    "parity_tol": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "reference": {
+     "type": "string"
+    },
+    "rfdetr": {
+     "type": "string"
+    },
+    "run": {
+     "type": "string"
+    },
+    "score_floor": {
+     "type": "number"
+    },
+    "torch": {
+     "type": "string"
+    },
+    "ultralytics": {
+     "type": "string"
+    },
+    "weights": {
+     "type": "string"
+    },
+    "within_tol": {
+     "type": [
+      "boolean",
+      "null"
+     ]
+    }
+   }
+  },
+  "quantize": {
+   "description": "scripts/quantize_onnx.py: INT8 versions (D-731)",
+   "type": "object",
+   "required": [
+    "calibration_frames",
+    "fp32",
+    "input",
+    "int8_dynamic",
+    "int8_static",
+    "sizes_mb"
+   ],
+   "properties": {
+    "calibration_frames": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "fp32": {
+     "type": "string"
+    },
+    "head_fp32": {
+     "type": "string"
+    },
+    "input": {
+     "type": "array",
+     "items": {
+      "type": "integer"
+     }
+    },
+    "int8_dynamic": {
+     "type": "string"
+    },
+    "int8_static": {
+     "type": "string"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "nodes_kept_fp32": {
+     "type": "integer"
+    },
+    "sizes_mb": {
+     "type": "object",
+     "required": [],
+     "properties": {
+      "B2_yolo26n_960_rect.onnx": {
+       "type": "number"
+      },
+      "B2_yolo26n_960_rect_int8dyn.onnx": {
+       "type": "number"
+      },
+      "B2_yolo26n_960_rect_int8static.onnx": {
+       "type": "number"
+      },
+      "B2_yolo26n_960_rect_int8static_headfp32.onnx": {
+       "type": "number"
+      },
+      "B2_yolo26n_960w_640_rect.onnx": {
+       "type": "number"
+      },
+      "B2_yolo26n_960w_640_rect_int8dyn.onnx": {
+       "type": "number"
+      },
+      "B2_yolo26n_960w_640_rect_int8static.onnx": {
+       "type": "number"
+      },
+      "dfine_n_640.onnx": {
+       "type": "number",
+       "minimum": 0
+      },
+      "dfine_n_640_int8dyn.onnx": {
+       "type": "number",
+       "minimum": 0
+      },
+      "dfine_n_640_int8dyn_headfp32.onnx": {
+       "type": "number",
+       "minimum": 0
+      },
+      "dfine_n_640_int8static.onnx": {
+       "type": "number",
+       "minimum": 0
+      },
+      "dfine_n_640_int8static_headfp32.onnx": {
+       "type": "number",
+       "minimum": 0
+      },
+      "rfdetr_nano_640.onnx": {
+       "type": "number"
+      },
+      "rfdetr_nano_640_int8dyn.onnx": {
+       "type": "number"
+      },
+      "rfdetr_nano_640_int8static.onnx": {
+       "type": "number"
+      },
+      "rfdetr_nano_960.onnx": {
+       "type": "number"
+      },
+      "rfdetr_nano_960_int8dyn.onnx": {
+       "type": "number"
+      },
+      "rfdetr_nano_960_int8static.onnx": {
+       "type": "number"
+      }
+     }
+    },
+    "static_nodes_kept_fp32": {
+     "type": "integer"
+    }
+   }
+  },
+  "platform_compare": {
+   "description": "scripts/platform_check.py --compare: x86-64 against ARM64 outputs (D-726)",
+   "type": "object",
+   "required": [
+    "a",
+    "b",
+    "checks",
+    "detector",
+    "frames",
+    "generated_utc",
+    "passed",
+    "results",
+    "tolerance"
+   ],
+   "properties": {
+    "a": {
+     "type": "object",
+     "required": [
+      "machine",
+      "tag"
+     ],
+     "properties": {
+      "machine": {
+       "type": "object",
+       "required": [
+        "machine",
+        "numpy",
+        "onnxruntime",
+        "opencv",
+        "os",
+        "python"
+       ],
+       "properties": {
+        "machine": {
+         "type": "string"
+        },
+        "numpy": {
+         "type": "string"
+        },
+        "onnxruntime": {
+         "type": "string"
+        },
+        "opencv": {
+         "type": "string"
+        },
+        "os": {
+         "type": "string"
+        },
+        "python": {
+         "type": "string"
+        }
+       }
+      },
+      "tag": {
+       "type": "string"
+      }
+     }
+    },
+    "b": {
+     "type": "object",
+     "required": [
+      "machine",
+      "tag"
+     ],
+     "properties": {
+      "machine": {
+       "type": "object",
+       "required": [
+        "machine",
+        "numpy",
+        "onnxruntime",
+        "opencv",
+        "os",
+        "python"
+       ],
+       "properties": {
+        "machine": {
+         "type": "string"
+        },
+        "numpy": {
+         "type": "string"
+        },
+        "onnxruntime": {
+         "type": "string"
+        },
+        "opencv": {
+         "type": "string"
+        },
+        "os": {
+         "type": "string"
+        },
+        "python": {
+         "type": "string"
+        }
+       }
+      },
+      "tag": {
+       "type": "string"
+      }
+     }
+    },
+    "checks": {
+     "type": "object",
+     "required": [
+      "demo_rows_agreement",
+      "demo_rows_boxes",
+      "demo_rows_ids",
+      "demo_rows_ranges",
+      "detection_agreement",
+      "detection_boxes",
+      "detection_scores",
+      "real_rows_agreement",
+      "real_rows_boxes",
+      "real_rows_ids",
+      "real_rows_ranges"
+     ],
+     "properties": {
+      "demo_rows_agreement": {
+       "type": "boolean"
+      },
+      "demo_rows_boxes": {
+       "type": "boolean"
+      },
+      "demo_rows_ids": {
+       "type": "boolean"
+      },
+      "demo_rows_ranges": {
+       "type": "boolean"
+      },
+      "detection_agreement": {
+       "type": "boolean"
+      },
+      "detection_boxes": {
+       "type": "boolean"
+      },
+      "detection_scores": {
+       "type": "boolean"
+      },
+      "real_rows_agreement": {
+       "type": "boolean"
+      },
+      "real_rows_boxes": {
+       "type": "boolean"
+      },
+      "real_rows_ids": {
+       "type": "boolean"
+      },
+      "real_rows_ranges": {
+       "type": "boolean"
+      }
+     }
+    },
+    "detector": {
+     "type": "object",
+     "required": [
+      "imgsz",
+      "kind",
+      "score_floor",
+      "sha256",
+      "weights"
+     ],
+     "properties": {
+      "imgsz": {
+       "type": "integer"
+      },
+      "kind": {
+       "type": "string"
+      },
+      "score_floor": {
+       "type": "number"
+      },
+      "sha256": {
+       "type": "string"
+      },
+      "weights": {
+       "type": "string"
+      }
+     }
+    },
+    "frames": {
+     "type": "string"
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "passed": {
+     "type": "boolean"
+    },
+    "results": {
+     "type": "object",
+     "required": [
+      "demo_rows",
+      "real_detections",
+      "real_rows"
+     ],
+     "properties": {
+      "demo_rows": {
+       "type": "object",
+       "required": [
+        "agreement_a",
+        "agreement_b",
+        "box_max_diff_px",
+        "id_consistency",
+        "n_a",
+        "n_b",
+        "range_max_rel_diff"
+       ],
+       "properties": {
+        "agreement_a": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
+        "agreement_b": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
+        "box_max_diff_px": {
+         "type": "number",
+         "minimum": 0
+        },
+        "id_consistency": {
+         "type": "number"
+        },
+        "n_a": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "n_b": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "range_max_rel_diff": {
+         "type": "number"
+        }
+       }
+      },
+      "real_detections": {
+       "type": "object",
+       "required": [
+        "agreement_a",
+        "agreement_b",
+        "box_max_diff_px",
+        "n_a",
+        "n_b",
+        "score_max_diff"
+       ],
+       "properties": {
+        "agreement_a": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
+        "agreement_b": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
+        "box_max_diff_px": {
+         "type": "number",
+         "minimum": 0
+        },
+        "n_a": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "n_b": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "score_max_diff": {
+         "type": "number"
+        }
+       }
+      },
+      "real_rows": {
+       "type": "object",
+       "required": [
+        "agreement_a",
+        "agreement_b",
+        "box_max_diff_px",
+        "id_consistency",
+        "n_a",
+        "n_b",
+        "range_max_rel_diff"
+       ],
+       "properties": {
+        "agreement_a": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
+        "agreement_b": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
+        "box_max_diff_px": {
+         "type": "number",
+         "minimum": 0
+        },
+        "id_consistency": {
+         "type": "number"
+        },
+        "n_a": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "n_b": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "range_max_rel_diff": {
+         "type": "number"
+        }
+       }
+      }
+     }
+    },
+    "tolerance": {
+     "type": "object",
+     "required": [
+      "box_max_diff_px",
+      "detection_agreement_min",
+      "id_consistency_min",
+      "range_max_rel_diff",
+      "row_agreement_min",
+      "score_max_diff"
+     ],
+     "properties": {
+      "box_max_diff_px": {
+       "type": "number",
+       "minimum": 0
+      },
+      "detection_agreement_min": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "id_consistency_min": {
+       "type": "number"
+      },
+      "range_max_rel_diff": {
+       "type": "number"
+      },
+      "row_agreement_min": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "score_max_diff": {
+       "type": "number"
+      }
+     }
+    }
+   }
+  },
+  "platform": {
+   "description": "scripts/platform_check.py: outputs on one machine (D-726)",
+   "type": "object",
+   "required": [
+    "config",
+    "demo",
+    "detector",
+    "frames",
+    "generated_utc",
+    "machine",
+    "real",
+    "row_fields",
+    "tag"
+   ],
+   "properties": {
+    "config": {
+     "type": "string"
+    },
+    "demo": {
+     "type": "object",
+     "required": [
+      "rows",
+      "summary"
+     ],
+     "properties": {
+      "rows": {
+       "type": "array"
+      },
+      "summary": {
+       "type": "object",
+       "required": [
+        "displayed_speed",
+        "frames",
+        "note",
+        "range_rel_error_median",
+        "range_rel_error_signed_median",
+        "rows",
+        "speed_last_10_median_ms",
+        "synthetic",
+        "true_speeds_ms",
+        "valid_fraction"
+       ],
+       "properties": {
+        "displayed_speed": {
+         "type": "object",
+         "required": [
+          "max_abs_error_ms",
+          "median_abs_error_ms",
+          "n_shown",
+          "rule",
+          "share_of_valid_rows",
+          "share_within_own_95_interval",
+          "share_within_tolerance",
+          "tolerance_ms"
+         ],
+         "properties": {
+          "max_abs_error_ms": {
+           "type": "null"
+          },
+          "median_abs_error_ms": {
+           "type": "null"
+          },
+          "n_shown": {
+           "type": "integer",
+           "minimum": 0
+          },
+          "rule": {
+           "type": "string"
+          },
+          "share_of_valid_rows": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "share_within_own_95_interval": {
+           "type": "null"
+          },
+          "share_within_tolerance": {
+           "type": "null"
+          },
+          "tolerance_ms": {
+           "type": "number",
+           "minimum": 0
+          }
+         }
+        },
+        "frames": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "note": {
+         "type": "string"
+        },
+        "range_rel_error_median": {
+         "type": "number"
+        },
+        "range_rel_error_signed_median": {
+         "type": "number"
+        },
+        "rows": {
+         "type": "integer"
+        },
+        "speed_last_10_median_ms": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "number",
+          "minimum": 0
+         }
+        },
+        "synthetic": {
+         "type": "boolean"
+        },
+        "true_speeds_ms": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "number",
+          "minimum": 0
+         }
+        },
+        "valid_fraction": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        }
+       }
+      }
+     }
+    },
+    "detector": {
+     "type": "object",
+     "required": [
+      "imgsz",
+      "kind",
+      "score_floor",
+      "sha256",
+      "weights"
+     ],
+     "properties": {
+      "imgsz": {
+       "type": "integer"
+      },
+      "kind": {
+       "type": "string"
+      },
+      "score_floor": {
+       "type": "number"
+      },
+      "sha256": {
+       "type": "string"
+      },
+      "weights": {
+       "type": "string"
+      }
+     }
+    },
+    "frames": {
+     "type": "string"
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "machine": {
+     "type": "object",
+     "required": [
+      "machine",
+      "numpy",
+      "onnxruntime",
+      "opencv",
+      "os",
+      "python"
+     ],
+     "properties": {
+      "machine": {
+       "type": "string"
+      },
+      "numpy": {
+       "type": "string"
+      },
+      "onnxruntime": {
+       "type": "string"
+      },
+      "opencv": {
+       "type": "string"
+      },
+      "os": {
+       "type": "string"
+      },
+      "python": {
+       "type": "string"
+      }
+     }
+    },
+    "real": {
+     "type": "object",
+     "required": [
+      "detections",
+      "rows"
+     ],
+     "properties": {
+      "detections": {
+       "type": "array"
+      },
+      "rows": {
+       "type": "array"
+      }
+     }
+    },
+    "row_fields": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "tag": {
+     "type": "string"
+    }
+   }
+  },
+  "pi_estimate": {
+   "description": "scripts/estimate_pi.py: Raspberry Pi 5 speed, estimated, not measured (D-723)",
+   "type": "object",
+   "required": [
+    "generated_utc",
+    "label",
+    "laptop_cpu",
+    "laptop_logical_cpus",
+    "method",
+    "models",
+    "onnxruntime",
+    "range_factor",
+    "range_note",
+    "ratio_pi5_over_laptop",
+    "reference",
+    "reference_laptop",
+    "scope",
+    "threads"
+   ],
+   "properties": {
+    "generated_utc": {
+     "type": "string"
+    },
+    "label": {
+     "type": "string"
+    },
+    "laptop_cpu": {
+     "type": "string"
+    },
+    "laptop_logical_cpus": {
+     "type": "integer"
+    },
+    "method": {
+     "type": "string"
+    },
+    "models": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "laptop",
+       "onnx",
+       "pi5_estimate_fps",
+       "pi5_estimate_ms",
+       "pi5_estimate_range_ms"
+      ],
+      "properties": {
+       "laptop": {
+        "type": "object",
+        "required": [
+         "input_shape",
+         "median_ms",
+         "p90_ms",
+         "repeats"
+        ],
+        "properties": {
+         "input_shape": {
+          "type": "array"
+         },
+         "median_ms": {
+          "type": "number",
+          "minimum": 0
+         },
+         "p90_ms": {
+          "type": "number",
+          "minimum": 0
+         },
+         "repeats": {
+          "type": "integer"
+         }
+        }
+       },
+       "onnx": {
+        "type": "string"
+       },
+       "pi5_estimate_fps": {
+        "type": "number"
+       },
+       "pi5_estimate_ms": {
+        "type": "number",
+        "minimum": 0
+       },
+       "pi5_estimate_range_ms": {
+        "type": "array",
+        "items": {
+         "type": "number",
+         "minimum": 0
+        }
+       }
+      }
+     }
+    },
+    "onnxruntime": {
+     "type": "string"
+    },
+    "range_factor": {
+     "type": "array",
+     "items": {
+      "type": "number"
+     }
+    },
+    "range_note": {
+     "type": "string"
+    },
+    "ratio_pi5_over_laptop": {
+     "type": "number"
+    },
+    "reference": {
+     "type": "object",
+     "required": [
+      "onnx",
+      "pi5_ms",
+      "source"
+     ],
+     "properties": {
+      "onnx": {
+       "type": "string"
+      },
+      "pi5_ms": {
+       "type": "number",
+       "minimum": 0
+      },
+      "source": {
+       "type": "string"
+      }
+     }
+    },
+    "reference_laptop": {
+     "type": "object",
+     "required": [
+      "input_shape",
+      "median_ms",
+      "p90_ms",
+      "repeats"
+     ],
+     "properties": {
+      "input_shape": {
+       "type": "array",
+       "items": {
+        "type": "integer"
+       }
+      },
+      "median_ms": {
+       "type": "number",
+       "minimum": 0
+      },
+      "p90_ms": {
+       "type": "number",
+       "minimum": 0
+      },
+      "repeats": {
+       "type": "integer"
+      }
+     }
+    },
+    "scope": {
+     "type": "string"
+    },
+    "threads": {
+     "type": "integer"
+    }
+   }
+  },
+  "candidates": {
+   "description": "scripts/candidates.py: detector candidates (D-729)",
+   "type": "object",
+   "required": [
+    "accuracy",
+    "candidates",
+    "generated_utc",
+    "pi5_frontier",
+    "speed"
+   ],
+   "properties": {
+    "accuracy": {
+     "type": "string"
+    },
+    "candidates": {
+     "type": "array"
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "pi5_frontier": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "speed": {
+     "type": "string"
+    }
+   }
+  },
+  "pareto": {
+   "description": "scripts/pareto.py: version 1 speed and accuracy frontier",
+   "type": "object",
+   "required": [
+    "accuracy",
+    "best_accuracy",
+    "budget_ms",
+    "configs",
+    "frontier",
+    "reference_ms",
+    "speed"
+   ],
+   "properties": {
+    "accuracy": {
+     "type": "string"
+    },
+    "best_accuracy": {
+     "type": "string"
+    },
+    "budget_ms": {
+     "type": "number",
+     "minimum": 0
+    },
+    "configs": {
+     "type": "array"
+    },
+    "frontier": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "reference_ms": {
+     "type": "number",
+     "minimum": 0
+    },
+    "speed": {
+     "type": "string"
+    }
+   }
+  },
+  "ranging_kalman_cost": {
+   "description": "time cost of the range filter",
+   "type": "object",
+   "required": [
+    "background_measured",
+    "by_tracks",
+    "decision",
+    "note"
+   ],
+   "properties": {
+    "background_measured": {
+     "type": "object",
+     "required": [
+      "busiest",
+      "other_processes_cpu_percent_of_one_core",
+      "window_s"
+     ],
+     "properties": {
+      "busiest": {
+       "type": "array"
+      },
+      "other_processes_cpu_percent_of_one_core": {
+       "type": "number"
+      },
+      "window_s": {
+       "type": "number",
+       "minimum": 0
+      }
+     }
+    },
+    "by_tracks": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "batched",
+       "per_object"
+      ],
+      "properties": {
+       "batched": {
+        "type": "object",
+        "required": [
+         "median_ms",
+         "p99_ms"
+        ],
+        "properties": {
+         "median_ms": {
+          "type": "number",
+          "minimum": 0
+         },
+         "p99_ms": {
+          "type": "number",
+          "minimum": 0
+         }
+        }
+       },
+       "per_object": {
+        "type": "object",
+        "required": [
+         "median_ms",
+         "p99_ms"
+        ],
+        "properties": {
+         "median_ms": {
+          "type": "number",
+          "minimum": 0
+         },
+         "p99_ms": {
+          "type": "number",
+          "minimum": 0
+         }
+        }
+       }
+      }
+     }
+    },
+    "decision": {
+     "type": "string"
+    },
+    "note": {
+     "type": "string"
+    }
+   }
+  }
+ }
+}

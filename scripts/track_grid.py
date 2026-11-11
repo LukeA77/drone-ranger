@@ -16,7 +16,8 @@ classes alone (`high_by_class`, `new_by_class`); the other group keeps the track
 Rules: people, highest person F2 (CLEAR precision and recall, beta 2), ties by person IDF1;
 vehicles, highest vehicle IDF1, ties by vehicle MOTA. Every point also records, per group,
 ground-truth object-frames, matched object-frames and identity switches by box height.
-Validation only: there is no test-dev option.
+VisDrone: validation only (no test-dev option). BIRDSAI (D-754): tuned on train; test only
+with --final, to score the chosen thresholds once.
 Output: results/visdrone/val/grid_<dets>__<tracker>[__<group>].json.
 """
 
@@ -50,7 +51,13 @@ def grid_points(
 
 
 def run_point(
-    dets_run: str, tracker: str, overrides: dict[str, float], cmap: dict[int, str], iou: float
+    dets_run: str,
+    tracker: str,
+    overrides: dict[str, float],
+    cmap: dict[int, str],
+    iou: float,
+    dataset: str = "visdrone",
+    split: str = "val",
 ) -> dict[str, Any]:
     import cv2
 
@@ -69,8 +76,8 @@ def run_point(
     from ultralytics_v1 import make_tracker  # version 1's library trackers, or the project's
 
     cv2.setNumThreads(1)
-    prep = REPO_ROOT / "cache" / "visdrone" / "mot" / "val"
-    cache = REPO_ROOT / "cache" / "visdrone" / "dets" / dets_run / "val"
+    prep = REPO_ROOT / "cache" / dataset / "mot" / split
+    cache = REPO_ROOT / "cache" / dataset / "dets" / dets_run / split
     groups = sorted(set(cmap.values()))
     trk_ov = dict(overrides)
     stride = int(trk_ov.pop("det_stride", 1))  # detection stride (D-610), not a tracker key
@@ -165,19 +172,40 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--group", choices=["person", "vehicle"], help="tune this group's thresholds only (D-733)"
     )
+    ap.add_argument("--dataset", default="visdrone", choices=["visdrone", "birdsai"])
+    ap.add_argument(
+        "--split",
+        default=None,
+        help="default: the dataset's tuning split (visdrone val, birdsai train); birdsai test "
+        "only with --final, for scoring chosen thresholds once",
+    )
+    ap.add_argument("--final", action="store_true")
     args = ap.parse_args(argv)
+    tune = {"visdrone": "val", "birdsai": "train"}[args.dataset]
+    args.split = args.split or tune
+    if args.split != tune and not (args.dataset == "birdsai" and args.split == "test"):
+        print(f"{args.dataset}: tuning split is {tune}")
+        return 1
+    if args.split == "test" and not args.final:
+        print("test runs once, after the thresholds are frozen. Use --final.")
+        return 1
     high, new = tuple(args.high), tuple(args.new)
     det = load_config("detector")
     iou = det.require("iou_match")
     cmap = {int(k): v for k, v in det.require("class_maps")[args.class_map].items()}
     meta = json.loads(
-        (REPO_ROOT / "cache" / "visdrone" / "dets" / args.dets / "val" / "meta.json").read_text()
+        (
+            REPO_ROOT / "cache" / args.dataset / "dets" / args.dets / args.split / "meta.json"
+        ).read_text()
     )
     pts = grid_points(high, new)
     if args.group:
         pts = [{**p, "group": args.group} for p in pts]
     with ProcessPoolExecutor(args.workers) as ex:
-        futs = [ex.submit(run_point, args.dets, args.tracker, p, cmap, iou) for p in pts]
+        futs = [
+            ex.submit(run_point, args.dets, args.tracker, p, cmap, iou, args.dataset, args.split)
+            for p in pts
+        ]
         results = []
         for f in futs:
             r = f.result()
@@ -193,7 +221,8 @@ def main(argv: list[str] | None = None) -> int:
     default = next((r for r in results if r["overrides"] == lib_default), None)
     out = {
         "generated_utc": datetime.now(UTC).isoformat(timespec="seconds"),
-        "split": "val",
+        "dataset": args.dataset,
+        "split": args.split,
         "dets": args.dets,
         "detector": meta,
         "tracker": Path(args.tracker).name,
@@ -206,7 +235,8 @@ def main(argv: list[str] | None = None) -> int:
         "points": results,
     }
     tag = Path(args.tracker).stem + (f"__{args.group}" if args.group else "") + args.suffix
-    dest = REPO_ROOT / "results" / "visdrone" / "val" / f"grid_{args.dets}__{tag}.json"
+    dest = REPO_ROOT / "results" / args.dataset / args.split / f"grid_{args.dets}__{tag}.json"
+    dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(out, indent=1) + "\n")
     ref = f" (default {default['mean_idf1']:.3f})" if default else ""
     print(f"selected {best['overrides']} mean IDF1 {best['mean_idf1']:.3f}{ref}; wrote {dest}")

@@ -100,12 +100,44 @@ The version 2 pipeline (`configs/run.yaml`: D-FINE N at 640, D-729) against the 
 | AP50, 16 to 32 px | 0.035 | 0.012 | 0.460 | 0.233 |
 | AP50, 32 to 64 px | 0.210 | 0.088 | 0.628 | 0.323 |
 | IDF1 | 0.022 | 0.019 | 0.299 | 0.277 |
-| Range, median error (vehicles) | | | 0.6 % | 0.5 % |
+| Range, median error (vehicles) | | | 0.6% | 0.5% |
 
 - **The version 2 detector transfers worse to rendered imagery.** It finds about half the vehicles version 1's detector does, at every size, so the cause is appearance, not size. On VisDrone, real footage, it was the better of the two (D-729). On the calibration towns the pattern is the same (vehicle AP50 0.301 against 0.641).
 - **Tracking and range barely change.** Vehicle IDF1 drops from 0.299 to 0.277; range accuracy is the same, since it depends on where a box's bottom edge is, not on how many objects are found.
-- **No speeds are shown with this detector.** No display rule reaches 9 in 10 shown speeds right, for either people (best 74 %) or vehicles (best 84 % within 5 km/h), so `configs/run.yaml` shows none (D-739).
+- **No speeds are shown with this detector.** No display rule reaches 9 in 10 shown speeds right, for either people (best 74%) or vehicles (best 84% within 5 km/h), so `configs/run.yaml` shows none (D-739).
 - **Fine-tuning:** how much SynDrone training recovers is being measured, as it was for version 1 above (D-740).
+
+## Results: the one-time test (Phase 10)
+
+The frozen version 2 pipeline (`configs/run.yaml`, frozen at commit c3ef52d, `results/frozen/phase10.json`) on the three test towns (Town02, Town03, Town06) at 20, 50 and 80 m, run once with exact poses and the interval calibration fitted on the calibration towns (D-749). Pooled over the 9 sequences; 95 % intervals resample whole sequences (`results/syndrone/test/eval_p10_v2_cal.json`, `breakdowns_p10_v2_cal.json`, `search_p10_v2_cal.json`).
+
+| | People | Vehicles |
+|---|---|---|
+| Detection AP50 | 0.019 (0.001 to 0.043) | 0.242 (0.188 to 0.295) |
+| IDF1 | 0.021 (0.002 to 0.052) | 0.340 (0.214 to 0.443) |
+| HOTA | 0.030 (0.010 to 0.048) | 0.279 (0.185 to 0.347) |
+| Range, median error | 0.6% (0.4% to 1.0%) | 0.4% (0.3% to 0.7%) |
+| Range, 90th percentile error | 1.5% (1.1% to 2.6%) | 3.3% (1.4% to 5.5%) |
+| Calibrated 68 / 90 / 95 % intervals hold | 78% / 95% / 97% | 76% / 93% / 97% |
+| Speed, median error (no speed is displayed) | 0.68 m/s | 0.77 m/s |
+| Share of objects found (a track matched it at least once) | 18% (3% to 39%) | 73% |
+| False-alarm tracks per km2 searched | 393 (234 to 658) | 38 |
+
+**By height** (found share; false-alarm tracks per km2):
+
+| | 20 m | 50 m | 80 m |
+|---|---|---|---|
+| People found | 47% | 6% | 0.4% |
+| People false alarms per km2 | 572 | 347 | 193 |
+| Vehicles found | 70% | 81% | 69% |
+| Person detection AP50 | 0.047 | 0.003 | 0.0001 |
+
+- **Where an object is found, its distance is right.** Ranges are within 1 % (median) for both groups, and the calibrated intervals, fitted on other towns, hold close to their stated levels on the test towns. With exact poses, range is not what limits this system.
+- **Detecting people is what limits it.** People are found almost only from 20 m (47%), barely at 50 m and not at 80 m, where a person is a few pixels tall. Most people tracks are false: 393 per km2 searched. Vehicles are found at every height (69% to 81%), with few false alarms.
+- **This is close to the development towns**: vehicle AP50 0.277 there, 0.242 here; people 0.014 and 0.019.
+- **No speed is displayed**, as fixed before the test (D-739): no display rule qualified with this detector.
+
+**With navigation errors added** (the same tracks, version 1's assumed grades D-621, one bias draw per sequence and grade, seed 0; `eval_p10_v2_cal_nav_<grade>.json`). Vehicle median range error: exact 0.4%, good 0.9%, typical 2.2%, poor 8.8%. The calibrated intervals, fitted with exact poses, no longer hold (vehicles, nominal 90 %: 88%, 57% and 37%), as expected (D-749): they must be refitted for the navigation actually flown. Person range errors do not follow the grades (good 12.4%, typical 7.4%, poor 5.7%), because 96 % of person range rows come from the 20 m flights and each grade draws its own single bias per flight: under "good", the Town02 20 m flight, which holds most of them, drew a +2.5 m height bias (2.5 times the grade's spread), which alone moves ranges at 20 m by about 13 %. So this part rests on one draw per flight; the Mid-Air sweep (docs/navigation.md), with many draws, is the better guide to how navigation error moves range.
 
 ## Limits of this evaluation
 

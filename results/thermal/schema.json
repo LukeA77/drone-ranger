@@ -1,0 +1,258 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "results/thermal/schema.json",
+ "title": "Thermal detection results (Phase 13, D-751)",
+ "description": "x-files maps each file's path inside this folder to its definition (first match applies); tests/test_results_schema.py checks every file against it. Written by scripts/results_schema.py from the existing files: required keys are those every file has; shares and probabilities lie in 0 to 1; counts, sizes and times are not negative. Each definition's description names the script that writes the file.",
+ "x-files": {
+  "detect_*.json": "#/$defs/detect"
+ },
+ "$defs": {
+  "detect": {
+   "description": "scripts/hituav_eval.py: detection AP on HIT-UAV per group, validation or (once) test",
+   "type": "object",
+   "required": [
+    "detector_ms_per_image",
+    "generated_utc",
+    "groups",
+    "iou_match",
+    "kind",
+    "max_det",
+    "n_images",
+    "n_settings",
+    "part",
+    "run",
+    "score_floor",
+    "split",
+    "weights"
+   ],
+   "properties": {
+    "detector_ms_per_image": {
+     "type": "number",
+     "minimum": 0
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "groups": {
+     "type": "object",
+     "required": [
+      "person",
+      "vehicle"
+     ],
+     "properties": {
+      "person": {
+       "type": "object",
+       "required": [
+        "ap50",
+        "ap50_95",
+        "ap50_ci95_resample_settings",
+        "by_altitude_m",
+        "by_angle_deg",
+        "by_box_height_px",
+        "by_time"
+       ],
+       "properties": {
+        "ap50": {
+         "type": "object",
+         "required": [
+          "ap",
+          "max_recall",
+          "n_det",
+          "n_gt"
+         ],
+         "properties": {
+          "ap": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "max_recall": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "n_det": {
+           "type": "integer",
+           "minimum": 0
+          },
+          "n_gt": {
+           "type": "integer",
+           "minimum": 0
+          }
+         }
+        },
+        "ap50_95": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
+        "ap50_ci95_resample_settings": {
+         "type": "array",
+         "items": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+         }
+        },
+        "by_altitude_m": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "object"
+         }
+        },
+        "by_angle_deg": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "object"
+         }
+        },
+        "by_box_height_px": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "object"
+         }
+        },
+        "by_time": {
+         "type": "object",
+         "required": [
+          "day",
+          "night"
+         ],
+         "properties": {
+          "day": {
+           "type": "object"
+          },
+          "night": {
+           "type": "object"
+          }
+         }
+        }
+       }
+      },
+      "vehicle": {
+       "type": "object",
+       "required": [
+        "ap50",
+        "ap50_95",
+        "ap50_ci95_resample_settings",
+        "by_altitude_m",
+        "by_angle_deg",
+        "by_box_height_px",
+        "by_time"
+       ],
+       "properties": {
+        "ap50": {
+         "type": "object",
+         "required": [
+          "ap",
+          "max_recall",
+          "n_det",
+          "n_gt"
+         ],
+         "properties": {
+          "ap": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "max_recall": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "n_det": {
+           "type": "integer",
+           "minimum": 0
+          },
+          "n_gt": {
+           "type": "integer",
+           "minimum": 0
+          }
+         }
+        },
+        "ap50_95": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
+        "ap50_ci95_resample_settings": {
+         "type": "array",
+         "items": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+         }
+        },
+        "by_altitude_m": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "object"
+         }
+        },
+        "by_angle_deg": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "object"
+         }
+        },
+        "by_box_height_px": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "object"
+         }
+        },
+        "by_time": {
+         "type": "object",
+         "required": [
+          "day",
+          "night"
+         ],
+         "properties": {
+          "day": {
+           "type": "object"
+          },
+          "night": {
+           "type": "object"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "iou_match": {
+     "type": "number"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "max_det": {
+     "type": "integer"
+    },
+    "n_images": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "n_settings": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "part": {
+     "type": "string"
+    },
+    "run": {
+     "type": "string"
+    },
+    "score_floor": {
+     "type": "number"
+    },
+    "split": {
+     "type": "string"
+    },
+    "weights": {
+     "type": "string"
+    }
+   }
+  }
+ }
+}

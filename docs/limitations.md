@@ -3,9 +3,9 @@
 
 *Measured limits are filled from `results/`; every limit here is also reported in the brief.*
 
-## The main gap: no end-to-end test with known object distances
+## The main gap: finding people from above 20 m
 
-No single test runs detect, track and range end to end against known object distances. Tracking is scored on VisDrone (boxes, no distances), ranging on Mid-Air (distances, no objects; exact poses) and real footage on AU-AIR (neither true distances nor a well-transferred detector). The box-to-ground simulation and the pose-noise sweep narrow the gap but are still separate pieces. The most valuable next step is one setup where every object's distance is known: a drone flown past a car carrying a GPS logger, or a simulator with vehicles and people (for example CARLA), scored through the whole pipeline.
+Version 1's main gap, no end-to-end test against known object distances, is closed: the whole version 2 pipeline was scored once on three held-out SynDrone towns ([docs/syndrone_eval.md](syndrone_eval.md)). Where an object is found its range is right (median error 0.6% for people, 0.4% for vehicles, with exact poses). What fails is finding people: 47% found from 20 m, 6% from 50 m, 0.4% from 80 m, with 393 false person tracks per km2 searched. In the multi-drone simulation those false alarms make map-guided search slower than a plain lawnmower sweep (1,065 s against 645 s for four drones; [docs/multi_drone.md](multi_drone.md)). These are rendered towns with exact poses; the only real footage (AU-AIR) has no true distances, so a real flight past objects with known positions is still the most valuable next test. The outcome of each version 2 hypothesis is in [docs/hypotheses.md](hypotheses.md). The sections below are version 1's measured limits, which still apply to the ranging method.
 
 ## Distance estimation (ranging)
 

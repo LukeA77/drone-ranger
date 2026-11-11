@@ -33,7 +33,9 @@ from aerialrange.utils.config import REPO_ROOT, load_config
 sys.path.insert(0, str(Path(__file__).resolve().parent))  # scripts/ultralytics_v1.py
 from ultralytics_v1 import library_version, make_detector  # noqa: E402
 
-PREP = REPO_ROOT / "cache" / "visdrone" / "mot"
+PREP_ROOT = REPO_ROOT / "cache"  # <dataset>/mot/<split>/<sequence>/
+# BIRDSAI (D-754): scripts/birdsai_prep.py; train tunes, test runs once
+SPLITS = {"visdrone": ("val", "test-dev"), "birdsai": ("train", "test")}
 # Box-height bins (pixels): doubling widths; small objects dominate VisDrone (D-312).
 HEIGHT_BINS = [(0, 16), (16, 32), (32, 64), (64, 128), (128, 1e9)]
 COCO_THRESHOLDS = np.round(np.arange(0.5, 0.96, 0.05), 2)
@@ -46,7 +48,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--class-map", required=True)
     ap.add_argument("--imgsz", type=int, required=True)
     ap.add_argument("--kind", default="yolo", choices=KINDS)
-    ap.add_argument("--split", default="val", choices=["val", "test-dev"])
+    ap.add_argument("--dataset", default="visdrone", choices=sorted(SPLITS))
+    ap.add_argument("--split", default="val", choices=["val", "test-dev", "train", "test"])
     ap.add_argument("--final", action="store_true")
     ap.add_argument("--frame-stride", type=int, default=10)
     ap.add_argument("--tiled", action="store_true")
@@ -54,8 +57,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--overlap", type=float, default=None)
     ap.add_argument("--include-full", action="store_true", help="also detect the full frame")
     args = ap.parse_args(argv)
-    if args.split == "test-dev" and not args.final:
-        print("test-dev runs once, after all settings are frozen. Use --final.")
+    if args.split not in SPLITS[args.dataset]:
+        print(f"{args.dataset} splits: {SPLITS[args.dataset]}")
+        return 1
+    if args.split in ("test-dev", "test") and not args.final:
+        print(f"{args.split} runs once, after all settings are frozen. Use --final.")
         return 1
     if args.tiled and (args.tile is None or args.overlap is None):
         print("--tiled needs --tile and --overlap ({{TILE_SIZE}}, {{TILE_OVERLAP}})")
@@ -74,7 +80,9 @@ def main(argv: list[str] | None = None) -> int:
     gt = {g: {} for g in groups}
     det = {g: {} for g in groups}
     t_total, n_img = 0.0, 0
-    for seq in sorted(p for p in (PREP / args.split).iterdir() if p.is_dir()):
+    for seq in sorted(
+        p for p in (PREP_ROOT / args.dataset / "mot" / args.split).iterdir() if p.is_dir()
+    ):
         info = json.loads((seq / "seqinfo.json").read_text())
         frames = sorted((REPO_ROOT / info["frame_dir"]).glob("*.jpg"))
         ign = read_ignored(seq / "ignored.txt")
@@ -125,6 +133,7 @@ def main(argv: list[str] | None = None) -> int:
     out = {
         "generated_utc": datetime.now(UTC).isoformat(timespec="seconds"),
         "run": args.run,
+        "dataset": args.dataset,
         "split": args.split,
         "weights": args.weights,
         "class_map": args.class_map,
@@ -144,7 +153,7 @@ def main(argv: list[str] | None = None) -> int:
         "timing_note": "Wall time, not the latency benchmark protocol (D-601).",
         "results": res,
     }
-    dest = REPO_ROOT / "results" / "visdrone" / args.split / f"detect_{args.run}.json"
+    dest = REPO_ROOT / "results" / args.dataset / args.split / f"detect_{args.run}.json"
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(out, indent=1) + "\n")
     for g in groups:

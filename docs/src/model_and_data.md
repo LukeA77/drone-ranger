@@ -80,6 +80,22 @@ VisDrone2019 detection train (with {{RESULT:headline.json#data.visdrone_excluded
 - **Splits:** by town, stratified by town type, seed 0: development Town01, Town07, Town10HD; calibration Town04, Town05; test Town02, Town03, Town06 (`results/splits.json`, D-701). The official split is by frame within each town and is not used.
 - **Limitation:** synthetic imagery from an ideal pinhole camera, with CARLA's traffic and pedestrian behaviour.
 
+### HIT-UAV (thermal detection; version 2, Phase 13)
+
+- **Source:** https://github.com/suojiashun/HIT-UAV-Infrared-Thermal-Dataset, commit 669259659b21a2737ca9f5e4bc81892acbe6ecd8 (`configs/thermal.yaml`).
+- **Citation:** Suo, J., Wang, T., Zhang, X., Chen, H., Zhou, W. and Shi, W. (2023) 'HIT-UAV: a high-altitude infrared thermal dataset for unmanned aerial vehicle-based object detection', *Scientific Data*, 10, 227. doi:10.1038/s41597-023-02066-6.
+- **Licence (checked 2026-11-10):** CC BY 4.0, from the repository's LICENSE file (D-748). Use, change and redistribution allowed, including commercial, with credit. No HIT-UAV images are committed here.
+- **Used:** 2,898 thermal images, 640 x 512, DJI Zenmuse XT2 on a DJI Matrice M210 V2, 60 to 130 m, camera 30 to 90 degrees down, by day and night. Person, Car and Bicycle map to the detector's VisDrone classes; OtherVehicle and DontCare are ignored regions.
+- **Splits:** by capture day (D-751): validation 23 January 2021, test 16 and 21 January 2021, training the other six days, because the official random split puts frames of the same videos in training and test. The official split is used once, for comparison with published results (`results/hituav/splits.json`).
+
+### BIRDSAI (thermal tracking; version 2, Phase 13)
+
+- **Source:** LILA, "Conservation Drones" (https://lila.science/datasets/conservationdrones), real training and test archives (SHA-256 in `Data/birdsai/zips/sha256.txt`); the simulated set is not used.
+- **Citation:** Bondi, E., Jain, R., Aggrawal, P., Anand, S., Hannaford, R., Kapoor, A., Piavis, J., Shah, S., Joppa, L., Dilkina, B. and Tambe, M. (2020) 'BIRDSAI: a dataset for detection and tracking in aerial thermal infrared videos', *IEEE Winter Conference on Applications of Computer Vision (WACV)*.
+- **Licence (checked 2026-11-10):** Community Data License Agreement, permissive variant, as stated on the LILA page (D-754). No BIRDSAI images are committed here.
+- **Used:** 48 real night-time thermal videos from fixed-wing drone patrols over African protected areas (FLIR Vue Pro 640 or Tamarisk 640, 640 x 480, 60 to 120 m), humans and animals tracked frame by frame. People only are scored; animals count as false alarms, not ignored.
+- **Splits:** the dataset's own: 32 training videos (6 with people) tune the tracker; 16 test videos (5 with people) are scored once.
+
 ## Code from other projects (version 2)
 
 - **TrackEval** (https://github.com/JonathonLuiten/TrackEval, commit 12c8791, MIT licence, checked from its LICENSE file 2026-11-04): the Higher Order Tracking Accuracy (HOTA) computation is vendored in `src/aerialrange/track/hota.py` with its copyright notice, changed only to run on NumPy 2.
@@ -108,6 +124,7 @@ The package (`src/aerialrange`) no longer uses Ultralytics (D-725). Its pinned e
 | Indirect: fonttools, pyparsing, rich, markdown-it-py, mdurl, six, annotated-doc, xmltodict, shellingham | MIT (shellingham ISC) |
 | Indirect: flatbuffers, ml_dtypes, packaging, tzdata, typing_extensions | Apache-2.0 (packaging also BSD-2-Clause; typing_extensions PSF-2.0) |
 | Development only: pytest, pytest-cov, pluggy, iniconfig, ruff, coverage | MIT (coverage Apache-2.0) |
+| Development only: pymap3d 3.1.0 (test reference for the geodetic conversion, Phase 12; licence read from its LICENSE file 2026-11-09: two conditions, BSD-2-Clause) | BSD-2-Clause |
 
 Version 1's results can still be reproduced in a separate environment, `requirements-v1.txt`, which adds PyTorch and Ultralytics 8.4.182 (AGPL-3.0); the scripts that need it load the library through `scripts/ultralytics_v1.py`. The version 1 detector's weights were trained with that library from its COCO weights, which Ultralytics distributes under AGPL-3.0; running them through the project's own ONNX runner removes the library, not the weights' terms.
 
@@ -127,3 +144,14 @@ The version 1 detector and its library are AGPL-3.0, so version 2 replaces them.
 **Excluded:** DEIMv2 (its 2026 licence allows non-commercial use only); RF-DETR Atto, Femto, Pico, XLarge and 2XLarge (Roboflow Platform Model License 1.0: commercial self-hosting needs a paid add-on); the original YOLOv7 and YOLOv9 repositories (GPL-3.0).
 
 **Open question, pretraining data:** Objects365's own site states no licence; a third-party listing describes it as non-commercial. Weights pretrained on it may inherit that restriction, so the COCO-only weights are preferred where a candidate offers both, and the choice is recorded with the result. COCO's annotations are CC-BY 4.0 and its images carry their Flickr licences; ImageNet-pretrained backbones carry ImageNet's research terms. These questions apply to almost every published detector, the version 1 one included. Not legal advice.
+
+## Phase 11 reference tools (licences checked 2026-11-09)
+
+Neither is a dependency of `src/aerialrange` (build2 R13); both live under `tools/openvins/` and are used only to produce a reference trajectory for comparison.
+
+| Tool | Licence | Use |
+|---|---|---|
+| OpenVINS v2.7 (https://github.com/rpng/open_vins) | GPL-3.0 (LICENSE file in the repository) | Built and run in its own container (`tools/openvins/Dockerfile`) on converted Mid-Air flights; only its output trajectories are compared. Its code never enters `src/`. |
+| rosbags 0.11.9 (https://gitlab.com/ternaris/rosbags) | Apache-2.0 (package metadata, `License-Expression`) | Writes the ROS 1 bags OpenVINS reads (`tools/openvins/make_bag.py`), installed in a separate folder (`cache/venvs/rosbags_lib`). |
+
+The navigation filter itself (`src/aerialrange/navigation/`) uses only NumPy, SciPy and OpenCV, already listed above. Its method is from the published papers cited in `docs/navigation.md`; no OpenVINS code was copied, and only OpenVINS's published configuration values are used as settings.

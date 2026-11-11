@@ -81,6 +81,22 @@ VisDrone2019 detection train (with 78 images removed that share source videos wi
 - **Splits:** by town, stratified by town type, seed 0: development Town01, Town07, Town10HD; calibration Town04, Town05; test Town02, Town03, Town06 (`results/splits.json`, D-701). The official split is by frame within each town and is not used.
 - **Limitation:** synthetic imagery from an ideal pinhole camera, with CARLA's traffic and pedestrian behaviour.
 
+### HIT-UAV (thermal detection; version 2, Phase 13)
+
+- **Source:** https://github.com/suojiashun/HIT-UAV-Infrared-Thermal-Dataset, commit 669259659b21a2737ca9f5e4bc81892acbe6ecd8 (`configs/thermal.yaml`).
+- **Citation:** Suo, J., Wang, T., Zhang, X., Chen, H., Zhou, W. and Shi, W. (2023) 'HIT-UAV: a high-altitude infrared thermal dataset for unmanned aerial vehicle-based object detection', *Scientific Data*, 10, 227. doi:10.1038/s41597-023-02066-6.
+- **Licence (checked 2026-11-10):** CC BY 4.0, from the repository's LICENSE file (D-748). Use, change and redistribution allowed, including commercial, with credit. No HIT-UAV images are committed here.
+- **Used:** 2,898 thermal images, 640 x 512, DJI Zenmuse XT2 on a DJI Matrice M210 V2, 60 to 130 m, camera 30 to 90 degrees down, by day and night. Person, Car and Bicycle map to the detector's VisDrone classes; OtherVehicle and DontCare are ignored regions.
+- **Splits:** by capture day (D-751): validation 23 January 2021, test 16 and 21 January 2021, training the other six days, because the official random split puts frames of the same videos in training and test. The official split is used once, for comparison with published results (`results/hituav/splits.json`).
+
+### BIRDSAI (thermal tracking; version 2, Phase 13)
+
+- **Source:** LILA, "Conservation Drones" (https://lila.science/datasets/conservationdrones), real training and test archives (SHA-256 in `Data/birdsai/zips/sha256.txt`); the simulated set is not used.
+- **Citation:** Bondi, E., Jain, R., Aggrawal, P., Anand, S., Hannaford, R., Kapoor, A., Piavis, J., Shah, S., Joppa, L., Dilkina, B. and Tambe, M. (2020) 'BIRDSAI: a dataset for detection and tracking in aerial thermal infrared videos', *IEEE Winter Conference on Applications of Computer Vision (WACV)*.
+- **Licence (checked 2026-11-10):** Community Data License Agreement, permissive variant, as stated on the LILA page (D-754). No BIRDSAI images are committed here.
+- **Used:** 48 real night-time thermal videos from fixed-wing drone patrols over African protected areas (FLIR Vue Pro 640 or Tamarisk 640, 640 x 480, 60 to 120 m), humans and animals tracked frame by frame. People only are scored; animals count as false alarms, not ignored.
+- **Splits:** the dataset's own: 32 training videos (6 with people) tune the tracker; 16 test videos (5 with people) are scored once.
+
 ## Code from other projects (version 2)
 
 - **TrackEval** (https://github.com/JonathonLuiten/TrackEval, commit 12c8791, MIT licence, checked from its LICENSE file 2026-11-04): the Higher Order Tracking Accuracy (HOTA) computation is vendored in `src/aerialrange/track/hota.py` with its copyright notice, changed only to run on NumPy 2.

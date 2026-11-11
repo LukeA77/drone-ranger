@@ -1,0 +1,566 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "results/hituav/schema.json",
+ "title": "HIT-UAV split (Phase 13, D-751)",
+ "description": "x-files maps each file's path inside this folder to its definition (first match applies); tests/test_results_schema.py checks every file against it. Written by scripts/results_schema.py from the existing files: required keys are those every file has; shares and probabilities lie in 0 to 1; counts, sizes and times are not negative. Each definition's description names the script that writes the file.",
+ "x-files": {
+  "splits.json": "#/$defs/splits"
+ },
+ "$defs": {
+  "splits": {
+   "description": "scripts/hituav_coco_package.py: the day split and the official split",
+   "type": "object",
+   "required": [
+    "class_map",
+    "dataset",
+    "day",
+    "day_files",
+    "day_split_days",
+    "official",
+    "official_files",
+    "repository_commit",
+    "rule"
+   ],
+   "properties": {
+    "class_map": {
+     "type": "object",
+     "required": [
+      "Bicycle",
+      "Car",
+      "DontCare",
+      "OtherVehicle",
+      "Person"
+     ],
+     "properties": {
+      "Bicycle": {
+       "type": "string"
+      },
+      "Car": {
+       "type": "string"
+      },
+      "DontCare": {
+       "type": "string"
+      },
+      "OtherVehicle": {
+       "type": "string"
+      },
+      "Person": {
+       "type": "string"
+      }
+     }
+    },
+    "dataset": {
+     "type": "string"
+    },
+    "day": {
+     "type": "object",
+     "required": [
+      "test",
+      "train",
+      "val"
+     ],
+     "properties": {
+      "test": {
+       "type": "object",
+       "required": [
+        "altitudes_m",
+        "angles_deg",
+        "boxes_per_class",
+        "ignored_boxes",
+        "images",
+        "night_images",
+        "serial_gap_to_nearest_train_same_setting"
+       ],
+       "properties": {
+        "altitudes_m": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "angles_deg": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "boxes_per_class": {
+         "type": "object",
+         "required": [
+          "bicycle",
+          "car",
+          "pedestrian"
+         ],
+         "properties": {
+          "bicycle": {
+           "type": "integer"
+          },
+          "car": {
+           "type": "integer"
+          },
+          "pedestrian": {
+           "type": "integer"
+          }
+         }
+        },
+        "ignored_boxes": {
+         "type": "integer"
+        },
+        "images": {
+         "type": "integer"
+        },
+        "night_images": {
+         "type": "integer"
+        },
+        "serial_gap_to_nearest_train_same_setting": {
+         "type": "object",
+         "required": [
+          "q10",
+          "q50",
+          "q90"
+         ],
+         "properties": {
+          "q10": {
+           "type": "integer"
+          },
+          "q50": {
+           "type": "integer"
+          },
+          "q90": {
+           "type": "integer"
+          }
+         }
+        }
+       }
+      },
+      "train": {
+       "type": "object",
+       "required": [
+        "altitudes_m",
+        "angles_deg",
+        "boxes_per_class",
+        "ignored_boxes",
+        "images",
+        "night_images"
+       ],
+       "properties": {
+        "altitudes_m": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "angles_deg": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "boxes_per_class": {
+         "type": "object",
+         "required": [
+          "bicycle",
+          "car",
+          "pedestrian"
+         ],
+         "properties": {
+          "bicycle": {
+           "type": "integer"
+          },
+          "car": {
+           "type": "integer"
+          },
+          "pedestrian": {
+           "type": "integer"
+          }
+         }
+        },
+        "ignored_boxes": {
+         "type": "integer"
+        },
+        "images": {
+         "type": "integer"
+        },
+        "night_images": {
+         "type": "integer"
+        }
+       }
+      },
+      "val": {
+       "type": "object",
+       "required": [
+        "altitudes_m",
+        "angles_deg",
+        "boxes_per_class",
+        "ignored_boxes",
+        "images",
+        "night_images",
+        "serial_gap_to_nearest_train_same_setting"
+       ],
+       "properties": {
+        "altitudes_m": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "angles_deg": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "boxes_per_class": {
+         "type": "object",
+         "required": [
+          "bicycle",
+          "car",
+          "pedestrian"
+         ],
+         "properties": {
+          "bicycle": {
+           "type": "integer"
+          },
+          "car": {
+           "type": "integer"
+          },
+          "pedestrian": {
+           "type": "integer"
+          }
+         }
+        },
+        "ignored_boxes": {
+         "type": "integer"
+        },
+        "images": {
+         "type": "integer"
+        },
+        "night_images": {
+         "type": "integer"
+        },
+        "serial_gap_to_nearest_train_same_setting": {
+         "type": "object",
+         "required": [
+          "q10",
+          "q50",
+          "q90"
+         ],
+         "properties": {
+          "q10": {
+           "type": "integer"
+          },
+          "q50": {
+           "type": "integer"
+          },
+          "q90": {
+           "type": "integer"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "day_files": {
+     "type": "object",
+     "required": [
+      "test",
+      "train",
+      "val"
+     ],
+     "properties": {
+      "test": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "train": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "val": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "day_split_days": {
+     "type": "object",
+     "required": [
+      "test",
+      "train",
+      "val"
+     ],
+     "properties": {
+      "test": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "train": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "val": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "official": {
+     "type": "object",
+     "required": [
+      "test",
+      "train",
+      "val"
+     ],
+     "properties": {
+      "test": {
+       "type": "object",
+       "required": [
+        "altitudes_m",
+        "angles_deg",
+        "boxes_per_class",
+        "ignored_boxes",
+        "images",
+        "night_images",
+        "serial_gap_to_nearest_train_same_setting"
+       ],
+       "properties": {
+        "altitudes_m": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "angles_deg": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "boxes_per_class": {
+         "type": "object",
+         "required": [
+          "bicycle",
+          "car",
+          "pedestrian"
+         ],
+         "properties": {
+          "bicycle": {
+           "type": "integer"
+          },
+          "car": {
+           "type": "integer"
+          },
+          "pedestrian": {
+           "type": "integer"
+          }
+         }
+        },
+        "ignored_boxes": {
+         "type": "integer"
+        },
+        "images": {
+         "type": "integer"
+        },
+        "night_images": {
+         "type": "integer"
+        },
+        "serial_gap_to_nearest_train_same_setting": {
+         "type": "object",
+         "required": [
+          "q10",
+          "q50",
+          "q90"
+         ],
+         "properties": {
+          "q10": {
+           "type": "integer"
+          },
+          "q50": {
+           "type": "integer"
+          },
+          "q90": {
+           "type": "integer"
+          }
+         }
+        }
+       }
+      },
+      "train": {
+       "type": "object",
+       "required": [
+        "altitudes_m",
+        "angles_deg",
+        "boxes_per_class",
+        "ignored_boxes",
+        "images",
+        "night_images"
+       ],
+       "properties": {
+        "altitudes_m": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "angles_deg": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "boxes_per_class": {
+         "type": "object",
+         "required": [
+          "bicycle",
+          "car",
+          "pedestrian"
+         ],
+         "properties": {
+          "bicycle": {
+           "type": "integer"
+          },
+          "car": {
+           "type": "integer"
+          },
+          "pedestrian": {
+           "type": "integer"
+          }
+         }
+        },
+        "ignored_boxes": {
+         "type": "integer"
+        },
+        "images": {
+         "type": "integer"
+        },
+        "night_images": {
+         "type": "integer"
+        }
+       }
+      },
+      "val": {
+       "type": "object",
+       "required": [
+        "altitudes_m",
+        "angles_deg",
+        "boxes_per_class",
+        "ignored_boxes",
+        "images",
+        "night_images",
+        "serial_gap_to_nearest_train_same_setting"
+       ],
+       "properties": {
+        "altitudes_m": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "angles_deg": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         }
+        },
+        "boxes_per_class": {
+         "type": "object",
+         "required": [
+          "bicycle",
+          "car",
+          "pedestrian"
+         ],
+         "properties": {
+          "bicycle": {
+           "type": "integer"
+          },
+          "car": {
+           "type": "integer"
+          },
+          "pedestrian": {
+           "type": "integer"
+          }
+         }
+        },
+        "ignored_boxes": {
+         "type": "integer"
+        },
+        "images": {
+         "type": "integer"
+        },
+        "night_images": {
+         "type": "integer"
+        },
+        "serial_gap_to_nearest_train_same_setting": {
+         "type": "object",
+         "required": [
+          "q10",
+          "q50",
+          "q90"
+         ],
+         "properties": {
+          "q10": {
+           "type": "integer"
+          },
+          "q50": {
+           "type": "integer"
+          },
+          "q90": {
+           "type": "integer"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "official_files": {
+     "type": "object",
+     "required": [
+      "test",
+      "train",
+      "val"
+     ],
+     "properties": {
+      "test": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "train": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "val": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "repository_commit": {
+     "type": "string"
+    },
+    "rule": {
+     "type": "string"
+    }
+   }
+  }
+ }
+}

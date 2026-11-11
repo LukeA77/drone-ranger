@@ -9,7 +9,7 @@ Commands run from the repository root with the project virtual environment. On W
 2. Check the data: `python scripts/check_data.py`. Then record checksums for the data cards with `python scripts/data_manifest.py`, which is heavy on disk; run it when nothing else is reading the data.
 3. Development and calibration evaluation and analysis: `make midair-eval`. Without make, run the five commands under `midair-eval` in the Makefile.
 4. Review the development figures in `results/midair/development/figures/`. Revisit the D-209 sampling values only if bins are under-populated, and record any change.
-5. Set `{{ERR_THRESHOLD_FRAC}}` (D-314), then fit on calibration:
+5. Set `ERR_THRESHOLD_FRAC` (D-314), then fit on calibration:
    `python scripts/midair_calibrate.py --level mid --base oracle_plane`
 6. Freeze. Record the fitted values from `results/midair/calibration_fit.json` in `configs/uncertainty.yaml` and `configs/geometry.yaml`, with sources.
 7. Test split, once:
@@ -42,7 +42,7 @@ Commands run from the repository root with the project virtual environment. On W
 3. B2, fine-tuning. Run on a GPU (`docs/gpu_training.md`):
    `python scripts/train_detector.py --name B2_yolo26n_640 --model yolo26n.pt --imgsz 640`
    Then track with `--weights cache/train/B2_yolo26n_640/weights/best.pt --class-map visdrone10`.
-4. B3 tiled inference, the tracker grid, and the pixel-noise fit (`{{SIGMA_PIX_MODEL}}`) are all on val.
+4. B3 tiled inference, the tracker grid, and the pixel-noise fit (`SIGMA_PIX_MODEL`) are all on val.
 5. Test-dev, once: rerun the frozen configurations with `--split test-dev --final`.
 
 ## VisDrone tracker tuning and final run (Phase 3, D-319 to D-321, D-605)
@@ -81,4 +81,63 @@ Commands run from the repository root with the project virtual environment. On W
 - Synthetic demo (no datasets): `aerialrange demo --out cache/demo`.
 - A real flight: `python scripts/auair_export_flight.py --clip 35`, then `aerialrange run --source cache/auair/flights/clip_35/frames --metadata cache/auair/flights/clip_35/metadata.csv --out cache/runs/auair_clip35`.
 - Documents: edit `docs/src/*.md`, then `python scripts/build_docs.py` (rebuilds `results/headline.json`, fills every number, refuses unresolved placeholders and banned phrases).
+- Results schemas: `python scripts/results_schema.py` rewrites `results/<folder>/schema.json` from that folder's files (D-759); `--check` reports a change without writing. Run it only when a new kind of result is added on purpose; `tests/test_results_schema.py` checks every file.
 - Showcase clips (D-618) and README media (D-619): `python scripts/auair_export_flight.py --clip 20` and `--clip 44`, then the accurate pipeline run of each (ONNX 960 detector, detection every frame), then `python scripts/make_showcase.py` and `python scripts/make_readme_media.py`. Needs `ffmpeg` on the PATH.
+
+## SynDrone data and truth (Phase 7, D-701 to D-716)
+
+1. Town split, once: `python scripts/make_syndrone_split.py` (whole towns, stratified; refuses to change an existing split).
+2. Fetch a town's members: `python scripts/syndrone_fetch.py --town <Town> --modality camera bboxes` (and `rgb` for frames; resumable, checks free disk space against `configs/data.yaml`).
+3. Truth, checks and the pipeline on a development town: `bash scripts/queues/syndrone_town.sh <Town>`. The remaining towns: `bash scripts/queues/syndrone_remaining.sh` (test towns get truth only).
+4. One sequence by hand: `python scripts/syndrone_run.py`, then `python scripts/syndrone_evaluate.py` (outputs in `cache/syndrone/runs/<name>/`).
+
+## Version 2 detector and tracker (Phase 8, D-715 to D-733)
+
+1. GPU package: `python scripts/visdrone_coco_package.py`; train on Kaggle (docs/gpu_training.md); unzip each run into `cache/train/`.
+2. Score each candidate on VisDrone validation: `bash scripts/queues/score_candidate.sh <run> <input size> <rfdetr|dfine>`; compare with `python scripts/candidates.py`.
+3. One-time test-dev run, after freezing: `python scripts/cache_detections.py --split test-dev --final ...`, then `python scripts/track_test.py --dets dfine_n_640 --class-map visdrone10 --tracker configs/trackers/motion_dfine_n_640.yaml --final` (refuses if the result exists).
+
+## Ranging, speed and calibration on SynDrone (Phase 9, D-734 to D-746)
+
+All on development and calibration towns; none reads the test towns.
+1. Contact-point correction: `python scripts/syndrone_contact_fit.py --run v2_dfine`.
+2. Speed display rule: `python scripts/syndrone_speed_display_fit.py` (reads the run's `speed_matches_development.csv.gz`).
+3. Interval calibration: `python scripts/syndrone_interval_calibration.py --run <name>`.
+4. Fine-tuned detector, leave one town out: `bash scripts/queues/syndrone_finetuned_dfine.sh` (needs `cache/train/dfine_syndrone_minus_<Town>/`).
+
+## End-to-end SynDrone test (Phase 10, D-749, D-753)
+
+1. Check the chain first: `SPLIT=development FRAMES=10 NAME=zz_p10_check bash scripts/queues/phase10_syndrone_test.sh`.
+2. Freeze: `python scripts/freeze.py --phase phase10`.
+3. The test, once: `bash scripts/queues/phase10_syndrone_test.sh` (pipeline, calibration, evaluation, breakdowns, search measures, then the three navigation grades).
+
+## Camera, IMU and GPS fusion on Mid-Air (Phase 11, D-741, D-744)
+
+1. Development: `python scripts/msckf_midair.py --split development --name <name>`; GPS gate rule: `python scripts/msckf_gps_gate_check.py`; effect on ranging: `python scripts/msckf_ranging.py --nav <name>`.
+2. OpenVINS reference (camera and IMU only): `python scripts/msckf_openvins_compare.py --nav msckf_sig4 --ov-dir <OpenVINS output folder>`.
+3. Freeze and test once: `python scripts/freeze.py --phase phase11`; `python scripts/msckf_midair.py --split test --final ...`; then `msckf_ranging.py --split test`.
+
+## Edge, map and ROS 2 (Phase 12, D-723, D-745 to D-750)
+
+1. Runtime images for x86-64 and ARM64: `make containers`; same outputs on both: `make platform-check FRAMES=<folder of JPEG frames>` (`scripts/platform_check.py`).
+2. Pi 5 speed, estimated: `python scripts/estimate_pi.py --model <name> weights/<model>.onnx`; measured, on a Pi 5: `make pi-benchmark`.
+3. ROS 2 integration test in Docker: `bash scripts/ros2_integration.sh <name> <frames dir> <flight CSV> <origin> [frames]` (inputs from `python scripts/ros2_inputs.py`; docs/ros2.md).
+4. Search map: `python scripts/make_search_map.py auair --clip 35 --source cache/runs/v2_clip35` or `python scripts/make_search_map.py syndrone --town Town07 --height 50 --source v2_dfine` (docs/map.md).
+
+## Thermal detection and tracking (Phase 13, D-751, D-754, D-757)
+
+1. Package HIT-UAV for the GPU: `python scripts/hituav_coco_package.py` (no test labels packaged).
+2. Train on Kaggle: `gpu/train_dfine_hituav_kaggle.py` (docs/gpu_training.md). Two sessions: the two day-split runs, then the official-split run. Unzip each `<run>.zip` into `cache/train/`.
+3. Export with parity and score validation: `bash scripts/queues/phase13_thermal_prepare.sh`.
+4. BIRDSAI: `python scripts/birdsai_prep.py`, then `bash scripts/queues/phase13_birdsai.sh tune` (training videos; `RUNS="..."` picks the detectors).
+5. Freeze, then the one-time tests: `python scripts/freeze.py --phase phase13`; `bash scripts/queues/phase13_thermal_test.sh`; `bash scripts/queues/phase13_birdsai.sh test`.
+
+## Multi-drone search simulation (Phase 14, D-752, D-756)
+
+1. Camera model from frozen runs: `python scripts/multidrone_sensor_fit.py --name p10_v2_cal --split test --allow-test` and `--name v2_dfine_cal_rural --split development`.
+2. Design stage (development seeds): `python scripts/multidrone_run.py design --sensor results/multi_drone/sensor_p10_v2_cal.json --workers 12`; check: `python scripts/multidrone_design_check.py . 12`.
+3. Fill the choices in `configs/multi_drone.yaml`, set `frozen: true`, `python scripts/freeze.py --phase phase14`.
+4. Test stage, once: `python scripts/multidrone_run.py test --sensor results/multi_drone/sensor_p10_v2_cal.json --workers 12`, and for the rural camera with `--only lawnmower_n4 chosen_noshare_n4 chosen_share_n4 --sensor results/multi_drone/sensor_v2_dfine_cal_rural.json`.
+5. Byte-budget follow-up (development seeds): `python scripts/multidrone_budget_check.py --workers 12`.
+6. Version 2 demo video (D-761): `python scripts/make_demo_v2.py` (needs `cache/maps/syndrone_Town07_h50/` from `make_search_map.py` and `ffmpeg`; writes `cache/video/demo_v2.mp4` and `results/video/demo_v2.json`).
+Each run of 12 workers needs about 2 GB of memory; on the 15 GB laptop do not overlap it with detection or tracker grids.

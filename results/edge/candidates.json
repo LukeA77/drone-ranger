@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-08T14:19:04+00:00",
+ "generated_utc": "2026-11-11T12:54:27+00:00",
  "accuracy": "VisDrone MOT val: detection AP on every 10th frame; tracking with the project's tracker tuned per detector (D-319). Development numbers.",
  "speed": "laptop: version 2 pipeline benchmark (read, detect, track; run configuration's stride); Pi 5: ESTIMATED detector inference only (D-723)",
  "pi5_frontier": [

@@ -1,0 +1,59 @@
+{
+ "paired_b4_minus_b8": {
+  "mean_s": 105.93728526625371,
+  "rmt_b4": 1071.8381442012387,
+  "rmt_b8": 965.9008589349852,
+  "ci95": [
+   -21.657986207120913,
+   233.16568440379208
+  ]
+ },
+ "lawnmower_faon_pdbylen": {
+  "rmt": 616.95,
+  "repeat": 0.7293881307654357
+ },
+ "auction_b4_faon_pdbylen": {
+  "rmt": 1073.920858934985,
+  "repeat": 0.9031812575431336
+ },
+ "auction_b8_faon_pdbylen": {
+  "rmt": 881.3617178699703,
+  "repeat": 0.8855964206762087
+ },
+ "lawnmower_faon_pdconst": {
+  "rmt": 678.12,
+  "repeat": 0.7449538429715172
+ },
+ "auction_b4_faon_pdconst": {
+  "rmt": 919.9808589349851,
+  "repeat": 0.8956673359844165
+ },
+ "auction_b8_faon_pdconst": {
+  "rmt": 958.3308589349851,
+  "repeat": 0.8879174501719822
+ },
+ "lawnmower_faoff_pdbylen": {
+  "rmt": 636.19,
+  "repeat": 0.7340301679263307
+ },
+ "auction_b4_faoff_pdbylen": {
+  "rmt": 479.39,
+  "repeat": 0.7502313076580247
+ },
+ "auction_b8_faoff_pdbylen": {
+  "rmt": 551.77,
+  "repeat": 0.7803415716084177
+ },
+ "lawnmower_faoff_pdconst": {
+  "rmt": 682.58,
+  "repeat": 0.7524877283450105
+ },
+ "auction_b4_faoff_pdconst": {
+  "rmt": 528.97,
+  "repeat": 0.7681272409300604
+ },
+ "auction_b8_faoff_pdconst": {
+  "rmt": 552.3,
+  "repeat": 0.7857793192711945
+ }
+}

@@ -26,6 +26,16 @@ def test_round_trip_keeps_frames_and_empty_frames(tmp_path):
     assert dets[2][2].tolist() == [4] and shapes.tolist() == [[240, 320]] * 3
 
 
+def test_frames_share_one_copy_of_each_array(tmp_path):
+    # One decompressed array per key, sliced per frame: memory stays the cache's size, not
+    # frames x cache (a 7,957-frame BIRDSAI video needed over 8 GB before this).
+    p = tmp_path / "seq.npz"
+    save_sequence(p, _dets() * 50, [(240, 320)] * 150)
+    dets, _ = load_sequence(p)
+    for i in range(3):
+        assert len({id(np.asarray(d[i]).base) for d in dets if len(d[i])}) == 1
+
+
 def test_replay_returns_frames_in_order_and_filters_low_scores(tmp_path):
     p = tmp_path / "seq.npz"
     save_sequence(p, _dets(), [(240, 320)] * 3)

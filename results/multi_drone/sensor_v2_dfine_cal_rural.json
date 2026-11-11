@@ -1,0 +1,117 @@
+{
+ "name": "v2_dfine_cal_rural",
+ "split": "development",
+ "sequences": [
+  "Town07_h20",
+  "Town07_h50",
+  "Town07_h80"
+ ],
+ "group": "person",
+ "min_depression_deg": 10.0,
+ "pass_split_gap_frames": 30,
+ "n_boot": 1000,
+ "by_height": {
+  "h20": {
+   "n_passes": 412,
+   "n_people": 105,
+   "pd_per_pass": 0.22330097087378642,
+   "pd_ci95_resample_sequences": null,
+   "pass_frames_quartiles": [
+    20.0,
+    43.0,
+    62.0
+   ],
+   "pd_by_pass_frames": {
+    "1-20": {
+     "n": 105,
+     "pd": 0.01904761904761905
+    },
+    "20-43": {
+     "n": 105,
+     "pd": 0.2
+    },
+    "43-62": {
+     "n": 101,
+     "pd": 0.26732673267326734
+    },
+    "62-128": {
+     "n": 101,
+     "pd": 0.4158415841584158
+    }
+   },
+   "box_h_px_median": 24.0,
+   "false_alarms_per_km2": 498.96807963658495,
+   "false_alarm_tracks": 156,
+   "ground_searched_km2": 0.31264525,
+   "range_half_68_m_median": 0.3642683026861517
+  },
+  "h50": {
+   "n_passes": 485,
+   "n_people": 105,
+   "pd_per_pass": 0.008247422680412371,
+   "pd_ci95_resample_sequences": null,
+   "pass_frames_quartiles": [
+    17.0,
+    54.0,
+    85.0
+   ],
+   "pd_by_pass_frames": {
+    "1-17": {
+     "n": 123,
+     "pd": 0.0
+    },
+    "17-54": {
+     "n": 122,
+     "pd": 0.0
+    },
+    "54-85": {
+     "n": 123,
+     "pd": 0.024390243902439025
+    },
+    "85-160": {
+     "n": 117,
+     "pd": 0.008547008547008548
+    }
+   },
+   "box_h_px_median": 19.0,
+   "false_alarms_per_km2": 382.8939121883193,
+   "false_alarm_tracks": 95,
+   "ground_searched_km2": 0.2481105,
+   "range_half_68_m_median": 0.18734568360692266
+  },
+  "h80": {
+   "n_passes": 504,
+   "n_people": 105,
+   "pd_per_pass": 0.0,
+   "pd_ci95_resample_sequences": null,
+   "pass_frames_quartiles": [
+    33.0,
+    75.0,
+    136.0
+   ],
+   "pd_by_pass_frames": {
+    "1-33": {
+     "n": 127,
+     "pd": 0.0
+    },
+    "33-75": {
+     "n": 126,
+     "pd": 0.0
+    },
+    "75-136": {
+     "n": 126,
+     "pd": 0.0
+    },
+    "136-387": {
+     "n": 125,
+     "pd": 0.0
+    }
+   },
+   "box_h_px_median": 9.0,
+   "false_alarms_per_km2": 456.62047804474184,
+   "false_alarm_tracks": 99,
+   "ground_searched_km2": 0.21681025,
+   "range_half_68_m_median": null
+  }
+ }
+}

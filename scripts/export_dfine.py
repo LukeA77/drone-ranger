@@ -61,6 +61,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--repo", type=Path, required=True)
     ap.add_argument("--n-frames", type=int, default=50)
     ap.add_argument("--score-floor", type=float, default=None, help="default: run config's")
+    ap.add_argument(
+        "--parity-dir",
+        type=Path,
+        help="folder of .jpg images for the parity check (default: VisDrone MOT val frames)",
+    )
     args = ap.parse_args(argv)
     args.repo = args.repo.resolve()
     run_dir = REPO_ROOT / "cache" / "train" / args.run
@@ -118,9 +123,12 @@ def main(argv: list[str] | None = None) -> int:
     # The authors' validation ops (configs/dfine/include/dataloader.yml), their own classes.
     resize, to_tensor = Resize(size=[res, res]), ConvertPILImage(dtype="float32", scale=True)
     frames = []
-    for seq in sorted(p for p in PREP.iterdir() if p.is_dir()):
-        meta = json.loads((seq / "seqinfo.json").read_text())
-        frames += sorted((REPO_ROOT / meta["frame_dir"]).glob("*.jpg"))
+    if args.parity_dir is not None:
+        frames = sorted(Path(args.parity_dir).glob("*.jpg"))
+    else:
+        for seq in sorted(p for p in PREP.iterdir() if p.is_dir()):
+            meta = json.loads((seq / "seqinfo.json").read_text())
+            frames += sorted((REPO_ROOT / meta["frame_dir"]).glob("*.jpg"))
     rng = np.random.default_rng(load_config("project").require("seed"))
     pick = sorted(rng.choice(len(frames), size=min(args.n_frames, len(frames)), replace=False))
     rows = []
@@ -150,6 +158,7 @@ def main(argv: list[str] | None = None) -> int:
         "input_hw": [onnx_det.h, onnx_det.w],
         "score_floor": floor,
         "n_frames": len(pick),
+        "parity_images": str(args.parity_dir) if args.parity_dir else "VisDrone MOT val",
         "torch": torch.__version__,
         "onnxruntime": version("onnxruntime"),
         "reference": "authors' validation transform, network and post-processor (PyTorch)",

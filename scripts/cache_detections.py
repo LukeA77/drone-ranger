@@ -26,7 +26,9 @@ from aerialrange.utils.config import REPO_ROOT, load_config
 sys.path.insert(0, str(Path(__file__).resolve().parent))  # scripts/ultralytics_v1.py
 from ultralytics_v1 import library_version, make_detector  # noqa: E402
 
-PREP = REPO_ROOT / "cache" / "visdrone" / "mot"
+PREP_ROOT = REPO_ROOT / "cache"  # <dataset>/mot/<split>/<sequence>/
+# BIRDSAI (D-754): scripts/birdsai_prep.py; train tunes, test runs once
+SPLITS = {"visdrone": ("val", "test-dev"), "birdsai": ("train", "test")}
 # Ultralytics 8.4.182 engine/model.py, Model.track: conf defaults to 0.1 because
 # "trackers need low-confidence input".
 TRACK_CONF = 0.1
@@ -39,13 +41,17 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--class-map", required=True)
     ap.add_argument("--imgsz", type=int, required=True)
     ap.add_argument("--kind", default="yolo", choices=KINDS)
-    ap.add_argument("--split", default="val", choices=["val", "test-dev"])
+    ap.add_argument("--dataset", default="visdrone", choices=sorted(SPLITS))
+    ap.add_argument("--split", default="val", choices=["val", "test-dev", "train", "test"])
     ap.add_argument("--final", action="store_true")
     ap.add_argument("--tiled", action="store_true", help="B3: tiled detection (D-317)")
     ap.add_argument("--nms-ios", type=float, default=None, help="tile merge IoS (D-318)")
     args = ap.parse_args(argv)
-    if args.split == "test-dev" and not args.final:
-        print("test-dev runs once, after all settings are frozen. Use --final.")
+    if args.split not in SPLITS[args.dataset]:
+        print(f"{args.dataset} splits: {SPLITS[args.dataset]}")
+        return 1
+    if args.split in ("test-dev", "test") and not args.final:
+        print(f"{args.split} runs once, after all settings are frozen. Use --final.")
         return 1
     import cv2
 
@@ -55,9 +61,11 @@ def main(argv: list[str] | None = None) -> int:
     predict = make_detector(args.kind, args.weights, args.imgsz, TRACK_CONF, max_det, sorted(cmap))
 
     tcfg = det.require("tiling") if args.tiled else None
-    out_dir = REPO_ROOT / "cache" / "visdrone" / "dets" / args.run / args.split
+    out_dir = REPO_ROOT / "cache" / args.dataset / "dets" / args.run / args.split
     seconds, n = 0.0, 0
-    for seq in sorted(p for p in (PREP / args.split).iterdir() if p.is_dir()):
+    for seq in sorted(
+        p for p in (PREP_ROOT / args.dataset / "mot" / args.split).iterdir() if p.is_dir()
+    ):
         dest = out_dir / f"{seq.name}.npz"
         if dest.exists():
             print(f"{seq.name}: cached", flush=True)

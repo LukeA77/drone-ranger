@@ -39,3 +39,6 @@ cache/
 # Local working files (never published)
 CLAUDE.md
 local/
+
+# browser automation tool output (screenshots, logs)
+.playwright-mcp/
