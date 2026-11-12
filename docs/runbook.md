@@ -141,3 +141,13 @@ All on development and calibration towns; none reads the test towns.
 5. Byte-budget follow-up (development seeds): `python scripts/multidrone_budget_check.py --workers 12`.
 6. Version 2 demo video (D-761): `python scripts/make_demo_v2.py` (needs `cache/maps/syndrone_Town07_h50/` from `make_search_map.py` and `ffmpeg`; writes `cache/video/demo_v2.mp4` and `results/video/demo_v2.json`).
 Each run of 12 workers needs about 2 GB of memory; on the 15 GB laptop do not overlap it with detection or tracker grids.
+
+## Confirmed finds and compact sharing (Phase 16, D-764)
+
+1. Measurements from frozen runs: `python scripts/multidrone_clutter_fit.py --name p10_v2_cal --split test --allow-test` and `--name v2_dfine_cal_rural --split development` (false-alarm recurrence, two-kind fit, persistence refits); `python scripts/multidrone_bytes.py --workers 5` (where Phase 14's sharing bytes go, development seeds).
+2. Design stages (development seeds), each choice filled into `configs/search16.yaml` before the next: `python scripts/multidrone16_run.py design1 --workers 5`, then `design2`, then `design3`.
+3. Set `frozen: true` in `configs/search16.yaml`, then `python scripts/freeze.py --phase phase16`.
+4. Test stage, once: `python scripts/multidrone16_run.py test --workers 5`.
+5. Paired comparisons for H13 to H16: `python scripts/multidrone16_paired.py test` (reads the test's per-seed file; simulates nothing).
+6. Look-alike sensitivity check (D-766; development seeds, after the test): `python scripts/multidrone16_sensitivity.py --workers 5` (2,400 searches, about 1 h 35 min with 5 workers).
+Five workers stay within the laptop's memory; do not overlap with a Phase 13 queue.

@@ -1,0 +1,57 @@
+# Phase 16 search simulation (D-764): confirmed finds, the sweep planner, compact sharing, a
+# coordinator option. Design choices are made on development seeds (scripts/multidrone16_run.py
+# design1, design2, design3) by rules fixed in D-764 before any run, then frozen before the
+# test seeds run once. World, camera, team size, speed and height are Phase 14's
+# (configs/multi_drone.yaml, frozen).
+frozen:
+  value: true
+  placeholder: null
+  source: "Set true only after the three design stages, before any test seed runs (D-764)"
+design_confirm_k:
+  value: [2, 3]
+  placeholder: null
+  source: "Detections of a place before it is an alarm to the crew: two looks (the least that is a confirmation) and three"
+design_spacing_factor:
+  value: [1.0, 0.5]
+  placeholder: null
+  source: "Sweep lane spacing as a share of the footprint's narrowest width: Phase 14's lanes (no ground skipped, small overlap) and half (every spot seen twice up close)"
+design_min_track_frames:
+  value: [1, 6, 10]
+  placeholder: null
+  source: "Persistence filter: none, the median life of false-alarm tracks, the median life of person tracks (results/multi_drone/clutter_p10_v2_cal.json, persistence_values)"
+design_post:
+  value: ["resweep", "map_b4", "coverage_b4", "map_b2", "map_b8"]
+  placeholder: null
+  source: "After a sweep: sweep again; Phase 14's map-guided blocks (2, 4, 8 lanes, Phase 14's design grid); 4-lane blocks on a map of where nothing was seen (detections left out, so recurring look-alikes do not pull drones back, as they did the Phase 14 map in a check on development seeds, D-764)"
+design_lost_after_s:
+  value: [10.0, 30.0, 60.0]
+  placeholder: null
+  source: "Silence after which a drone is presumed lost; chosen at 50 % packet loss, where a wrong verdict is most likely, with one drone really lost at half a sweep, so a slow takeover also costs time (D-765)"
+design_lost_loss:
+  value: 0.5
+  placeholder: null
+  source: "Packet loss for the lost-drone timeout choice: the middle of Phase 14's swept losses"
+confirm_k:
+  value: 2
+  placeholder: null
+  source: "Design stage 1 on development seeds 0-199 (results/multi_drone/phase16_design1.json, choice sweep_k2_f1_m1: lowest mean time to confirmed find, no tie, D-765)"
+spacing_factor:
+  value: 1.0
+  placeholder: null
+  source: "Design stage 1 on development seeds 0-199 (results/multi_drone/phase16_design1.json, choice sweep_k2_f1_m1: lowest mean time to confirmed find, no tie, D-765)"
+min_track_frames:
+  value: 1
+  placeholder: null
+  source: "Design stage 1 on development seeds 0-199 (results/multi_drone/phase16_design1.json, choice sweep_k2_f1_m1: lowest mean time to confirmed find, no tie, D-765)"
+post:
+  value: "coverage"
+  placeholder: null
+  source: "Design stage 2 on development seeds 0-199 (results/multi_drone/phase16_design2.json, choice sweep_post_coverage_b4: lowest mean time to confirmed find, no tie, D-765)"
+block_lanes:
+  value: 4
+  placeholder: null
+  source: "Design stage 2 on development seeds 0-199 (results/multi_drone/phase16_design2.json, choice sweep_post_coverage_b4: lowest mean time to confirmed find, no tie, D-765)"
+lost_after_s:
+  value: 60.0
+  placeholder: null
+  source: "Design stage 3 on development seeds 0-199 at 50 % loss with a drone lost at half a sweep (results/multi_drone/phase16_design3.json): 10, 30 and 60 s tied exactly (drones choose a new lane only at lane ends, about 100 s apart); the longest, by the tie rule (D-765)"

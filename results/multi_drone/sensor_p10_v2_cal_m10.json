@@ -1,0 +1,62 @@
+{
+ "name": "p10_v2_cal",
+ "split": "test",
+ "sequences": [
+  "Town02_h20",
+  "Town02_h50",
+  "Town02_h80",
+  "Town03_h20",
+  "Town03_h50",
+  "Town03_h80",
+  "Town06_h20",
+  "Town06_h50",
+  "Town06_h80"
+ ],
+ "group": "person",
+ "min_depression_deg": 10.0,
+ "pass_split_gap_frames": 30,
+ "n_boot": 1000,
+ "by_height": {
+  "h20": {
+   "n_passes": 1060,
+   "n_people": 435,
+   "pd_per_pass": 0.2641509433962264,
+   "pd_ci95_resample_sequences": [
+    0.11353711790393013,
+    0.4891640866873065
+   ],
+   "pass_frames_quartiles": [
+    27.0,
+    53.0,
+    84.0
+   ],
+   "pd_by_pass_frames": {
+    "1-27": {
+     "n": 278,
+     "pd": 0.04316546762589928
+    },
+    "27-53": {
+     "n": 263,
+     "pd": 0.22433460076045628
+    },
+    "53-84": {
+     "n": 257,
+     "pd": 0.3346303501945525
+    },
+    "84-129": {
+     "n": 262,
+     "pd": 0.46946564885496184
+    }
+   },
+   "box_h_px_median": 27.0,
+   "false_alarms_per_km2": 216.78469261239565,
+   "false_alarm_tracks": 236,
+   "ground_searched_km2": 1.08863775,
+   "range_half_68_m_median": 0.371628461748032
+  }
+ },
+ "persistence_filter": {
+  "min_track_frames": 10,
+  "source": "clutter_p10_v2_cal.json"
+ }
+}

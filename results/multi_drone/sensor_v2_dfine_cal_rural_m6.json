@@ -1,0 +1,53 @@
+{
+ "name": "v2_dfine_cal_rural",
+ "split": "development",
+ "sequences": [
+  "Town07_h20",
+  "Town07_h50",
+  "Town07_h80"
+ ],
+ "group": "person",
+ "min_depression_deg": 10.0,
+ "pass_split_gap_frames": 30,
+ "n_boot": 1000,
+ "by_height": {
+  "h20": {
+   "n_passes": 412,
+   "n_people": 105,
+   "pd_per_pass": 0.1941747572815534,
+   "pd_ci95_resample_sequences": null,
+   "pass_frames_quartiles": [
+    20.0,
+    43.0,
+    62.0
+   ],
+   "pd_by_pass_frames": {
+    "1-20": {
+     "n": 105,
+     "pd": 0.01904761904761905
+    },
+    "20-43": {
+     "n": 105,
+     "pd": 0.1523809523809524
+    },
+    "43-62": {
+     "n": 101,
+     "pd": 0.22772277227722773
+    },
+    "62-128": {
+     "n": 101,
+     "pd": 0.38613861386138615
+    }
+   },
+   "box_h_px_median": 24.0,
+   "false_alarms_per_km2": 275.07214646632247,
+   "false_alarm_tracks": 86,
+   "ground_searched_km2": 0.31264525,
+   "range_half_68_m_median": 0.3642683026861517
+  }
+ },
+ "persistence_filter": {
+  "min_track_frames": 6,
+  "source": "clutter_v2_dfine_cal_rural.json"
+ }
+}

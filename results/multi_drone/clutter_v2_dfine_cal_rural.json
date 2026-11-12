@@ -1,0 +1,274 @@
+{
+ "name": "v2_dfine_cal_rural",
+ "split": "development",
+ "height_m": 20,
+ "sequences": [
+  "Town07_h20"
+ ],
+ "radius_m": 1.8213415134307585,
+ "radius_rule": "TAIL_SIGMAS x the sensor file's 68 % half-width at 20 m",
+ "pass_split_gap_frames": 30,
+ "ground_searched_km2": 0.31264525,
+ "persistence_values": {
+  "rule": "1 (none), median life of false-alarm tracks, median life of person tracks",
+  "m": [
+   1,
+   6,
+   8
+  ]
+ },
+ "by_min_track_frames": {
+  "1": {
+   "min_track_frames": 1,
+   "false_alarm_tracks": 156,
+   "false_alarms_per_km2": 498.96807963658495,
+   "track_life_median_frames": {
+    "false_alarm": 6.0,
+    "person": 8.0
+   },
+   "recurrence": {
+    "1.82134": {
+     "later_passes": 180,
+     "q": 0.005555555555555556,
+     "repeat_share": 0.00641025641025641,
+     "sites_with_later_passes": 96,
+     "persistent": {
+      "share": 0.561,
+      "fire_per_pass": 0.01,
+      "ci95_resample_sites": {
+       "share": [
+        0.0,
+        0.999
+       ],
+       "fire_per_pass": [
+        0.0,
+        0.02
+       ]
+      },
+      "rule": "maximum likelihood, two kinds: persistent look-alikes firing with fire_per_pass on each later pass, the rest never again"
+     }
+    },
+    "2": {
+     "later_passes": 180,
+     "q": 0.005555555555555556,
+     "repeat_share": 0.00641025641025641,
+     "sites_with_later_passes": 96,
+     "persistent": {
+      "share": 0.561,
+      "fire_per_pass": 0.01,
+      "ci95_resample_sites": {
+       "share": [
+        0.0,
+        0.999
+       ],
+       "fire_per_pass": [
+        0.0,
+        0.02
+       ]
+      },
+      "rule": "maximum likelihood, two kinds: persistent look-alikes firing with fire_per_pass on each later pass, the rest never again"
+     }
+    },
+    "5": {
+     "later_passes": 180,
+     "q": 0.044444444444444446,
+     "repeat_share": 0.04487179487179487,
+     "sites_with_later_passes": 96,
+     "persistent": {
+      "share": 0.314,
+      "fire_per_pass": 0.14,
+      "ci95_resample_sites": {
+       "share": [
+        0.080975,
+        0.999
+       ],
+       "fire_per_pass": [
+        0.02,
+        0.4902500000000001
+       ]
+      },
+      "rule": "maximum likelihood, two kinds: persistent look-alikes firing with fire_per_pass on each later pass, the rest never again"
+     }
+    },
+    "10": {
+     "later_passes": 180,
+     "q": 0.1,
+     "repeat_share": 0.08333333333333333,
+     "sites_with_later_passes": 96,
+     "persistent": {
+      "share": 0.838,
+      "fire_per_pass": 0.12,
+      "ci95_resample_sites": {
+       "share": [
+        0.27085000000000004,
+        0.999
+       ],
+       "fire_per_pass": [
+        0.05975000000000001,
+        0.36000000000000004
+       ]
+      },
+      "rule": "maximum likelihood, two kinds: persistent look-alikes firing with fire_per_pass on each later pass, the rest never again"
+     }
+    }
+   },
+   "pass_correlation": {
+    "n_passes": 412,
+    "pd_per_pass": 0.22330097087378642,
+    "n_pairs": 307,
+    "after_detected": {
+     "n": 60,
+     "pd": 0.2833333333333333
+    },
+    "after_missed": {
+     "n": 247,
+     "pd": 0.26720647773279355
+    }
+   },
+   "pd_by_pass_frames": {
+    "1-20": {
+     "n": 105,
+     "pd": 0.01904761904761905
+    },
+    "20-43": {
+     "n": 105,
+     "pd": 0.2
+    },
+    "43-62": {
+     "n": 101,
+     "pd": 0.26732673267326734
+    },
+    "62-128": {
+     "n": 101,
+     "pd": 0.4158415841584158
+    }
+   }
+  },
+  "6": {
+   "min_track_frames": 6,
+   "false_alarm_tracks": 86,
+   "false_alarms_per_km2": 275.07214646632247,
+   "track_life_median_frames": {
+    "false_alarm": 14.0,
+    "person": 12.0
+   },
+   "recurrence": {
+    "1.82134": {
+     "later_passes": 102,
+     "q": 0.0,
+     "repeat_share": 0.0,
+     "sites_with_later_passes": 50,
+     "persistent": {
+      "share": 0.0,
+      "fire_per_pass": 0.0,
+      "ci95_resample_sites": {
+       "share": [
+        0.0,
+        0.0
+       ],
+       "fire_per_pass": [
+        0.0,
+        0.0
+       ]
+      },
+      "rule": "maximum likelihood, two kinds: persistent look-alikes firing with fire_per_pass on each later pass, the rest never again"
+     }
+    }
+   },
+   "pass_correlation": {
+    "n_passes": 412,
+    "pd_per_pass": 0.1941747572815534,
+    "n_pairs": 307,
+    "after_detected": {
+     "n": 53,
+     "pd": 0.2830188679245283
+    },
+    "after_missed": {
+     "n": 254,
+     "pd": 0.2204724409448819
+    }
+   },
+   "pd_by_pass_frames": {
+    "1-20": {
+     "n": 105,
+     "pd": 0.01904761904761905
+    },
+    "20-43": {
+     "n": 105,
+     "pd": 0.1523809523809524
+    },
+    "43-62": {
+     "n": 101,
+     "pd": 0.22772277227722773
+    },
+    "62-128": {
+     "n": 101,
+     "pd": 0.38613861386138615
+    }
+   }
+  },
+  "8": {
+   "min_track_frames": 8,
+   "false_alarm_tracks": 75,
+   "false_alarms_per_km2": 239.88849982528123,
+   "track_life_median_frames": {
+    "false_alarm": 14.0,
+    "person": 14.0
+   },
+   "recurrence": {
+    "1.82134": {
+     "later_passes": 85,
+     "q": 0.0,
+     "repeat_share": 0.0,
+     "sites_with_later_passes": 44,
+     "persistent": {
+      "share": 0.0,
+      "fire_per_pass": 0.0,
+      "ci95_resample_sites": {
+       "share": [
+        0.0,
+        0.0
+       ],
+       "fire_per_pass": [
+        0.0,
+        0.0
+       ]
+      },
+      "rule": "maximum likelihood, two kinds: persistent look-alikes firing with fire_per_pass on each later pass, the rest never again"
+     }
+    }
+   },
+   "pass_correlation": {
+    "n_passes": 412,
+    "pd_per_pass": 0.16990291262135923,
+    "n_pairs": 307,
+    "after_detected": {
+     "n": 43,
+     "pd": 0.20930232558139536
+    },
+    "after_missed": {
+     "n": 264,
+     "pd": 0.20075757575757575
+    }
+   },
+   "pd_by_pass_frames": {
+    "1-20": {
+     "n": 105,
+     "pd": 0.01904761904761905
+    },
+    "20-43": {
+     "n": 105,
+     "pd": 0.13333333333333333
+    },
+    "43-62": {
+     "n": 101,
+     "pd": 0.19801980198019803
+    },
+    "62-128": {
+     "n": 101,
+     "pd": 0.33663366336633666
+    }
+   }
+  }
+ }
+}

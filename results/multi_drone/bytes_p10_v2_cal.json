@@ -1,0 +1,29 @@
+{
+ "configuration": "auction_b4_share_h20",
+ "n_drones": 4,
+ "sensor": "results/multi_drone/sensor_p10_v2_cal.json",
+ "seeds": [
+  0,
+  199
+ ],
+ "bytes_per_drone_per_second": 840.303018112125,
+ "share_of_bytes": {
+  "packet_header_vector": 0.0285613082351293,
+  "observation_header": 0.07120566743495961,
+  "cell_runs": 0.5899862094427821,
+  "detections": 0.30974430498983824,
+  "claims": 0.0005025098972907441
+ },
+ "share_of_observation_bytes": {
+  "own": 0.400119801273986,
+  "relayed": 0.5998801987260141
+ },
+ "broadcasts_per_observation": 4.99626055953715,
+ "cells_per_observation": 57.02741360431812,
+ "runs_per_observation": {
+  "256": 19.88574840810851,
+  "16": 19.88574840810851,
+  "none": 17.523560227778667
+ },
+ "detections_per_observation": 3.2629609590729927
+}
