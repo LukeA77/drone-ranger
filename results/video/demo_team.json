@@ -1,0 +1,99 @@
+{
+ "file": "cache/video/demo_team.mp4",
+ "seconds": 48.88,
+ "size_mb": 1.59,
+ "size": [
+  1280,
+  720
+ ],
+ "encoding": "H.264 crf 24",
+ "limits": {
+  "max_mb": 10.0,
+  "max_s": 60.0
+ },
+ "within_limits": true,
+ "source": "two searches of the frozen Phase 16 simulation (configs/search16.yaml), recorded by scripts/make_demo_v2.py record(): the sweep planner and the lawnmower, four drones, primary camera, perfect radio, the same drone lost at half a sweep's time",
+ "seed": 73,
+ "seed_choice_file": "results/video/demo_v2_seed_choice.json",
+ "split": "development seeds",
+ "lost_drone_shown_as": 3,
+ "events_s": {
+  "start": 90.0,
+  "lost": 682.0,
+  "presumed": 742.0,
+  "takeover": 1520.0,
+  "seen": 1572.0,
+  "confirmed": 1697.0
+ },
+ "schedule": [
+  {
+   "segment": "search",
+   "video_s": 9.0
+  },
+  {
+   "segment": "silence",
+   "video_s": 5.5
+  },
+  {
+   "segment": "own lanes",
+   "video_s": 6.5
+  },
+  {
+   "segment": "takeover",
+   "video_s": 3.5
+  },
+  {
+   "segment": "find",
+   "video_s": 3.5
+  },
+  {
+   "segment": "find held",
+   "video_s": 3.5
+  },
+  {
+   "segment": "side by side",
+   "video_s": 11.5
+  },
+  {
+   "segment": "end card",
+   "video_s": 6.0
+  }
+ ],
+ "team_plan": {
+  "confirmed": true,
+  "t_confirmed_s": 1697.0,
+  "places_reported_before_find": 2172
+ },
+ "fixed_lanes": {
+  "confirmed": false,
+  "searched_until_s": 4091.0,
+  "ground_searched_share": 0.9472
+ },
+ "end_card": {
+  "test_searches": 300,
+  "added_s_team_plan": 196.25057262332345,
+  "added_s_fixed_lanes": 365.49696343240856,
+  "source": "results/multi_drone/phase16_paired_test.json",
+  "cases_like_this": [
+   13,
+   200
+  ]
+ },
+ "not_drawn": "single detections and places reported to the crew (counted in a tile)",
+ "captions": {
+  "a1": "Four drones search 4.8 km² for one missing person.\nEach colour is the ground one drone has covered.",
+  "a2": "They fly in lanes and tell each other what they have covered,\nin a few dozen bytes a second.",
+  "b": "Drone 3 goes silent: a flat battery, a crash or a lost radio.\nThe others cannot tell which.",
+  "c": "After 60 seconds of silence they count it as lost,\nand add the ground it left to their own.",
+  "d1": "Their own lanes finished, they fly the ground the lost drone left.",
+  "d2": "Two sightings at the same spot: the person is confirmed and a crew is sent.",
+  "e1": "The same search without the team plan: each drone keeps to its own strip.",
+  "e2": "The lost drone's ground is never searched, and the person was in it."
+ },
+ "end_card_lines": [
+  "Over 300 test searches, losing a drone added 196 s\nwith the team plan and 365 s without.",
+  "A case like this one, with the person on the lost drone's ground, came up in 13 of 200 trial searches.\nWith no drone lost, neither plan was measurably faster.",
+  "Still open: false alarms. Here 2,172 places were reported to the crew before the right one.",
+  "Drone Ranger  ·  simulation, camera measured on rendered towns"
+ ]
+}

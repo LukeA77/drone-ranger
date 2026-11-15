@@ -2,7 +2,9 @@
 
 Token syntax: {{RESULT:<path under results/>#<dotted.key.path>|<format spec>}}
   e.g. {{RESULT:midair/test/summary.json#data.oracle_plane.land.abs_rel_err_median|.1%}}
-List elements are addressed by index (ci.0). The format spec is Python's (optional).
+List elements are addressed by index (ci.0). The format spec is Python's (optional); a
+leading "neg:" negates the value first (|neg:,.0f shows a difference of -169 as 169), and
+"min:" turns seconds into minutes (|min:.0f shows 1697 as 28).
 
 Usage:
   python scripts/fill_docs.py SRC.md DEST.md     fill one document
@@ -64,6 +66,10 @@ def fill(text: str, results_dir: Path = RESULTS) -> str:
                 raise FillError(f"results file not found: {rel}")
             cache[rel] = json.loads(p.read_text(encoding="utf-8"))
         val = _lookup(cache[rel], key, rel)
+        if spec and spec.startswith("neg:"):  # a saving stored as a negative difference
+            val, spec = -val, spec[4:]
+        if spec and spec.startswith("min:"):  # seconds shown in minutes
+            val, spec = val / 60, spec[4:]
         return format(val, spec) if spec else str(val)
 
     return TOKEN.sub(repl, text)

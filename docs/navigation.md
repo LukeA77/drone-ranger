@@ -112,4 +112,4 @@ OpenVINS (v2.7), a widely used open-source visual-inertial filter, was run as a 
 - **Simulated sensors.** Mid-Air's IMU has no scale or axis-misalignment errors, and its camera is ideal. The GPS velocity noise was added by us.
 - **One climate.** Kite, sunny: 15 development and 9 test flights.
 - **The GPS outlier check came after the test.** The test numbers above are from the filter without it.
-- **Laptop speed only.** Runtime has been measured on a laptop only. Raspberry Pi figures will be estimates until measured (build2 R12).
+- **Laptop speed only.** Runtime has been measured on a laptop only. Raspberry Pi figures will be estimates until measured.

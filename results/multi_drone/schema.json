@@ -4,6 +4,7 @@
  "title": "Phase 14 and Phase 16 multi-drone search simulation results (D-752, D-764)",
  "description": "One schema per kind of file in results/multi_drone/. x-files maps each file-name pattern to its definition (the first matching pattern applies); tests/test_results_schema.py checks every file against it. Times are seconds, rates per km2 or per drone per second as named; probabilities are 0 to 1; ci95 values are [low, high] 95 % bootstrap intervals over seeds (searches) unless named otherwise.",
  "x-files": {
+  "search_speed_by_height.json": "#/$defs/search_speed",
   "phase16_paired_*.json": "#/$defs/phase16_paired",
   "phase16_sensitivity_seeds.json": "#/$defs/phase16_seeds",
   "phase16_sensitivity.json": "#/$defs/phase16_sensitivity",
@@ -1054,6 +1055,83 @@
      "additionalProperties": {
       "$ref": "#/$defs/paired"
      }
+    }
+   },
+   "additionalProperties": false
+  },
+  "search_speed": {
+   "description": "Time for the team to cover the area once and the share of people found, by flying height (scripts/search_speed_by_height.py, D-772): derived from the frozen Phase 14 scenario and the SynDrone test results; no search is run.",
+   "type": "object",
+   "required": [
+    "sources",
+    "n_drones",
+    "speed_ms",
+    "area_km2",
+    "today_m",
+    "by_height",
+    "sweep_ratio_20_to_80"
+   ],
+   "properties": {
+    "sources": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "string"
+     }
+    },
+    "n_drones": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "speed_ms": {
+     "type": "number",
+     "minimum": 0
+    },
+    "area_km2": {
+     "type": "number",
+     "minimum": 0
+    },
+    "today_m": {
+     "type": "integer",
+     "description": "The height the frozen search flies at"
+    },
+    "by_height": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "height_m",
+       "lane_spacing_m",
+       "sweep_s",
+       "sweep_min",
+       "person_found_share"
+      ],
+      "properties": {
+       "height_m": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "lane_spacing_m": {
+        "type": "number",
+        "minimum": 0
+       },
+       "sweep_s": {
+        "type": "number",
+        "minimum": 0
+       },
+       "sweep_min": {
+        "type": "number",
+        "minimum": 0
+       },
+       "person_found_share": {
+        "$ref": "#/$defs/probability"
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "sweep_ratio_20_to_80": {
+     "type": "number",
+     "minimum": 0
     }
    },
    "additionalProperties": false

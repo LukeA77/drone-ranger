@@ -54,5 +54,32 @@
   "width": 900,
   "fps": 12,
   "size_mb": 5.86
+ },
+ "field_view": {
+  "source": "cache/video/field_view.mp4",
+  "start_s": 0.0,
+  "seconds": 13.5,
+  "width": 900,
+  "fps": 12,
+  "speed": 1.0,
+  "size_mb": 5.33
+ },
+ "field_map": {
+  "source": "cache/video/field_view.mp4",
+  "start_s": 13.5,
+  "seconds": 16.7,
+  "width": 900,
+  "fps": 10,
+  "speed": 1.5,
+  "size_mb": 5.07
+ },
+ "field_team": {
+  "source": "cache/video/field_view.mp4",
+  "start_s": 30.2,
+  "seconds": 30.4,
+  "width": 900,
+  "fps": 10,
+  "speed": 1.6,
+  "size_mb": 2.3
  }
 }

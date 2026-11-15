@@ -4,7 +4,8 @@
  "title": "Thermal detection results (Phase 13, D-751)",
  "description": "x-files maps each file's path inside this folder to its definition (first match applies); tests/test_results_schema.py checks every file against it. Written by scripts/results_schema.py from the existing files: required keys are those every file has; shares and probabilities lie in 0 to 1; counts, sizes and times are not negative. Each definition's description names the script that writes the file.",
  "x-files": {
-  "detect_*.json": "#/$defs/detect"
+  "detect_*.json": "#/$defs/detect",
+  "example.json": "#/$defs/example"
  },
  "$defs": {
   "detect": {
@@ -251,6 +252,133 @@
     },
     "weights": {
      "type": "string"
+    }
+   }
+  },
+  "example": {
+   "description": "scripts/thermal_example.py: a night and a day test image seen by the colour and the thermal detector (README pictures)",
+   "type": "object",
+   "required": [
+    "day",
+    "generated_utc",
+    "iou_match",
+    "licence",
+    "night",
+    "outputs",
+    "palette",
+    "rule",
+    "show_score"
+   ],
+   "properties": {
+    "day": {
+     "type": "object",
+     "required": [
+      "altitude_m",
+      "angle_deg",
+      "detectors",
+      "image",
+      "night",
+      "people_labelled",
+      "region_px",
+      "vehicles_labelled"
+     ],
+     "properties": {
+      "altitude_m": {
+       "type": "integer"
+      },
+      "angle_deg": {
+       "type": "integer"
+      },
+      "detectors": {
+       "type": "array"
+      },
+      "image": {
+       "type": "string"
+      },
+      "night": {
+       "type": "boolean"
+      },
+      "people_labelled": {
+       "type": "integer"
+      },
+      "region_px": {
+       "type": "array",
+       "items": {
+        "type": "integer",
+        "minimum": 0
+       }
+      },
+      "vehicles_labelled": {
+       "type": "integer"
+      }
+     }
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "iou_match": {
+     "type": "number"
+    },
+    "licence": {
+     "type": "string"
+    },
+    "night": {
+     "type": "object",
+     "required": [
+      "altitude_m",
+      "angle_deg",
+      "detectors",
+      "image",
+      "night",
+      "people_labelled",
+      "region_px",
+      "vehicles_labelled"
+     ],
+     "properties": {
+      "altitude_m": {
+       "type": "integer"
+      },
+      "angle_deg": {
+       "type": "integer"
+      },
+      "detectors": {
+       "type": "array"
+      },
+      "image": {
+       "type": "string"
+      },
+      "night": {
+       "type": "boolean"
+      },
+      "people_labelled": {
+       "type": "integer"
+      },
+      "region_px": {
+       "type": "array",
+       "items": {
+        "type": "integer",
+        "minimum": 0
+       }
+      },
+      "vehicles_labelled": {
+       "type": "integer"
+      }
+     }
+    },
+    "outputs": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "palette": {
+     "type": "string"
+    },
+    "rule": {
+     "type": "string"
+    },
+    "show_score": {
+     "type": "number"
     }
    }
   }

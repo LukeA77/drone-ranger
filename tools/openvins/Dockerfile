@@ -1,5 +1,5 @@
 # OpenVINS reference for Phase 11 (D-741). OpenVINS is GPL-3.0: it runs here, in its own
-# container, as a reference only; its code never enters src/ (build2 R13). Only its trajectory
+# container, as a reference only; its code never enters src/. Only its trajectory
 # outputs are compared. Pinned to the v2.7 release tag.
 FROM ros:noetic-ros-base
 

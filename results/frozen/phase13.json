@@ -1,0 +1,42 @@
+{
+ "frozen_utc": "2026-11-14T14:14:38+00:00",
+ "phase": "phase13",
+ "git_commit": "8375614",
+ "uncommitted_changes_to_frozen_files": [
+  "M configs/data.yaml",
+  " M scripts/queues/phase13_birdsai.sh",
+  "?? results/birdsai/train/grid_dfine_hituav_day_coco__motion__person.json"
+ ],
+ "files": {
+  "configs/thermal.yaml": "e2af1dbdc6ee8739fbb71f91538e328ac277359afa00ce92189ac69c3a543325",
+  "configs/detector.yaml": "52782acd3d43267f9e239ad42f03954f739903ca4d5e701351373b1a18b7e3fd",
+  "configs/data.yaml": "b1e42729a9f05876b162e36b0cf2cf4e01baeeea2c9487e2d66784a8c252bd46",
+  "configs/project.yaml": "e03d2027f69077f5e66d7a761e1e69f81e7e1f16795ab57884e45e1905394c6f",
+  "results/hituav/splits.json": "831f74a5393650927f9637454e5d8a236fc643577d8f237f9eaf3c8115ce6061",
+  "weights/dfine_hituav_day_coco.onnx": "09829661f566c97b5dc3c5939c797046a326a64a42725041252fdbd880c520bc",
+  "weights/dfine_hituav_day_visdrone.onnx": "6999713f7cb67f8d132661334db1440f3e2a52dacb29c83f1ac2bb5f58645457",
+  "weights/dfine_hituav_official_coco.onnx": "75cdb5b15bee838af77e76b556933c6156add65950b8de715765ba5a56c8affd",
+  "weights/dfine_n_640.onnx": "d85748ea79ad8a7168a4be1b4577a62c049ae5affc8c5644a402584c329c7c64",
+  "scripts/hituav_eval.py": "d18cd25a7c5d5d91c202cbd4289baff9c2b6b224b80dd0980da259546fb4c4f5",
+  "scripts/queues/phase13_thermal_test.sh": "d80d8c4f824ad931a0440033e52f3efe0bae8e02c72be985f42ab8cab26066db",
+  "src/aerialrange/data/hituav.py": "250e8888ac8b831264c5ff2d23f71db4b8685615d1df99de894aeaffc95111ca",
+  "src/aerialrange/detect/factory.py": "58689f6025c37702d6557c62ea555eefe31cbb1a45e00482138b530177c5d355",
+  "src/aerialrange/detect/onnx_detectors.py": "b802d106c2eda56cc252707ea52abebc6243fee127bf931358da8974146e4ff9",
+  "src/aerialrange/detect/evaluate.py": "75a956d2898cb585c9e8ba45e56e47fabf338bff92fa52e039605e6ee229f6c6",
+  "configs/trackers/motion.yaml": "fa64b4fc6d3ede55a8860324f320f3e7681bde802bd0530b623d5f80a4d4a6cd",
+  "scripts/birdsai_prep.py": "a3b07926d9f04bcb56020a85eee5a63a0dc3326aa03e6d22f77e8c3fbc04478d",
+  "scripts/cache_detections.py": "0ae569f074b871850c2f29be02601a9bdea4eb4183cd829cad0a6e6ff81a5ebb",
+  "scripts/detect_eval.py": "17aaa490bf3ef8330250522f101514afa845787f97deb790bd236acb592be5b2",
+  "scripts/track_grid.py": "0cbf5f404d0bde040702955c1e17f6b9d9e8a17dfde39bfb2b7a7dc86b37ac2c",
+  "scripts/queues/phase13_birdsai.sh": "b3a569a752c1093b9b721a20cfb3333762d2e4141f2603fd4d54b3ed80968e88",
+  "results/birdsai/train/grid_dfine_n_640__motion__person.json": "3d5856f1f13d82a6f8a0b4a3f54fee624db7ee0e30cc8ef0f9fac967081fcdd6",
+  "results/birdsai/train/grid_dfine_hituav_day_coco__motion__person.json": "12a796d6b6f2d522d24d419caeeed225955a7f1918f7cc03b29171abb91b8b7c",
+  "src/aerialrange/track/box_kalman.py": "978cf723764f9a3f222fdfc208507cac5936ba38444f1f973a97c080442ae282",
+  "src/aerialrange/track/camera_motion.py": "840d373c6b34455b213d48180a09475196d898083d89d118e005437152a9ae05",
+  "src/aerialrange/track/detcache.py": "299cdce3e4ccf17a7bdc9305465620a921519ac02eda46057e7c1ebf40e26477",
+  "src/aerialrange/track/evaluate.py": "283d1bd059775ec3012ae07e45829d8bd67d06215092860edebbb47812aa7df0",
+  "src/aerialrange/track/hota.py": "c395b3dc729618535e929a6242d4744deb252878ba8cab5361bdb443ff81e469",
+  "src/aerialrange/track/runner.py": "0cda7837cd173c1fe5d3d9928bebb57c8791d48658f7591d2c3d4764b50f942e",
+  "src/aerialrange/track/tracker.py": "a4210cc51188a2e8b13240d590c50f633f1166f647e3b0a5ff4868d90eb1f200"
+ }
+}

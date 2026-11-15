@@ -1,0 +1,64 @@
+{
+ "file": "cache/video/demo_one_drone.mp4",
+ "seconds": 50.36,
+ "size_mb": 3.51,
+ "size": [
+  1280,
+  720
+ ],
+ "encoding": "H.264 crf 26",
+ "limits": {
+  "max_mb": 10.0,
+  "max_s": 60.0
+ },
+ "within_limits": true,
+ "source": "cache/maps/syndrone_Town07_h50",
+ "flight": "SynDrone Town07, 50 m (simulated)",
+ "split": "development",
+ "speed": 1.0,
+ "opening_speed": 0.5,
+ "flight_shown_s": [
+  0.0,
+  22.0
+ ],
+ "frozen_person": {
+  "track_id": "14",
+  "at_s": 2.48,
+  "range_m": 52.6,
+  "ellipse_95_m": [
+   0.44,
+   0.19
+  ]
+ },
+ "segments": [
+  "flight start, slowed",
+  "freeze on one real person",
+  "flight on, real speed",
+  "skip to the end",
+  "whole flight",
+  "false alarms",
+  "end card"
+ ],
+ "captions": {
+  "a1": "A drone flies over a town, 50 m up. Its camera spots people and vehicles.",
+  "a2": "Orange: a person.   Teal: a vehicle.   Grey: something that only looks like a person.",
+  "b": "Each find is placed on the map. This person: {range} m from the drone, placed\nto within {size} m (simulation, with the drone's exact position).",
+  "c1": "The map is built from the drone's own camera: no internet, no map service.",
+  "c2": "The counter keeps score as it flies: people, vehicles and ground searched.",
+  "d": "Skipping ahead to the end of the 2-minute flight",
+  "e": "The whole flight: the path it flew, and all the ground it checked.",
+  "f1": "Grey: things the camera mistook for a person. It learned from city streets\nfilmed from lower down, where people look bigger.",
+  "f2": "The crew confirms or dismisses each find on the map. The fix being built:\na thermal camera, where people show up warm against cool ground."
+ },
+ "final_counts": {
+  "people": 92,
+  "vehicles": 128,
+  "km2": 0.2481,
+  "t_s": 119.92,
+  "real": 7,
+  "near": 7,
+  "false alarm": 75,
+  "not scored": 3
+ },
+ "searched_km2_map": 0.2481105
+}

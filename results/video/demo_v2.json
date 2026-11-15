@@ -1,7 +1,7 @@
 {
  "file": "cache/video/demo_v2.mp4",
- "seconds": 79.12,
- "size_mb": 10.07,
+ "seconds": 82.96,
+ "size_mb": 9.83,
  "size": [
   1280,
   720
@@ -25,16 +25,34 @@
    "real": 130
   }
  },
- "scene2_team": {
-  "config": "auction, 4-lane blocks, 20 m, sharing on, perfect radio (configs/multi_drone.yaml, frozen)",
-  "sensor": "results/multi_drone/sensor_p10_v2_cal.json",
-  "seed": 88,
-  "found": true,
-  "t_found_s": 927.0,
-  "false_alarms_before_find": 11832,
-  "output_frames": 978,
-  "seed_rule": "development seed whose time to find is closest to the median of the chosen configuration with sharing and no byte limit (budget_check_p10_v2_cal_seeds.json 'unlimited'); ties to the lower seed",
-  "median_time_s": 928.5,
-  "seed_time_s_in_results": 927.0
+ "scene2_lost_drone": {
+  "config": "left: sweep first then look again (frozen Phase 16 settings, configs/search16.yaml); right: lawnmower; four drones, primary camera, perfect radio, the same drone lost at half a sweep's time in both",
+  "sensor": "results/multi_drone/sensor_p10_v2_cal.json, with the recurring look-alikes of clutter_p10_v2_cal.json",
+  "seed": 73,
+  "lost_drone": 2,
+  "lost_at_s": 682.0,
+  "sweep": {
+   "confirmed": true,
+   "t_confirmed_s": 1697.0,
+   "crew_alarms_before_find": 2172
+  },
+  "lawnmower": {
+   "confirmed": false,
+   "t_confirmed_s": null,
+   "crew_alarms_before_find": 7459
+  },
+  "simulated_seconds_per_frame": 4.0,
+  "output_frames": 1074,
+  "seed_rule": "development seeds 0 to 199, four drones, primary camera, perfect radio, one drone (drawn per seed) lost at half a sweep's time, frozen Phase 16 settings; candidates: seeds where the person is in the lost drone's lawnmower strip, on ground no lawnmower drone had covered when it was lost (the situation the lost-drone result is about; decided from the person's position and the lost drone only, both drawn before any detection, and from the lawnmower's fixed routes); chosen: the candidate whose lawnmower-minus-sweep time to a confirmed find (the horizon when none) is closest to the median of that difference over the candidates; ties to the lower seed (D-767).",
+  "seed_choice": {
+   "loss_time_s": 681.7571577915431,
+   "n_candidates": 13,
+   "n_seeds": 200,
+   "median_lawnmower_minus_sweep_s": 2393.5429467492586,
+   "lawnmower_minus_sweep_s": 2393.5429467492586,
+   "sweep_t_s": 1697.0,
+   "lawnmower_t_s": null
+  },
+  "seed_choice_file": "results/video/demo_v2_seed_choice.json"
  }
 }

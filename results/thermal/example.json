@@ -1,0 +1,71 @@
+{
+ "generated_utc": "2026-11-15T12:42:20+00:00",
+ "rule": "from the day-split test days: the night image and the day image with the most labelled people; ties to the lower serial",
+ "show_score": 0.5,
+ "iou_match": 0.5,
+ "palette": "greyscale shown in false colour (OpenCV inferno)",
+ "night": {
+  "image": "1_130_30_0_03841.jpg",
+  "night": true,
+  "altitude_m": 130,
+  "angle_deg": 30,
+  "people_labelled": 23,
+  "vehicles_labelled": 9,
+  "region_px": [
+   128,
+   0,
+   430,
+   421
+  ],
+  "detectors": [
+   {
+    "detector": "Colour detector",
+    "weights": "weights/dfine_n_640.onnx",
+    "person_boxes": 0,
+    "people_found": 0,
+    "vehicle_boxes": 0
+   },
+   {
+    "detector": "Thermal detector",
+    "weights": "weights/dfine_hituav_day_coco.onnx",
+    "person_boxes": 17,
+    "people_found": 9,
+    "vehicle_boxes": 0
+   }
+  ]
+ },
+ "day": {
+  "image": "0_100_30_0_03281.jpg",
+  "night": false,
+  "altitude_m": 100,
+  "angle_deg": 30,
+  "people_labelled": 8,
+  "vehicles_labelled": 5,
+  "region_px": [
+   0,
+   0,
+   640,
+   512
+  ],
+  "detectors": [
+   {
+    "detector": "Colour detector",
+    "weights": "weights/dfine_n_640.onnx",
+    "person_boxes": 0,
+    "people_found": 0,
+    "vehicle_boxes": 2
+   },
+   {
+    "detector": "Thermal detector",
+    "weights": "weights/dfine_hituav_day_coco.onnx",
+    "person_boxes": 1,
+    "people_found": 1,
+    "vehicle_boxes": 2
+   }
+  ]
+ },
+ "outputs": [
+  "docs/media/thermal_night_day.jpg"
+ ],
+ "licence": "HIT-UAV, CC BY 4.0"
+}

@@ -31,7 +31,7 @@ aerialrange map --run-dir cache/run --metadata <flight CSV> --origin <lat>,<lon>
 
   The page header gives the counts. On Town07 at 50 m: 7 real, 7 near and 75 false alarms among 92 people finds; 123 of 128 vehicle finds real.
 
-People are shown as a class and a number only (build2 R16).
+People are shown as a class and a number only.
 
 ## The ground image
 

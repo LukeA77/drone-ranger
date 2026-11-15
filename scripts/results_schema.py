@@ -1,4 +1,4 @@
-"""Write the schema.json of a results folder from its file kinds (build2 Section 15).
+"""Write the schema.json of a results folder from its file kinds.
 
 Usage: python scripts/results_schema.py [--check] [folder ...]   (default: every folder in KINDS)
 
@@ -209,6 +209,12 @@ KINDS: dict[str, dict[str, Any]] = {
                 "scripts/hituav_eval.py: detection AP on HIT-UAV per group, validation or (once) "
                 "test",
             ),
+            (
+                "example.json",
+                "example",
+                "scripts/thermal_example.py: a night and a day test image seen by the colour and "
+                "the thermal detector (README pictures)",
+            ),
         ],
     },
     "birdsai": {
@@ -219,6 +225,12 @@ KINDS: dict[str, dict[str, Any]] = {
                 "grid",
                 "scripts/track_grid.py --dataset birdsai: the tracker threshold grid for people on "
                 "the training videos, each point's metrics and the selected point (D-733 rule)",
+            ),
+            (
+                "*/detect_*.json",
+                "detect",
+                "scripts/detect_eval.py --dataset birdsai: detection AP for people on the test "
+                "videos (once, after the Phase 13 freeze)",
             ),
         ],
     },

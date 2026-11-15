@@ -1,5 +1,5 @@
-"""Version 2 demo video (build2 Section 15): a person found and placed on the map, then a team
-of drones sharing what they have searched. No words or numbers on screen (as D-618): the
+"""Version 2 demo video: a person found and placed on the map, then two teams
+of drones that each lose a drone. No words or numbers on screen (as D-618): the
 story and the credits go in the text that accompanies it.
 
 Usage: python scripts/make_demo_v2.py [--map cache/maps/syndrone_Town07_h50] [--seed N]
@@ -12,21 +12,23 @@ miss (the map's truth labels). Right, the map: the ground the camera has covered
 is searched (the flight's own frames laid on the ground), the drone's path and its current
 footprint, and one marker per track at its latest ground position. Played at 1.5 times speed.
 
-Scene 2, a team of four (about 37 s): one search of the Phase 14 simulation with the frozen
-choice (configs/multi_drone.yaml: auction planner, 4-lane blocks, 20 m, sharing on, perfect
-radio) and the camera measured on the SynDrone test towns (sensor_p10_v2_cal.json). The seed
-is the development seed whose time to find is closest to the median of that configuration
-over development seeds (results/multi_drone/budget_check_p10_v2_cal_seeds.json, `unlimited`),
-so the search shown is a typical one, not the best. The frozen simulator is not changed: its
-drones, maps and the person's position are recorded by wrapping them from here. Left, the team:
-each drone's searched ground in its colour, its path and position, false alarms as grey dots,
-the person as an orange marker once found. Right, the first drone's own map of where the person
-may be (brighter is more likely): it darkens over ground other drones searched, because they
-shared their observations. One simulated second per video frame.
+Scene 2, losing a drone (Phase 16, D-767): two searches of the Phase 16 simulation side by side,
+on the same missing person and the same camera (measured on the SynDrone test towns, with the
+recurring look-alikes of D-764), each with four drones of which the same one stops for good at
+half a sweep's time (the test's `sweep_lose_any` and `lawnmower_lose_any`). Left, the sweep
+planner on the frozen Phase 16 settings: the others take over the lost drone's lanes. Right, the
+lawnmower: the lost drone's strip stays unsearched. Each panel: the ground each drone covered
+first in its colour, paths and positions, the lost drone as a grey cross (a white ring as it
+is lost), every detection as a dim grey dot, places reported to the crew that were not the
+person as grey rings, and the person as an orange marker once confirmed (that panel then stops).
+The seed is chosen on development seeds by a rule fixed before those searches ran (SEED_RULE),
+so the comparison shown is a typical one where the loss matters, not the best. The frozen
+engine is not changed: drones, alarms and the person are recorded by wrapping them from here.
+Several simulated seconds per video frame, so that the whole video stays within 90 s.
 
 Writes cache/video/demo_v2.mp4 (dataset imagery, not committed, D-323) and
 results/video/demo_v2.json (sources, seed, duration, size, and whether it is within the limits:
-20 MB and 90 s, build2 Section 15).
+20 MB and 90 s).
 """
 
 from __future__ import annotations
@@ -211,73 +213,203 @@ def scene1(folder: Path) -> tuple[list[np.ndarray] | Any, dict]:
 
 # ---------------------------------------------------------------- scene 2
 
+SEED_FILE = REPO_ROOT / "results" / "video" / "demo_v2_seed_choice.json"
+SEED_RULE = (
+    "development seeds 0 to 199, four drones, primary camera, perfect radio, one drone (drawn "
+    "per seed) lost at half a sweep's time, frozen Phase 16 settings; candidates: seeds where "
+    "the person is in the lost drone's lawnmower strip, on ground no lawnmower drone had "
+    "covered when it was lost (the situation the lost-drone result is about; decided from the "
+    "person's position and the lost drone only, both drawn before any detection, and from the "
+    "lawnmower's fixed routes); chosen: the candidate whose lawnmower-minus-sweep time to a "
+    "confirmed find (the horizon when none) is closest to the median of that difference over "
+    "the candidates; ties to the lower seed (D-767)."
+)
+# The first rule, fixed before the searches ran, kept for the record: it chose seed 133, where the
+# person was outside the lost drone's ground, so both teams searched alike and the takeover never
+# appears (D-767).
+FIRST_RULE = (
+    "candidates: seeds where both the sweep and the lawnmower confirm the find after the loss; "
+    "chosen: the candidate whose lawnmower-minus-sweep time is closest to the median of that "
+    "difference over the candidates; ties to the lower seed."
+)
 
-def typical_seed() -> tuple[int, float, float]:
-    z = json.loads(
-        (REPO_ROOT / "results/multi_drone/budget_check_p10_v2_cal_seeds.json").read_text()
-    )["unlimited"]
+
+def configs16() -> dict[str, dict]:
+    """The test's two lost-drone settings (multidrone16_run.py: sweep_lose_any and
+    lawnmower_lose_any), on the frozen Phase 16 choices."""
+    import multidrone16_run as r16
     import multidrone_run as mr
 
-    t, found = np.array(z["t_s"]), np.array(z["found"])
-    # the budget check keeps the order of the development seeds (ProcessPoolExecutor.map)
-    seed = np.array(z.get("seed", mr.DEV_SEEDS))
-    if len(seed) != len(t):
-        raise ValueError("per-seed outcomes and seeds differ in length")
-    med = float(np.median(t))  # horizon counts for searches without a find, as in the results
-    cand = np.nonzero(found)[0]
-    best = cand[np.lexsort((seed[cand], np.abs(t[cand] - med)))[0]]
-    return int(seed[best]), float(t[best]), med
+    st, s16 = mr.load_settings(), r16.load16()
+    if not s16["frozen"]:
+        raise SystemExit("configs/search16.yaml is not frozen")
+    sw_pc = r16.sweep_pc(
+        s16["spacing_factor"], s16["post"], s16["block_lanes"], s16["lost_after_s"]
+    )
+    b = {"camera": "primary", "n": st["n_drones"], "k": s16["confirm_k"]}
+    b["m"] = s16["min_track_frames"]
+    return {
+        "sweep": {**b, "pc": sw_pc, "lose": "any"},
+        "lawnmower": {**b, "pc": {"kind": "lawnmower"}, "lose": "any"},
+    }
 
 
-def record(seed: int) -> dict[str, Any]:
+def choose_seed(workers: int) -> dict[str, Any]:
+    """Run both settings on the development seeds (once; kept in SEED_FILE), apply SEED_RULE."""
+    import multidrone16_run as r16
     import multidrone_run as mr
-    from aerialrange.search import belief, prior, sim
-    from aerialrange.search import comms as cm
+
+    cfgs = configs16()
+    have = json.loads(SEED_FILE.read_text(encoding="utf-8")) if SEED_FILE.exists() else None
+    if have is None or have.get("settings") != cfgs:
+        from concurrent.futures import ProcessPoolExecutor
+
+        st = mr.load_settings()
+        jobs = [(st, c, s) for c in cfgs.values() for s in mr.DEV_SEEDS]
+        print(f"seed choice: {len(jobs)} development searches, {workers} workers", flush=True)
+        with ProcessPoolExecutor(workers) as ex:
+            rows = list(ex.map(r16.job, jobs, chunksize=4))
+        n = len(mr.DEV_SEEDS)
+        have = {
+            "rule": SEED_RULE,
+            "settings": cfgs,
+            "rows": {lab: rows[i * n : (i + 1) * n] for i, lab in enumerate(cfgs)},
+        }
+    rows = have["rows"]
+    loss_t = rows["sweep"][0]["horizon"] / mr.HORIZON_COVERS / 2
+    in_lost = lost_drone_ground(cfgs["lawnmower"], loss_t, [r["seed"] for r in rows["sweep"]])
+
+    def t(r: dict) -> float:
+        return r["t"] if r["found"] else r["horizon"]
+
+    cand, first = [], []
+    for a, b in zip(rows["sweep"], rows["lawnmower"], strict=True):
+        if a["seed"] != b["seed"]:
+            raise ValueError("seed order differs between settings")
+        if in_lost[a["seed"]]:
+            cand.append((a["seed"], t(b) - t(a), a["t"], b["t"]))
+        if a["found"] and b["found"] and min(a["t"], b["t"]) > loss_t:
+            first.append((a["seed"], b["t"] - a["t"]))
+    if not cand:
+        raise SystemExit("no candidate seed")
+    med = float(np.median([c[1] for c in cand]))
+    seed, diff, t_sw, t_lm = min(cand, key=lambda c: (abs(c[1] - med), c[0]))
+    med1 = float(np.median([c[1] for c in first]))
+    have["first_rule"] = {
+        "rule": FIRST_RULE,
+        "seed": min(first, key=lambda c: (abs(c[1] - med1), c[0]))[0],
+        "n_candidates": len(first),
+        "median_lawnmower_minus_sweep_s": med1,
+    }
+    have["rule"] = SEED_RULE
+    have["choice"] = {
+        "seed": seed,
+        "loss_time_s": loss_t,
+        "n_candidates": len(cand),
+        "n_seeds": len(rows["sweep"]),
+        "median_lawnmower_minus_sweep_s": med,
+        "lawnmower_minus_sweep_s": diff,
+        "sweep_t_s": t_sw,
+        "lawnmower_t_s": t_lm,
+    }
+    SEED_FILE.parent.mkdir(parents=True, exist_ok=True)
+    SEED_FILE.write_text(json.dumps(have, indent=1) + "\n", encoding="utf-8")
+    return have["choice"]
+
+
+def lost_drone_ground(c: dict, loss_t: float, seeds: list[int]) -> dict[int, bool]:
+    """Seed -> whether the person is in the lost drone's lawnmower strip, on ground no lawnmower
+    drone had covered by the loss. The lawnmower's routes do not depend on the seed, so they are
+    flown here with the simulation's own drone, planner and camera footprint up to the loss; the
+    person and the lost drone are the engine's own draws for each seed."""
+    import multidrone16_run as r16
+    import multidrone_run as mr
+    from aerialrange.search import prior, sim
 
     st = mr.load_settings()
-    if not st["frozen"]:
-        raise SystemExit("configs/multi_drone.yaml is not frozen")
-    sc = mr.scenario(
-        st, REPO_ROOT / "results/multi_drone/sensor_p10_v2_cal.json", st["height"],
-        st["n_drones"], "ring",
+    sc = mr.scenario(st, r16.camera_files(c["camera"], c["m"])[0], st["height"], c["n"], "ring")
+    g, s = sc.grid, sc.sensor
+    spacing = sim.lane_spacing_m(s)
+    pc = sim.PlannerConfig("lawnmower", True, 4)
+    seen = np.zeros(g.size, bool)
+    for i in range(c["n"]):
+        d = sim.Drone(i, *sc.launch_ne)
+        for k in range(int(np.ceil(loss_t / sc.dt_s))):
+            t = (k + 1) * sc.dt_s
+            if t > loss_t:  # the engine stops a lost drone once t passes the loss time
+                break
+            if not d.route:
+                sim.plan(d, pc, sc, None, {}, [], spacing, 1, t)
+            d.step(sc.speed_ms, sc.dt_s)
+            fp = s.footprint(float(d.pos[0]), float(d.pos[1]), d.yaw)
+            if len(fp):
+                seen[np.asarray(g.cells_in_polygon(fp), np.int64)] = True
+    width = g.ncols * g.cell_m / c["n"]
+    out = {}
+    for seed in seeds:
+        n_m, e_m = prior.sample_location(sc.prior, g, np.random.default_rng([seed, 0]))
+        who = int(np.random.default_rng([seed, 4]).integers(c["n"]))
+        strip = min(int((e_m - g.e0_m) // width), c["n"] - 1)
+        out[seed] = strip == who and not seen[int(g.cell_of(n_m, e_m))]
+    return out
+
+
+def record(c: dict, seed: int) -> dict[str, Any]:
+    """One search of the frozen Phase 16 engine, set up as multidrone16_run.job sets it up, with
+    the drones' positions, the ground each drone covered first, every detection and every alarm
+    recorded by wrapping them from here (the engine is not changed)."""
+    import multidrone16_run as r16
+    import multidrone_run as mr
+    from aerialrange.search import comms as cm
+    from aerialrange.search import confirm, prior, sim
+    from aerialrange.search import engine as en
+
+    st = mr.load_settings()
+    sensor, share, fire, radius = r16.camera_files(c["camera"], c["m"])
+    sc = mr.scenario(st, sensor, st["height"], c["n"], "ring")
+    who = int(np.random.default_rng([seed, 4]).integers(c["n"]))  # as job() draws "any"
+    lose = (who, sc.horizon_s / mr.HORIZON_COVERS / 2)
+    world = en.World(
+        persistent_share=share, persistent_fire=fire, confirm_k=c["k"],
+        confirm_radius_m=radius, stop="confirmed", lose=lose,
     )  # fmt: skip
-    g = sc.grid
-    rec: dict[str, Any] = {"pos": [], "yaw": [], "cover": [], "belief": [], "fa": []}
+    g, s = sc.grid, sc.sensor
     drones: list = []
-    maps: list = []
+    pos: list[np.ndarray] = []
+    yaw: list[np.ndarray] = []
+    first = np.full(g.size, -1, np.int32)  # step at which a cell was first covered
     owner = np.full(g.size, -1, np.int8)
-    fa: list[tuple[float, float]] = []
+    dets: list[tuple[float, float, int]] = []
+    alarms: list[tuple[float, float, int, bool]] = []
     person: list = []
+    last = [10**9]
     orig_init, orig_step = sim.Drone.__init__, sim.Drone.step
-    orig_from, orig_apply = belief.SearchMap.from_prior.__func__, belief.SearchMap.apply
-    orig_sample = prior.sample_location
+    orig_add, orig_sample = confirm.Alarms.add, prior.sample_location
 
     def init(self: Any, *a: Any) -> None:
         orig_init(self, *a)
         drones.append(self)
 
-    def snapshot() -> None:
-        rec["pos"].append(np.array([d.pos for d in drones]))
-        rec["yaw"].append(np.array([d.yaw for d in drones]))
-        rec["cover"].append(owner.copy())
-        rec["belief"].append(maps[0].probabilities()[0].astype(np.float32))
-        rec["fa"].append(len(fa))
-
     def step(self: Any, *a: Any) -> None:
-        if self.i == 0:
-            snapshot()
+        if self.i <= last[0]:  # a new simulation step begins
+            pos.append(np.array([d.pos for d in drones]))
+            yaw.append(np.array([d.yaw for d in drones]))
+        last[0] = self.i
         orig_step(self, *a)
+        k = len(pos) - 1
+        fp = s.footprint(float(self.pos[0]), float(self.pos[1]), self.yaw)
+        if len(fp):
+            cells = np.asarray(g.cells_in_polygon(fp), np.int64)
+            new = cells[first[cells] < 0]
+            first[new], owner[new] = k, self.i
 
-    def from_prior(cls: Any, *a: Any) -> Any:
-        m = orig_from(cls, *a)
-        maps.append(m)
-        return m
-
-    def apply(self: Any, obs: Any) -> bool:
-        if maps and self is maps[obs.drone]:  # the drone's own pass, applied first
-            owner[np.asarray(obs.cells, np.int64)] = obs.drone
-            fa.extend((d.n_m, d.e_m) for d in obs.detections)
-        return orig_apply(self, obs)
+    def add(self: Any, n: float, e: float, t: float, p: Any) -> Any:
+        k = int(round(t / sc.dt_s)) - 1
+        dets.append((n, e, k))
+        r = orig_add(self, n, e, t, p)
+        if r is not None:
+            alarms.append((n, e, k, bool(r)))
+        return r
 
     def sample(*a: Any) -> Any:
         p = orig_sample(*a)
@@ -285,110 +417,137 @@ def record(seed: int) -> dict[str, Any]:
         return p
 
     sim.Drone.__init__, sim.Drone.step = init, step
-    belief.SearchMap.from_prior, belief.SearchMap.apply = classmethod(from_prior), apply
-    prior.sample_location = sample
+    confirm.Alarms.add, prior.sample_location = add, sample
     try:
-        pc = sim.PlannerConfig(kind=st["planner"], share=True, block_lanes=st["block_lanes"])
-        res = sim.run(sc, pc, cm.Radio(), seed)
+        res = en.run(sc, en.Plan(**c["pc"]), cm.Radio(), seed, world)
     finally:
         sim.Drone.__init__, sim.Drone.step = orig_init, orig_step
-        belief.SearchMap.from_prior = classmethod(orig_from)
-        belief.SearchMap.apply = orig_apply
-        prior.sample_location = orig_sample
-    snapshot()
-    rec.update(grid=g, person=person[0], result=res, fa_points=fa, prior=sc.prior)
-    return rec
+        confirm.Alarms.add, prior.sample_location = orig_add, orig_sample
+    pos.append(np.array([d.pos for d in drones]))
+    yaw.append(np.array([d.yaw for d in drones]))
+    return {
+        "grid": g, "prior": sc.prior, "dt": sc.dt_s, "pos": np.array(pos), "yaw": np.array(yaw),
+        "first": first, "owner": owner, "dets": np.array(dets, float).reshape(-1, 3),
+        "alarms": alarms, "person": person[0], "result": res,
+        "lose": (who, int(round(lose[1] / sc.dt_s)) - 1),
+    }  # fmt: skip
 
 
-def scene2(seed: int) -> tuple[Any, dict]:
-    rec = record(seed)
-    g = rec["grid"]
+def scene2(choice: dict, max_frames: int) -> tuple[Any, dict]:
+    """Left the sweep, right the lawnmower: the same missing person, the same drone lost."""
+    cfgs = configs16()
+    seed = choice["seed"]
+    recs = [record(cfgs["sweep"], seed), record(cfgs["lawnmower"], seed)]
+    for r, lab in zip(recs, ("sweep", "lawnmower"), strict=True):
+        if r["result"].t_confirmed_s != choice[f"{lab}_t_s"]:
+            raise SystemExit(f"{lab}: the recorded search differs from the seed-choice run")
+    g = recs[0]["grid"]
     side = 600
     boxes = [(30, 60), (W - 30 - side, 60)]
     s = side / g.ncols
+    ends = [len(r["pos"]) - 1 for r in recs]
+    hold = int(HOLD_S * FPS)
+    per_frame = max(1, int(np.ceil(max(ends) / max(max_frames - hold - 1, 1))))
+    n_out = int(np.ceil(max(ends) / per_frame)) + 1 + hold
 
     def to_px(n: float, e: float, b: tuple[int, int]) -> tuple[int, int]:
         return int(b[0] + (e - g.e0_m) / g.cell_m * s), int(
             b[1] + side - (n - g.n0_m) / g.cell_m * s
         )
 
-    decades = 3.0  # each frame scaled to its own likeliest cells, three decades below them
-
-    def heat(p: np.ndarray) -> np.ndarray:
-        top = float(np.quantile(p, 0.999))  # not the peak: single false-alarm cells spike
-        v = 1.0 + np.log10(np.maximum(p / top, 1e-12)) / decades
-        u8 = (np.clip(v, 0, 1) * 255).astype(np.uint8).reshape(g.nrows, g.ncols)[::-1]
-        return cv2.resize(
-            cv2.applyColorMap(u8, cv2.COLORMAP_INFERNO),
-            (side, side),
-            interpolation=cv2.INTER_NEAREST,
-        )
-
-    base = heat(rec["prior"])
+    top = float(np.quantile(recs[0]["prior"], 0.999))
+    v = 1.0 + np.log10(np.maximum(recs[0]["prior"] / top, 1e-12)) / 3.0
+    u8 = (np.clip(v, 0, 1) * 255).astype(np.uint8).reshape(g.nrows, g.ncols)[::-1]
+    base = cv2.resize(cv2.applyColorMap(u8, cv2.COLORMAP_INFERNO), (side, side),
+                      interpolation=cv2.INTER_NEAREST)  # fmt: skip
     base = (0.12 * base + 0.88 * np.array(PANEL)).astype(np.uint8)
     pal = np.array(DRONES, np.uint8)
-    n = len(rec["pos"])
-    res = rec["result"]
-    trails = [[to_px(*p, boxes[0]) for p in np.array(rec["pos"])[:, i]] for i in range(len(DRONES))]
-    found_k = n - 1 if res.found else None
-    fa_px = np.array([to_px(nm, em, boxes[0]) for nm, em in rec["fa_points"]], int).reshape(-1, 2)
-    fa_px = np.clip(
-        fa_px, [boxes[0][0], boxes[0][1]], [boxes[0][0] + side - 1, boxes[0][1] + side - 1]
-    )
+    draw = []
+    for r, b in zip(recs, boxes, strict=True):
+        trails = [[to_px(*p, b) for p in r["pos"][:, i]] for i in range(r["pos"].shape[1])]
+        dpx = np.array([to_px(n_, e_, b) for n_, e_, _ in r["dets"]], int).reshape(-1, 2)
+        dpx = np.clip(dpx, [b[0], b[1]], [b[0] + side - 1, b[1] + side - 1])
+        crew = [(to_px(n_, e_, b), k) for n_, e_, k, ok in r["alarms"] if not ok]
+        draw.append((trails, dpx, crew))
+
+    def panel(img: np.ndarray, j: int, k_out: int) -> None:
+        r, b = recs[j], boxes[j]
+        trails, dpx, crew = draw[j]
+        k = min(k_out, ends[j])
+        x0, y0 = b
+        cov = ((r["first"] >= 0) & (r["first"] <= k)).reshape(g.nrows, g.ncols)[::-1]
+        own = r["owner"].reshape(g.nrows, g.ncols)[::-1]
+        m = cv2.resize(cov.astype(np.uint8), (side, side), interpolation=cv2.INTER_NEAREST) > 0
+        col = cv2.resize(pal[np.maximum(own, 0)], (side, side), interpolation=cv2.INTER_NEAREST)
+        tile = base.copy()
+        tile[m] = (0.6 * col[m] + 0.4 * tile[m]).astype(np.uint8)
+        img[y0 : y0 + side, x0 : x0 + side] = tile
+        nd = int(np.searchsorted(r["dets"][:, 2], k, side="right"))
+        fx, fy = dpx[:nd].T  # every detection so far, one dim pixel each
+        img[fy, fx] = (0.5 * img[fy, fx] + 0.5 * np.array(GREY)).astype(np.uint8)
+        # places reported to the crew that were not the person: faint rings, so that the
+        # ground each drone covered stays readable under thousands of them
+        win = img[y0 : y0 + side, x0 : x0 + side]
+        ov = win.copy()
+        for (qx, qy), ka in crew:
+            if ka <= k:
+                cv2.circle(ov, (qx - x0, qy - y0), 3, GREY, 1, cv2.LINE_AA)
+        win[:] = cv2.addWeighted(ov, 0.35, win, 0.65, 0)
+        lost, k_lost = r["lose"]
+        for i, c in enumerate(DRONES[: r["pos"].shape[1]]):
+            gone = i == lost and k > k_lost
+            kk = min(k, k_lost) if i == lost else k
+            tr = np.array(trails[i][: kk + 1], np.int32)
+            if len(tr) > 1:
+                cv2.polylines(img, [tr], False, c, 1, cv2.LINE_AA)
+            cx, cy = to_px(*r["pos"][kk][i], b)
+            if gone:
+                cv2.line(img, (cx - 6, cy - 6), (cx + 6, cy + 6), GREY, 2, cv2.LINE_AA)
+                cv2.line(img, (cx - 6, cy + 6), (cx + 6, cy - 6), GREY, 2, cv2.LINE_AA)
+                age = (k - k_lost) / per_frame  # output frames since the loss
+                if age < FPS:  # a widening ring for one second after the loss
+                    cv2.circle(img, (cx, cy), 10 + int(age * 1.5), WHITE, 1, cv2.LINE_AA)
+                continue
+            yw = r["yaw"][kk][i]
+            fwd = np.array([np.sin(yw), -np.cos(yw)])  # east, north-up screen
+            pts = np.array([fwd * 9, np.array([-fwd[1], fwd[0]]) * 5 - fwd * 5,
+                            np.array([fwd[1], -fwd[0]]) * 5 - fwd * 5]) + [cx, cy]  # fmt: skip
+            cv2.fillPoly(img, [pts.astype(np.int32)], c, cv2.LINE_AA)
+        if r["result"].confirmed and k_out >= ends[j]:
+            age = (k_out - ends[j]) // per_frame
+            q = to_px(*r["person"], b)
+            cv2.circle(img, q, 6, ORANGE, -1, cv2.LINE_AA)
+            cv2.circle(img, q, 8 + (age * 2) % 24, ORANGE, 1, cv2.LINE_AA)
+        cv2.rectangle(img, b, (b[0] + side, b[1] + side), (70, 70, 70), 1)
 
     def frames() -> Any:
-        for k in range(n + int(HOLD_S * FPS)):
-            kk = min(k, n - 1)
+        for f in range(n_out):
             img = np.full((H, W, 3), BG, np.uint8)
-            # left: the team
-            left = base.copy()
-            cov = rec["cover"][kk].reshape(g.nrows, g.ncols)[::-1]
-            col = cv2.resize(pal[np.maximum(cov, 0)], (side, side), interpolation=cv2.INTER_NEAREST)
-            m = (
-                cv2.resize(
-                    (cov >= 0).astype(np.uint8), (side, side), interpolation=cv2.INTER_NEAREST
-                )
-                > 0
-            )
-            left[m] = (0.6 * col[m] + 0.4 * left[m]).astype(np.uint8)
-            x0, y0 = boxes[0]
-            img[y0 : y0 + side, x0 : x0 + side] = left
-            fx, fy = fa_px[: rec["fa"][kk]].T  # every detection so far, one dim pixel each
-            img[fy, fx] = (0.5 * img[fy, fx] + 0.5 * np.array(GREY)).astype(np.uint8)
-            for i, c in enumerate(DRONES):
-                tr = np.array(trails[i][: kk + 1], np.int32)
-                if len(tr) > 1:
-                    cv2.polylines(img, [tr], False, c, 1, cv2.LINE_AA)
-                p, yaw = rec["pos"][kk][i], rec["yaw"][kk][i]
-                cx, cy = to_px(*p, boxes[0])
-                fwd = np.array([np.sin(yaw), -np.cos(yaw)])  # east, north-up screen
-                pts = np.array([fwd * 9, np.array([-fwd[1], fwd[0]]) * 5 - fwd * 5,
-                                np.array([fwd[1], -fwd[0]]) * 5 - fwd * 5]) + [cx, cy]  # fmt: skip
-                cv2.fillPoly(img, [pts.astype(np.int32)], c, cv2.LINE_AA)
-            # right: the first drone's own map
-            x1, y1 = boxes[1]
-            img[y1 : y1 + side, x1 : x1 + side] = heat(rec["belief"][kk])
-            cx, cy = to_px(*rec["pos"][kk][0], boxes[1])
-            cv2.circle(img, (cx, cy), 5, DRONES[0], -1, cv2.LINE_AA)
-            if found_k is not None and k >= found_k:
-                age = k - found_k
-                for b in boxes:
-                    q = to_px(*rec["person"], b)
-                    cv2.circle(img, q, 6, ORANGE, -1, cv2.LINE_AA)
-                    cv2.circle(img, q, 8 + (age * 2) % 24, ORANGE, 1, cv2.LINE_AA)
-            for b in boxes:
-                cv2.rectangle(img, b, (b[0] + side, b[1] + side), (70, 70, 70), 1)
+            for j in range(2):
+                panel(img, j, f * per_frame)
             yield img
 
+    def outcome(r: dict) -> dict:
+        x = r["result"]
+        return {
+            "confirmed": x.confirmed,
+            "t_confirmed_s": x.t_confirmed_s,
+            "crew_alarms_before_find": x.crew_alarms_before_confirmed,
+        }
+
     info = {
-        "config": "auction, 4-lane blocks, 20 m, sharing on, perfect radio "
-        "(configs/multi_drone.yaml, frozen)",
-        "sensor": "results/multi_drone/sensor_p10_v2_cal.json",
+        "config": "left: sweep first then look again (frozen Phase 16 settings, "
+        "configs/search16.yaml); right: lawnmower; four drones, primary camera, perfect radio, "
+        "the same drone lost at half a sweep's time in both",
+        "sensor": "results/multi_drone/sensor_p10_v2_cal.json, with the recurring look-alikes "
+        "of clutter_p10_v2_cal.json",
         "seed": seed,
-        "found": bool(res.found),
-        "t_found_s": res.t_found_s,
-        "false_alarms_before_find": res.false_alarms_before_find,
-        "output_frames": n + int(HOLD_S * FPS),
+        "lost_drone": recs[0]["lose"][0],
+        "lost_at_s": (recs[0]["lose"][1] + 1) * recs[0]["dt"],
+        "sweep": outcome(recs[0]),
+        "lawnmower": outcome(recs[1]),
+        "simulated_seconds_per_frame": per_frame * recs[0]["dt"],
+        "output_frames": n_out,
     }
     return frames(), info
 
@@ -424,14 +583,13 @@ def encode(frames: Any, dest: Path, crf: int) -> int:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--map", default="cache/maps/syndrone_Town07_h50")
-    ap.add_argument("--seed", type=int, help="default: the typical development seed")
+    ap.add_argument("--workers", type=int, default=5, help="for the seed choice (once)")
     ap.add_argument("--crf", type=int, default=26)
     args = ap.parse_args(argv)
-    seed, t_seed, med = typical_seed()
-    if args.seed is not None:
-        seed = args.seed
+    choice = choose_seed(args.workers)
     g1, i1 = scene1(REPO_ROOT / args.map)
-    g2, i2 = scene2(seed)
+    budget = int((MAX_S - 1.0) * FPS) - i1["output_frames"]
+    g2, i2 = scene2(choice, budget)
 
     def all_frames() -> Any:
         yield from fade(g1, i1["output_frames"])
@@ -450,13 +608,11 @@ def main(argv: list[str] | None = None) -> int:
         "within_limits": mb <= MAX_MB and n / FPS <= MAX_S,
         "on_screen_text": "none (D-618)",
         "scene1_one_drone": i1,
-        "scene2_team": {
+        "scene2_lost_drone": {
             **i2,
-            "seed_rule": "development seed whose time to find is closest to the median of the "
-            "chosen configuration with sharing and no byte limit "
-            "(budget_check_p10_v2_cal_seeds.json 'unlimited'); ties to the lower seed",
-            "median_time_s": med,
-            "seed_time_s_in_results": t_seed if args.seed is None else None,
+            "seed_rule": SEED_RULE,
+            "seed_choice": {k: v for k, v in choice.items() if k != "seed"},
+            "seed_choice_file": SEED_FILE.relative_to(REPO_ROOT).as_posix(),
         },
     }
     rv = REPO_ROOT / "results" / "video" / "demo_v2.json"

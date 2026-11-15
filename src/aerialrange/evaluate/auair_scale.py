@@ -6,7 +6,7 @@ drifts during a flight). Between two straight-down frames:
 - ground displacement d moves the image centre by shift = f d / h, so f = shift h / d.
 Image motion comes from a similarity transform (shift, rotation, scale) fitted by RANSAC to
 tracked corners between the two frames, measured directly between them (not chained through
-intermediate frames, which builds up error: PROGRESS 2026-10-21).
+intermediate frames, which builds up error).
 """
 
 from __future__ import annotations

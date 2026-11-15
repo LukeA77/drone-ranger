@@ -1,0 +1,45 @@
+{
+ "file": "cache/video/field_view.mp4",
+ "seconds": 65.52,
+ "size_mb": 8.02,
+ "size": [
+  1280,
+  720
+ ],
+ "encoding": "H.264 crf 29",
+ "flight": {
+  "source": "cache/maps/syndrone_Town07_h50 (SynDrone Town07, 50 m), as results/video/demo_one_drone.json",
+  "person_shown": "14",
+  "range_m": 52.58204946001718,
+  "ellipse_major_m": 0.4411438673516868,
+  "counts_at_end": {
+   "people": 92,
+   "vehicles": 128,
+   "km2": 0.2481105,
+   "false": 75
+  }
+ },
+ "team": {
+  "source": "the two recorded searches of scripts/make_video_team.py (same rule)",
+  "seed": 73,
+  "lost_drone_shown_as": 3,
+  "presumed_lost_after_s": 60.0,
+  "team_plan_confirmed_s": 1697.0,
+  "fixed_lanes_searched_until_s": 4091.0
+ },
+ "end_card_source": "results/multi_drone/phase16_paired_test.json",
+ "drawn_larger_than_life": "pins, drones and drone stems",
+ "captions": {
+  "see": "A drone's camera sees pixels: boxes in a picture.",
+  "place": "Drone Ranger works out where each one is on the ground.\nThis person: {rng:.0f} m from the drone, placed to within {size:.1f} m.",
+  "pins": "Every person and vehicle gets a pin, a distance and an error bar.",
+  "map": "The map is built from the camera's own frames. No internet, no map service.",
+  "all": "Two minutes of flight: {people} people and {vehicles} vehicles pinned, {km2:.2f} km² searched.",
+  "false": "Grey rings: {false} of the {people} were look-alikes, not people. That is the open\nproblem, and a thermal camera is the next step.",
+  "team_team": "Now a team. Four drones search {km2:.1f} km² for one missing person.",
+  "team_lost": "Drone {lost} goes silent: a flat battery, a crash or a lost radio.\nThe others cannot tell which.",
+  "team_count": "After {after:.0f} seconds of silence they count it as lost,\nand add the ground it left to their own.",
+  "team_found": "They fly that ground and see someone. A second sighting confirms it.",
+  "team_pair": "Without the team plan each drone keeps to its own lanes,\nand the lost drone's ground is never searched."
+ }
+}

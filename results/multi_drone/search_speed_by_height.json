@@ -1,0 +1,35 @@
+{
+ "sources": {
+  "sensor": "results/multi_drone/sensor_p10_v2_cal.json",
+  "people_found": "results/syndrone/test/search_p10_v2_cal.json",
+  "settings": "configs/multi_drone.yaml (frozen, Phase 14)"
+ },
+ "n_drones": 4,
+ "speed_ms": 21.9,
+ "area_km2": 4.84,
+ "today_m": 20,
+ "by_height": {
+  "h20": {
+   "height_m": 20,
+   "lane_spacing_m": 40.52113052357951,
+   "sweep_s": 1363.5143155830863,
+   "sweep_min": 22.725238593051436,
+   "person_found_share": 0.47276688453159044
+  },
+  "h50": {
+   "height_m": 50,
+   "lane_spacing_m": 87.16302961794253,
+   "sweep_s": 633.8827573420872,
+   "sweep_min": 10.56471262236812,
+   "person_found_share": 0.05726872246696035
+  },
+  "h80": {
+   "height_m": 80,
+   "lane_spacing_m": 160.0,
+   "sweep_s": 345.3196347031964,
+   "sweep_min": 5.755327245053274,
+   "person_found_share": 0.004366812227074236
+  }
+ },
+ "sweep_ratio_20_to_80": 3.948557158514986
+}

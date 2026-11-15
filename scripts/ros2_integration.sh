@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ROS 2 integration test (Phase 12, build2 11.2): a recorded flight goes in as a rosbag2
+# ROS 2 integration test (Phase 12): a recorded flight goes in as a rosbag2
 # recording, and the node's tracked objects must equal `aerialrange run` on the same frames.
 #
 #   bash scripts/ros2_integration.sh <name> <frames dir> <flight CSV> <origin lat,lon,h> [frames]

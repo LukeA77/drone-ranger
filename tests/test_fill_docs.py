@@ -60,3 +60,13 @@ def test_keys_containing_dots(tmp_path):
     assert fd.fill(t, tmp_path) == "98% 2"
     with pytest.raises(fd.FillError, match="range_coverage_0"):
         fd.fill("{{RESULT:e.json#vehicle.pooled.range_coverage_0.95}}", tmp_path)
+
+
+def test_neg_prefix_negates_before_formatting(tmp_path):
+    (tmp_path / "x.json").write_text(json.dumps({"diff": -169.25}))
+    assert fd.fill("{{RESULT:x.json#diff|neg:,.0f}} s saved", tmp_path) == "169 s saved"
+
+
+def test_min_prefix_turns_seconds_into_minutes(tmp_path):
+    (tmp_path / "x.json").write_text(json.dumps({"t": 1697.0}))
+    assert fd.fill("after {{RESULT:x.json#t|min:.0f}} minutes", tmp_path) == "after 28 minutes"

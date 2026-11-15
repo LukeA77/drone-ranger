@@ -1,0 +1,23 @@
+{
+ "generated_utc": "2026-11-14T13:58:16+00:00",
+ "run": "dfine_hituav_day_visdrone",
+ "commit": "956d1709314c2c6a4df6f34de232054578a7449f",
+ "onnx": "dfine_hituav_day_visdrone.onnx",
+ "input_hw": [
+  640,
+  640
+ ],
+ "score_floor": 0.1,
+ "n_frames": 50,
+ "parity_images": "Data\\hituav\\normal_json\\val",
+ "torch": "2.15.0+cpu",
+ "onnxruntime": "1.31.1",
+ "reference": "authors' validation transform, network and post-processor (PyTorch)",
+ "max_box_diff_px": 0.0011272430419921875,
+ "p99_box_diff_px": 0.00018089294433593778,
+ "max_score_diff": 0.00019086214550217973,
+ "agreement_library_side": 1.0,
+ "agreement_onnx_side": 1.0,
+ "detections_library": 1230,
+ "detections_onnx": 1230
+}

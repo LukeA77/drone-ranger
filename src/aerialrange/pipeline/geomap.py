@@ -27,7 +27,7 @@ range intervals, rescaled along the line of sight so that its spread in that dir
 the calibrated 68 % range half-width (D-737), the bearing part unchanged
 (`calibrate_along_sight`; D-750 corrects an earlier scaling that assumed the covariance was
 built from the range sigma); drawn at `ELLIPSE_LEVEL` (chi-squared with 2 degrees of freedom).
-Privacy (build2 R16): people are a class and a track number only.
+Privacy: people are a class and a track number only.
 """
 
 from __future__ import annotations

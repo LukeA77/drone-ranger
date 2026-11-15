@@ -148,7 +148,7 @@ The version 1 detector and its library are AGPL-3.0, so version 2 replaces them.
 
 ## Phase 11 reference tools (licences checked 2026-11-09)
 
-Neither is a dependency of `src/aerialrange` (build2 R13); both live under `tools/openvins/` and are used only to produce a reference trajectory for comparison.
+Neither is a dependency of `src/aerialrange`; both live under `tools/openvins/` and are used only to produce a reference trajectory for comparison.
 
 | Tool | Licence | Use |
 |---|---|---|

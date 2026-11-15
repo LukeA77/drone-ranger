@@ -51,7 +51,12 @@ def referenced_paths(text: str) -> set[str]:
 
 @pytest.mark.parametrize("doc", [d for d in DOCS if not _ignored(d)], ids=lambda d: d.name)
 def test_referenced_files_exist(doc: Path) -> None:
-    base = ROOT if doc.parent in (ROOT, ROOT / "docs" / "src") else doc.parent
+    # a template in docs/src resolves where build_docs.py writes it: README.md at the top, the
+    # rest in docs/
+    if doc.parent == ROOT / "docs" / "src":
+        base = ROOT if doc.name == "README.md" else ROOT / "docs"
+    else:
+        base = doc.parent
     missing = []
     for p in sorted(referenced_paths(doc.read_text(encoding="utf-8"))):
         candidates = [ROOT / p, base / p]

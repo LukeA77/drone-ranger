@@ -1,0 +1,22 @@
+{
+ "frozen_utc": "2026-11-15T12:45:56+00:00",
+ "phase": "auair_v2",
+ "git_commit": "8375614",
+ "uncommitted_changes_to_frozen_files": [
+  "M configs/data.yaml",
+  "?? scripts/auair_detect.py"
+ ],
+ "files": {
+  "configs/auair.yaml": "f3a7ea8962e4e11ca34c6623083a9ea03ddbca2f40ee656c3ba21390fccb8dd3",
+  "configs/data.yaml": "b1e42729a9f05876b162e36b0cf2cf4e01baeeea2c9487e2d66784a8c252bd46",
+  "configs/detector.yaml": "52782acd3d43267f9e239ad42f03954f739903ca4d5e701351373b1a18b7e3fd",
+  "weights/dfine_n_640.onnx": "d85748ea79ad8a7168a4be1b4577a62c049ae5affc8c5644a402584c329c7c64",
+  "cache/auair/frames.csv": "ba93ae78be38d5256c178912652fc9c440daec1e8591a2363645d2fcf589303b",
+  "cache/auair/boxes.jsonl": "14e6eccd74feb19a24354bd4fa62cc5bdc319cf76822724a9f86cec7be2d69fe",
+  "results/auair/detect_B2_yolo26n_960.json": "e6d80c1a1af4c9e9d039924f41a2e700fc83a5007322e1fd82c7b092ef17b713",
+  "scripts/auair_detect.py": "fb734a09f336f9b2692728885ed6fd61d44939f7c0cf2fd90ae395d215ada6f7",
+  "src/aerialrange/detect/factory.py": "58689f6025c37702d6557c62ea555eefe31cbb1a45e00482138b530177c5d355",
+  "src/aerialrange/detect/onnx_detectors.py": "b802d106c2eda56cc252707ea52abebc6243fee127bf931358da8974146e4ff9",
+  "src/aerialrange/detect/evaluate.py": "75a956d2898cb585c9e8ba45e56e47fabf338bff92fa52e039605e6ee229f6c6"
+ }
+}

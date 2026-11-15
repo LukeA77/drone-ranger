@@ -4,7 +4,8 @@
  "title": "Thermal tracking on BIRDSAI (Phase 13, D-754)",
  "description": "x-files maps each file's path inside this folder to its definition (first match applies); tests/test_results_schema.py checks every file against it. Written by scripts/results_schema.py from the existing files: required keys are those every file has; shares and probabilities lie in 0 to 1; counts, sizes and times are not negative. Each definition's description names the script that writes the file.",
  "x-files": {
-  "*/grid_*.json": "#/$defs/grid"
+  "*/grid_*.json": "#/$defs/grid",
+  "*/detect_*.json": "#/$defs/detect"
  },
  "$defs": {
   "grid": {
@@ -171,6 +172,208 @@
      "type": "string"
     },
     "tracker": {
+     "type": "string"
+    }
+   }
+  },
+  "detect": {
+   "description": "scripts/detect_eval.py --dataset birdsai: detection AP for people on the test videos (once, after the Phase 13 freeze)",
+   "type": "object",
+   "required": [
+    "class_map",
+    "conf_floor",
+    "dataset",
+    "frame_stride",
+    "generated_utc",
+    "imgsz",
+    "include_full",
+    "iou_match",
+    "kind",
+    "library",
+    "max_det",
+    "n_images",
+    "overlap",
+    "results",
+    "run",
+    "seconds_per_image_wall",
+    "split",
+    "tile",
+    "tiled",
+    "timing_note",
+    "weights"
+   ],
+   "properties": {
+    "class_map": {
+     "type": "string"
+    },
+    "conf_floor": {
+     "type": "number"
+    },
+    "dataset": {
+     "type": "string"
+    },
+    "frame_stride": {
+     "type": "integer"
+    },
+    "generated_utc": {
+     "type": "string"
+    },
+    "imgsz": {
+     "type": "integer"
+    },
+    "include_full": {
+     "type": "boolean"
+    },
+    "iou_match": {
+     "type": "number"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "library": {
+     "type": "object",
+     "required": [
+      "onnxruntime"
+     ],
+     "properties": {
+      "onnxruntime": {
+       "type": "string"
+      }
+     }
+    },
+    "max_det": {
+     "type": "integer"
+    },
+    "n_images": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "overlap": {
+     "type": "null"
+    },
+    "results": {
+     "type": "object",
+     "required": [
+      "person",
+      "vehicle"
+     ],
+     "properties": {
+      "person": {
+       "type": "object",
+       "required": [
+        "ap50",
+        "ap50_95",
+        "by_height"
+       ],
+       "properties": {
+        "ap50": {
+         "type": "object",
+         "required": [
+          "ap",
+          "max_recall",
+          "n_det",
+          "n_gt"
+         ],
+         "properties": {
+          "ap": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "max_recall": {
+           "type": "number",
+           "minimum": 0,
+           "maximum": 1
+          },
+          "n_det": {
+           "type": "integer",
+           "minimum": 0
+          },
+          "n_gt": {
+           "type": "integer",
+           "minimum": 0
+          }
+         }
+        },
+        "ap50_95": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
+        "by_height": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "object"
+         }
+        }
+       }
+      },
+      "vehicle": {
+       "type": "object",
+       "required": [
+        "ap50",
+        "ap50_95",
+        "by_height"
+       ],
+       "properties": {
+        "ap50": {
+         "type": "object",
+         "required": [
+          "ap",
+          "max_recall",
+          "n_det",
+          "n_gt"
+         ],
+         "properties": {
+          "ap": {
+           "type": "number"
+          },
+          "max_recall": {
+           "type": "number"
+          },
+          "n_det": {
+           "type": "integer",
+           "minimum": 0
+          },
+          "n_gt": {
+           "type": "integer",
+           "minimum": 0
+          }
+         }
+        },
+        "ap50_95": {
+         "type": "number"
+        },
+        "by_height": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "object"
+         }
+        }
+       }
+      }
+     }
+    },
+    "run": {
+     "type": "string"
+    },
+    "seconds_per_image_wall": {
+     "type": "number",
+     "minimum": 0
+    },
+    "split": {
+     "type": "string"
+    },
+    "tile": {
+     "type": "null"
+    },
+    "tiled": {
+     "type": "boolean"
+    },
+    "timing_note": {
+     "type": "string"
+    },
+    "weights": {
      "type": "string"
     }
    }

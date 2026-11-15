@@ -120,7 +120,7 @@ In the frozen radio, a drone's unused byte allowance carries over for at most on
 
 ## Phase 16: confirmed finds, sweep first then look again, compact sharing
 
-Phase 14 counted a find at the first detection of the person and treated false alarms as free. A real crew cannot: every place the drones report has to be checked. Phase 16 changes the measure and the world to match, and adds a planner and a way of sharing built for them (D-764, D-765; plan in build2 Section 12.3).
+Phase 14 counted a find at the first detection of the person and treated false alarms as free. A real crew cannot: every place the drones report has to be checked. Phase 16 changes the measure and the world to match, and adds a planner and a way of sharing built for them (D-764, D-765).
 
 ```bash
 python scripts/multidrone_clutter_fit.py --name p10_v2_cal --split test --allow-test   # how false alarms recur

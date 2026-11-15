@@ -1,0 +1,108 @@
+{
+ "generated_utc": "2026-11-14T16:29:28+00:00",
+ "run": "dfine_n_640",
+ "dataset": "birdsai",
+ "split": "test",
+ "weights": "weights/dfine_n_640.onnx",
+ "class_map": "visdrone10",
+ "imgsz": 640,
+ "tiled": false,
+ "include_full": false,
+ "tile": null,
+ "overlap": null,
+ "frame_stride": 10,
+ "n_images": 2140,
+ "iou_match": 0.5,
+ "max_det": 1000,
+ "kind": "dfine",
+ "conf_floor": 0.25,
+ "library": {
+  "onnxruntime": "1.31.0"
+ },
+ "seconds_per_image_wall": 0.15932835000080262,
+ "timing_note": "Wall time, not the latency benchmark protocol (D-601).",
+ "results": {
+  "person": {
+   "ap50": {
+    "ap": 0.011816602299669153,
+    "n_gt": 2211,
+    "n_det": 10190,
+    "max_recall": 0.17458163726820444
+   },
+   "ap50_95": 0.002124806758220832,
+   "by_height": {
+    "0-16": {
+     "ap": 1.5543155571444114e-05,
+     "n_gt": 338,
+     "n_det": 2023,
+     "max_recall": 0.005917159763313609
+    },
+    "16-32": {
+     "ap": 0.0174026261032628,
+     "n_gt": 1001,
+     "n_det": 3868,
+     "max_recall": 0.17582417582417584
+    },
+    "32-64": {
+     "ap": 0.043815206153059214,
+     "n_gt": 852,
+     "n_det": 1779,
+     "max_recall": 0.2335680751173709
+    },
+    "64-128": {
+     "ap": 0.0037285471968249457,
+     "n_gt": 20,
+     "n_det": 2388,
+     "max_recall": 0.45
+    },
+    "128-inf": {
+     "ap": NaN,
+     "n_gt": 0,
+     "n_det": 132,
+     "max_recall": NaN
+    }
+   }
+  },
+  "vehicle": {
+   "ap50": {
+    "ap": NaN,
+    "n_gt": 0,
+    "n_det": 986,
+    "max_recall": NaN
+   },
+   "ap50_95": NaN,
+   "by_height": {
+    "0-16": {
+     "ap": NaN,
+     "n_gt": 0,
+     "n_det": 546,
+     "max_recall": NaN
+    },
+    "16-32": {
+     "ap": NaN,
+     "n_gt": 0,
+     "n_det": 97,
+     "max_recall": NaN
+    },
+    "32-64": {
+     "ap": NaN,
+     "n_gt": 0,
+     "n_det": 87,
+     "max_recall": NaN
+    },
+    "64-128": {
+     "ap": NaN,
+     "n_gt": 0,
+     "n_det": 195,
+     "max_recall": NaN
+    },
+    "128-inf": {
+     "ap": NaN,
+     "n_gt": 0,
+     "n_det": 61,
+     "max_recall": NaN
+    }
+   }
+  }
+ }
+}

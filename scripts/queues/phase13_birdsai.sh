@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Phase 13 thermal tracking on BIRDSAI (D-754), people only.
 #   bash scripts/queues/phase13_birdsai.sh tune            # train videos: cache, tracker grid
-#   bash scripts/queues/phase13_birdsai.sh test            # once, each detector with the thresholds
-#                                                          # its train grid selected
+#   bash scripts/queues/phase13_birdsai.sh test            # once, after the Phase 13 freeze: each
+#                                                          # detector with the thresholds its train
+#                                                          # grid selected
 # The thermal detector (weights/dfine_hituav_day_coco.onnx) and, for transfer, the colour one
 # (weights/dfine_n_640.onnx), each with the project's tracker (configs/trackers/motion.yaml)
 # tuned on BIRDSAI train for people by the D-733 rule (highest F2), detection every frame.
@@ -20,6 +21,13 @@ WORKERS=${WORKERS:-5}
 HIGH_GRID="0.05 0.15 0.25 0.35 0.45 0.55"
 NEW_GRID="0.25 0.35 0.45 0.55 0.65 0.75 0.85"
 STAGE=$1
+if [ "$STAGE" = test ]; then
+  # once, after the Phase 13 freeze (D-751): refuse if the freeze changed or test results exist
+  "$PY" scripts/freeze.py --phase phase13 --check > "$L/freeze_check_birdsai.log" 2>&1 || { say "freeze check failed"; exit 1; }
+  if compgen -G "results/birdsai/test/detect_*.json" > /dev/null     || compgen -G "results/birdsai/test/grid_*_test.json" > /dev/null; then
+    say "test results exist: refusing"; exit 1
+  fi
+fi
 [ -f cache/birdsai/mot/train/0000000010_0000000000/seqinfo.json ] || "$PY" scripts/birdsai_prep.py
 for RUN in ${RUNS:-dfine_hituav_day_coco dfine_n_640}; do
   W=weights/$RUN.onnx

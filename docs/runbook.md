@@ -67,6 +67,7 @@ Commands run from the repository root with the project virtual environment. On W
 6. Calibration checks: `python scripts/auair_repeatability.py --run B2_yolo26n_960 --split calibration`; `python scripts/auair_repeatability_view.py --source B2_yolo26n_960 --split calibration`.
 7. Freeze and held-out once: `python scripts/freeze.py --phase phase4_view`, then `python scripts/auair_repeatability_view.py --source B2_yolo26n_960 --split held_out --final` (and `--source truth`).
 8. Moving targets: `python scripts/auair_moving.py --run B2_yolo26n_960 --tune` (calibration), then without `--tune`.
+9. Version 2 detector on the same frames (D-777): `python scripts/auair_detect.py --split calibration` (a check, about 2 min), then `python scripts/freeze.py --phase auair_v2` and `python scripts/auair_detect.py --split held_out` once (about 10 min; it refuses to run again or after a change to a frozen file). Needs `cache/auair/frames.csv` and `boxes.jsonl` from step 1 and `weights/dfine_n_640.onnx`.
 
 ## Speed (Phase 5, D-601 to D-612)
 
@@ -139,7 +140,10 @@ All on development and calibration towns; none reads the test towns.
 3. Fill the choices in `configs/multi_drone.yaml`, set `frozen: true`, `python scripts/freeze.py --phase phase14`.
 4. Test stage, once: `python scripts/multidrone_run.py test --sensor results/multi_drone/sensor_p10_v2_cal.json --workers 12`, and for the rural camera with `--only lawnmower_n4 chosen_noshare_n4 chosen_share_n4 --sensor results/multi_drone/sensor_v2_dfine_cal_rural.json`.
 5. Byte-budget follow-up (development seeds): `python scripts/multidrone_budget_check.py --workers 12`.
-6. Version 2 demo video (D-761): `python scripts/make_demo_v2.py` (needs `cache/maps/syndrone_Town07_h50/` from `make_search_map.py` and `ffmpeg`; writes `cache/video/demo_v2.mp4` and `results/video/demo_v2.json`).
+6. Version 2 demo video (D-761; second scene from Phase 16, D-767): `python scripts/make_demo_v2.py --workers 5` (needs `cache/maps/syndrone_Town07_h50/` from `make_search_map.py`, the Phase 16 freeze and `ffmpeg`; the first run also runs 400 development searches to choose the seed, about 20 min, kept in `results/video/demo_v2_seed_choice.json`; writes `cache/video/demo_v2.mp4` and `results/video/demo_v2.json`).
+7. Presentation videos with captions (D-770): `python scripts/make_video_one_drone.py` (one drone, camera to map, D-771; needs `cache/maps/syndrone_Town07_h50/`; writes `cache/video/demo_one_drone.mp4` and `results/video/demo_one_drone.json`) and `python scripts/make_video_team.py` (a team loses a drone, D-773; needs the Phase 16 freeze and `results/video/demo_v2_seed_choice.json` from step 6; about 2 min; writes `cache/video/demo_team.mp4` and `results/video/demo_team.json`; `--loop <file.webp>` also writes a silent loop of the map for the README).
+8. Search-speed chart (D-772, no search is run): `python scripts/search_speed_by_height.py` (writes `results/multi_drone/search_speed_by_height.json` and `results/multi_drone/figures/search_speed_by_height.png`).
+9. README media (D-775): `python scripts/make_video_field_view.py` (the 3D field-view video, one flight then the team search; needs `cache/maps/syndrone_Town07_h50/` and the searches of step 7, recorded once into `cache/video/field_view_team.pkl`; about 8 min on the laptop; writes `cache/video/field_view.mp4` and `results/video/field_view.json`), then `python scripts/make_readme_media.py field_view field_map field_team` (the README's three loops, into `docs/media/`) and `python scripts/readme_figures.py` (the README's five charts, light and dark, into `docs/media/`).
 Each run of 12 workers needs about 2 GB of memory; on the 15 GB laptop do not overlap it with detection or tracker grids.
 
 ## Confirmed finds and compact sharing (Phase 16, D-764)

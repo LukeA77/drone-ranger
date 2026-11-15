@@ -1,4 +1,4 @@
-"""Integration test (build2 11.2): a rosbag2 recording converted from a flight goes in, and the
+"""Integration test: a rosbag2 recording converted from a flight goes in, and the
 node's tracked objects must equal `aerialrange run` on the same frames and flight data.
 
 Run by scripts/ros2_integration.sh inside the ROS 2 container (it makes the recording and the

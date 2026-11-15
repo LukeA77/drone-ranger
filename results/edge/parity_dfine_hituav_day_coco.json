@@ -1,0 +1,23 @@
+{
+ "generated_utc": "2026-11-14T13:56:39+00:00",
+ "run": "dfine_hituav_day_coco",
+ "commit": "956d1709314c2c6a4df6f34de232054578a7449f",
+ "onnx": "dfine_hituav_day_coco.onnx",
+ "input_hw": [
+  640,
+  640
+ ],
+ "score_floor": 0.1,
+ "n_frames": 50,
+ "parity_images": "Data\\hituav\\normal_json\\val",
+ "torch": "2.15.0+cpu",
+ "onnxruntime": "1.31.1",
+ "reference": "authors' validation transform, network and post-processor (PyTorch)",
+ "max_box_diff_px": 0.000598907470703125,
+ "p99_box_diff_px": 0.00014113903045654254,
+ "max_score_diff": 0.00010384329989121532,
+ "agreement_library_side": 1.0,
+ "agreement_onnx_side": 1.0,
+ "detections_library": 1090,
+ "detections_onnx": 1090
+}

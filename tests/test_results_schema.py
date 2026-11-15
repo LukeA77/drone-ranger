@@ -1,4 +1,4 @@
-"""Results files match their folder's schema.json (build2 Section 15: results with a schema).
+"""Results files match their folder's schema.json.
 
 A schema is a JSON Schema document; its `x-files` maps file-name patterns to definitions
 (the first matching pattern applies). Only the keywords used in this repository's schemas are

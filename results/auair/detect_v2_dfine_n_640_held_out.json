@@ -1,0 +1,157 @@
+{
+ "generated_utc": "2026-11-15T12:54:26+00:00",
+ "run": "dfine_n_640",
+ "weights": "weights/dfine_n_640.onnx",
+ "kind": "dfine",
+ "imgsz": 640,
+ "class_map": "visdrone10",
+ "split": "held_out",
+ "clips": [
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  40,
+  41,
+  42,
+  43,
+  44,
+  45,
+  46,
+  47
+ ],
+ "det_stride": 10,
+ "iou_match": 0.5,
+ "conf_floor": 0.25,
+ "max_det": 1000,
+ "class_map_auair": {
+  "person": [
+   "Human"
+  ],
+  "vehicle": [
+   "Car",
+   "Truck",
+   "Van",
+   "Bus"
+  ]
+ },
+ "library": {
+  "onnxruntime": "1.31.0"
+ },
+ "seconds_per_image_wall": 0.1500528092997464,
+ "note": "Cross-dataset check on version 1's frames: AU-AIR was not used for training or tuning. Version 1's result on the same frames is copied in `version1`.",
+ "results": {
+  "person": {
+   "n_images": 2742,
+   "ap50": {
+    "ap": 0.039842157791404646,
+    "n_gt": 253,
+    "n_det": 12190,
+    "max_recall": 0.1976284584980237
+   },
+   "by_height": {
+    "0-16": {
+     "ap": 0.0,
+     "n_gt": 4,
+     "n_det": 150,
+     "max_recall": 0.0
+    },
+    "16-32": {
+     "ap": 0.002641525496561682,
+     "n_gt": 33,
+     "n_det": 10372,
+     "max_recall": 0.30303030303030304
+    },
+    "32-64": {
+     "ap": 0.023870429518128556,
+     "n_gt": 125,
+     "n_det": 1555,
+     "max_recall": 0.184
+    },
+    "64-128": {
+     "ap": 0.11040245761221493,
+     "n_gt": 81,
+     "n_det": 112,
+     "max_recall": 0.20987654320987653
+    },
+    "128-inf": {
+     "ap": 0.0,
+     "n_gt": 10,
+     "n_det": 1,
+     "max_recall": 0.0
+    }
+   }
+  },
+  "vehicle": {
+   "n_images": 2742,
+   "ap50": {
+    "ap": 0.20363127560152322,
+    "n_gt": 10107,
+    "n_det": 132321,
+    "max_recall": 0.48609874344513704
+   },
+   "by_height": {
+    "0-16": {
+     "ap": 0.018435439821750377,
+     "n_gt": 223,
+     "n_det": 15855,
+     "max_recall": 0.16591928251121077
+    },
+    "16-32": {
+     "ap": 0.04079564781830224,
+     "n_gt": 1450,
+     "n_det": 89289,
+     "max_recall": 0.6379310344827587
+    },
+    "32-64": {
+     "ap": 0.16758230418615103,
+     "n_gt": 2989,
+     "n_det": 15313,
+     "max_recall": 0.5332887253261961
+    },
+    "64-128": {
+     "ap": 0.2537175894371993,
+     "n_gt": 3718,
+     "n_det": 9414,
+     "max_recall": 0.4308768154922001
+    },
+    "128-inf": {
+     "ap": 0.319795582976491,
+     "n_gt": 1727,
+     "n_det": 2450,
+     "max_recall": 0.4371742906774754
+    }
+   }
+  }
+ },
+ "version1": {
+  "source": "results/auair/detect_B2_yolo26n_960.json",
+  "run": "B2_yolo26n_960",
+  "ap50": {
+   "person": 0.024926604774138775,
+   "vehicle": 0.2087491247773771
+  }
+ }
+}

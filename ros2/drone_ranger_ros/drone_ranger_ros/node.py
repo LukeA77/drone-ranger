@@ -1,4 +1,4 @@
-"""Drone Ranger ROS 2 node (Phase 12, build2 11.2).
+"""Drone Ranger ROS 2 node (Phase 12).
 
 Subscribes (synchronised by time stamp with message_filters):
   image (sensor_msgs/Image, sensor-data QoS), camera_info (sensor_msgs/CameraInfo),
