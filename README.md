@@ -3,7 +3,7 @@
 
 # Drone Ranger
 
-**Using a drone's camera, Drone Ranger maps where people and vehicles are on the ground below, and shows how confident it is in each position.**
+**Drone Ranger maps where people and vehicles are on the ground ssing a camera, and shows how confident it is in each position.**
 
 The system is designed to run on a Raspberry Pi 5 carried on the drone itself, with no GPU and no internet connection.<br>
 It is a research prototype. It has been tested on public datasets and in simulation, and has not yet been flown.
@@ -47,7 +47,7 @@ I tested it on search and rescue, with a team of drones looking for one missing 
 
 ### 1. Distances are typically within 4.5%
 
-A camera gives a direction, not a distance. Drone Ranger follows the line of sight to each person or vehicle down to the ground and reports how far away they are. With the drone's position known, the typical (median) error is 0.6% for people and 0.4% for vehicles. When the drone has to work out its own position from its camera, motion sensor and GPS, it is 4.5%.
+Camera's give direction, not distance. Drone Ranger is able to calculate the distance by following the line of sight to each person or vehicle down to the ground. When the drone's position is known, the median error is 0.6% for people and 0.4% for vehicles. When the drone has to work out its own position, it is 4.5%.
 
 <p align="center"><picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/media/fig_distance_dark.png">
@@ -56,7 +56,7 @@ A camera gives a direction, not a distance. Drone Ranger follows the line of sig
 
 ### 2. The error bars contain the true distance 84% to 95% of the time
 
-Every distance comes with an error bar, because a number you cannot trust is worse than no number. The bars are calibrated on separate flights and then checked on test data. A 90% error bar should contain the true distance 9 times out of 10. On the test data, the true distance was inside the bar 84% to 95% of the time, up from 74% before calibration on the hardest test set. A separate warning flag marks the distances most likely to be badly wrong. So far it catches 56% of them.
+Every distance comes with an error bar, because a number you cannot trust is worse than no number. The bars are calibrated on separate flights and then checked on test data. A 90% error bar should contain the true distance 9 times out of 10. On the test data, the true distance was inside the bar 84% to 95% of the time, up from 74% before calibration on the hardest test set. A separate warning flag marks the distances most likely to be severely wrong and is successful 56% of the time. 
 
 <p align="center"><picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/media/fig_error_bars_dark.png">
@@ -70,13 +70,13 @@ Every distance comes with an error bar, because a number you cannot trust is wor
 
 ### 3. Searching as a team saves 169 s when a drone is lost
 
-Four drones split the area into lanes and tell each other which lanes they have finished. Each drone sends about 34 bytes a second, small enough for a basic radio. If a drone goes silent, the others treat it as lost and fly the lanes it had not finished.
+Four drones split the area into lanes and tell each other which lanes they have finished searching. Each drone sends about 34 bytes a second, small enough for a basic radio signal. If a drone goes silent, the others treat it as lost and fly the lanes it had not finished.
 
-I compared this with the usual plan, where each drone keeps to its own fixed lanes. Over 300 simulated searches, losing one of four drones added 196 s to a search done as a team, against 365 s on fixed lanes. With no drone lost, neither plan was measurably faster.
+I compared this with the original plan, where each drone keeps to its own fixed lanes. This system was tested on over 300 simulated searches. Losing one of the four drones added 196 s to a search done as a team. When no drone was lost, neither plan was measurably faster.
 
 <p align="center">
   <img src="docs/media/field_team.webp" width="900" alt="A tilted map of a simulated search. Four numbered drones fly lanes, colouring the ground they cover. Drone 3 turns grey and sinks, and the strip it had not searched is hatched. The others later fly that strip, and the missing person is marked found and confirmed. A side-by-side view then shows the same search on fixed lanes, where the hatched strip is never flown">
-<br><sub>One simulated search where the lost drone matters, because the missing person was on its ground. It was chosen by a written rule as the typical case of this kind. Searching as a team, the drones found and confirmed the person after 28 minutes. On fixed lanes they had not found them when the search was called off at 68 minutes. A case like this came up in 13 of 200 trial searches.</sub>
+<br><sub>One example of when a simulated search where the lost drone matters, because the missing person was on the lost drones lane. It was chosen by a written rule as the typical case of this kind. Searching as a team, the drones found and confirmed the person after 28 minutes. On the original fixed lanes they had not found them and the search was called off after 68 minutes. A case like this came up in 13 of 200 trial searches.</sub>
 </p>
 
 <p align="center"><picture>
@@ -86,14 +86,14 @@ I compared this with the usual plan, where each drone keeps to its own fixed lan
 
 ### 4. The camera limits the search, not the flight plan
 
-From 20 m the camera finds 47% of people. From 50 m it finds 6%. So the drones have to fly low, and flying low is slow. Four drones take 23 minutes to cover an area from 20 m that they could cover in 6 minutes from 80 m.
+From 20 m the camera finds 47% of people, from 50 m it finds 6%. This means the drones have to fly low, and flying low is much slower. Four drones take 23 minutes to cover an area from 20 m and 6 minutes from 80 m for an area of the same size.
 
 <p align="center"><picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/media/fig_height_dark.png">
   <img src="docs/media/fig_height_light.png" width="820" alt="Two bar charts by flying height. Minutes for four drones to cover the area once: 23 at 20 m, 11 at 50 m, 6 at 80 m. Share of people the camera finds: 47% at 20 m, 6% at 50 m, 0.4% at 80 m">
 </picture></p>
 
-The system also raises too many false alarms, places it reports as a person where there is none. To cut them, a place is reported to the search crew only after it has been seen twice. On average, that cuts the false alarms before the real person is found from 6,277 to 1,861 per search. That is still far more than a crew could check.
+The main problem is the system raises too many missing people false alarms. To reduce this an alert is only reported to the search crew after it has been seen twice. On average, that cuts the false alarms from 6,277 to 1,861 per search. That is still far more than a crew could check and my biggest problem.
 
 <p align="center"><picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/media/fig_false_alarms_dark.png">
@@ -105,11 +105,11 @@ The system also raises too many false alarms, places it reports as a person wher
 <br><sub>The whole two-minute flight, sped up. Grey rings are false alarms. 75 of the 92 “people” were look-alikes.</sub>
 </p>
 
-**Both problems have the same cause.** The detector learned from city streets filmed from lower down, where people look bigger. From search height a person is only a few pixels, and so are many fixed objects. Most false alarms come back to the same places on every pass. Three things would help.
+**Both problems have the same cause.** The detector learned from city streets filmed from lower down, where people look bigger. From search height a person is only a few pixels, and so are many fixed objects. Most false alarms come back to the same places on every pass. Three things would help;
 
-- **A thermal camera.** People show up warm against cool ground. A detector I trained on thermal images already finds people on days it never saw, by night as well as by day. It scores 0.69, against 0.06 for the colour detector (person AP50, a standard detection score from 0 to 1). On a different thermal camera, over wildlife areas at night, only 20% of what it tracks as people are people. The next step is to train it on that kind of video. More in [thermal](docs/thermal.md).
-- **Training on footage filmed from search height**, so the detector learns what a person looks like from that far up.
-- **A closer second look** as soon as something is seen, instead of waiting for the next pass.
+- **1. A thermal camera.** People show up warm against cool ground. A detector I trained on thermal images already reduces the false alerts. It scores 0.69, against 0.06 for the colour detector (person AP50). More in [thermal](docs/thermal.md).
+- **2. Training on footage filmed from search height**, so the detector learns what a person looks like from that far up.
+- **3. A closer second look** as soon as something is seen, instead of waiting for the next pass, lowering the search height and confirming the false alert.
 
 <p align="center">
   <img src="docs/media/thermal_night_day.jpg" width="900" alt="Two thermal test images in false colour, each shown twice. Top, at night from 130 m and enlarged. The colour detector has boxed nothing, and the thermal detector has drawn cyan boxes on the glowing figures of people. Below, by day from 100 m over a road, trees and a building. The colour detector boxes two vehicles and no people, and the thermal detector boxes the same two vehicles and one person">
@@ -120,10 +120,10 @@ The system also raises too many false alarms, places it reports as a person wher
 
 ## What it does
 
-- **Maps what the camera sees.** Each person and vehicle is followed from frame to frame and pinned on a map built from the drone's own frames, with no map service. A counter shows people found, vehicles found, ground searched and flight time. A crew confirms or dismisses each find ([search map](docs/map.md)).
+- **Maps what the camera sees.** Each person and vehicle is followed from frame to frame and pinned on a map built from the drone's own frames. A counter shows people found, vehicles found, ground searched and flight time. ([search map](docs/map.md)).
 - **Gives every distance an error bar,** and flags the ones likely to be badly wrong.
 - **Searches as a team** over an unreliable radio, and covers for a drone that is lost ([team search](docs/multi_drone.md)).
-- **Runs on small hardware.** It processes 13 frames a second on a laptop processor with no graphics card (AMD Ryzen 7 5700U with Radeon Graphics, detecting every second frame). On a Raspberry Pi 5 the detector is estimated, not yet measured, at 285 ms per detection.
+- **Runs on small hardware.** It processes 13 frames a second on a laptop processor with no graphics card (detecting every second frame). On a Raspberry Pi 5 the detector is estimated, not yet measured, at 285 ms per detection.
 
 It also:
 
