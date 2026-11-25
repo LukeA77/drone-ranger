@@ -7,7 +7,7 @@ PY ?= .venv/bin/python
 endif
 
 .PHONY: setup lint test data-check env midair-eval visdrone-prep \
-        demo docs pareto pi-benchmark containers platform-check
+        demo docs pareto pi-benchmark containers platform-check ros2-image ros2-demo ros2-check
 
 setup:
 	python -m venv .venv
@@ -44,6 +44,20 @@ visdrone-prep:
 # Whole pipeline on a synthetic flight, checked against its truth (no datasets needed).
 demo:
 	$(PY) -m aerialrange.cli demo --out cache/demo
+
+# The ROS 2 image (ROS 2 Jazzy, with the synthetic demo recording built in).
+ros2-image:
+	docker build -f docker/ros2.Dockerfile -t drone-ranger-ros:amd64 .
+
+# The ROS 2 demo without a display: the recording plays into the node, and tracks.csv, the map
+# and timing.json land in cache/ros2_demo. RViz: docker/ros2-viz.Dockerfile.
+ros2-demo: ros2-image
+	docker run --rm -v "$(CURDIR)/cache/ros2_demo:/out" drone-ranger-ros:amd64 \
+	  ros2 launch drone_ranger_ros demo.launch.py rviz:=false output_dir:=/out
+
+# The ROS 2 check CI runs: launch_testing against `aerialrange run`, then the demo launch.
+ros2-check: ros2-image
+	docker run --rm drone-ranger-ros:amd64 bash scripts/ros2_demo_check.sh
 
 # Rebuild results/headline.json and every document from docs/src/ (fails on any unfilled number).
 docs:

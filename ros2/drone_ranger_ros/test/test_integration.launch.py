@@ -8,6 +8,7 @@ reference first) with:
   DR_OUT     a folder for the node's outputs
   DR_MOUNT   the camera mount tilt used to make the recording (degrees)
   DR_CONFIG  the config name (as for aerialrange run)
+  DR_BOXES   optional: a boxes CSV read instead of the detector (the synthetic demo, in CI)
   DR_RATE    playback rate (slow enough that no frame is dropped)
   DR_FRAMES  the number of frames in the recording
 Skipped when DR_BAG is not set.
@@ -22,7 +23,6 @@ from pathlib import Path
 
 import launch
 import launch.event_handlers
-import launch_ros.actions
 import launch_testing
 import launch_testing.actions
 import launch_testing.asserts
@@ -31,8 +31,17 @@ import pandas as pd
 import pytest
 import rclpy
 from drone_ranger_msgs.msg import TrackedObjectArray
+from drone_ranger_ros.launch_util import (
+    TOPICS,
+    drone_ranger_node,
+    mount_tf_nodes,
+    play_recording_cmd,
+)
 
-ENV = {k: os.environ.get(k) for k in ("DR_BAG", "DR_REF", "DR_OUT", "DR_MOUNT", "DR_CONFIG")}
+ENV = {
+    k: os.environ.get(k)
+    for k in ("DR_BAG", "DR_REF", "DR_OUT", "DR_MOUNT", "DR_CONFIG", "DR_BOXES")
+}
 RATE = os.environ.get("DR_RATE", "0.2")
 TOL = 1e-6  # poses pass through a quaternion and back: about 1e-12, so this is generous
 IDLE_S = 600  # far longer than one frame takes, even under ARM64 emulation (about 20 s)
@@ -43,33 +52,22 @@ EXACT = ["frame", "track_id", "class", "valid", "reason", "flag", "speed_shown"]
 def generate_test_description():  # noqa: ANN201 - launch_testing's entry point
     if not ENV["DR_BAG"]:
         pytest.skip("DR_BAG not set: run scripts/ros2_integration.sh")
-    node = launch_ros.actions.Node(
+    node = drone_ranger_node(
+        {
+            "config": ENV["DR_CONFIG"] or "run",
+            "boxes_csv": ENV["DR_BOXES"] or "",
+            "output_dir": ENV["DR_OUT"],
+            "image_qos": "recording",  # every frame of the recording, for the comparison
+        },
+        {k: f"/{k}" for k in TOPICS},
         # time to write tracks.csv and the map after the interrupt (slow under emulation)
         sigterm_timeout="300",
         sigkill_timeout="300",
-        # unbuffered logs, so the "subscribed" line reaches the event handler at once
-        additional_env={"PYTHONUNBUFFERED": "1", "RCUTILS_LOGGING_BUFFERED_STREAM": "0"},
-        package="drone_ranger_ros",
-        executable="drone_ranger_node",
-        name="drone_ranger",
-        output="screen",
-        parameters=[
-            {
-                "config": ENV["DR_CONFIG"] or "run",
-                "mount_tilt_deg": float(ENV["DR_MOUNT"]),
-                "output_dir": ENV["DR_OUT"],
-                "image_qos": "reliable",  # every frame of the recording, for the comparison
-            }
-        ],
-        remappings=[
-            ("image", "/image"),
-            ("camera_info", "/camera_info"),
-            ("odometry", "/odometry"),
-            ("fix", "/fix"),
-        ],
     )
+    # the camera's mount reaches the node through tf2, as on a drone
+    mount = mount_tf_nodes(float(ENV["DR_MOUNT"]))
     play = launch.actions.ExecuteProcess(
-        cmd=["ros2", "bag", "play", ENV["DR_BAG"], "--rate", RATE, "--delay", "5"],
+        cmd=play_recording_cmd(ENV["DR_BAG"], RATE, "5"),
         output="screen",
     )
     # start playback only once the node has subscribed: under ARM64 emulation its start-up takes
@@ -87,7 +85,8 @@ def generate_test_description():  # noqa: ANN201 - launch_testing's entry point
             target_action=node, on_stdout=on_output, on_stderr=on_output
         )
     )
-    return launch.LaunchDescription([node, wait, launch_testing.actions.ReadyToTest()]), {
+    desc = [*mount, node, wait, launch_testing.actions.ReadyToTest()]
+    return launch.LaunchDescription(desc), {
         "node": node,
         "play": play,
     }

@@ -41,6 +41,31 @@ I tested it on search and rescue, with a team of drones looking for one missing 
 </tr>
 </table>
 
+## Running in ROS 2
+
+<p align="center">
+  <img src="docs/media/rviz_auair.webp" width="900" alt="RViz with two panes. Left, real drone footage of a road leading to a roundabout, with moving and parked vehicles. Right, a 3D view behind the drone: its frame axes near the bottom, and lines fanning out from it to each tracked vehicle on the ground, each ending in an error ellipse and a label, orange for vehicles, such as vehicle 251, 59 m, and blue for people">
+<br><sub>The ROS 2 node on real drone footage (AU-AIR), played from a recording and shown in RViz at real speed. Left: the drone's camera. Right: the drone's frame tree and every tracked vehicle (orange) and person (blue) on the ground, with its error ellipse, a line from the camera, and its distance.</sub>
+</p>
+
+You can run it with two commands. You need Docker, but not ROS, the datasets or the model weights:
+
+```bash
+docker build -f docker/ros2.Dockerfile -t drone-ranger-ros:amd64 .
+docker run --rm -v "$PWD/out:/out" drone-ranger-ros:amd64 \
+  ros2 launch drone_ranger_ros demo.launch.py rviz:=false output_dir:=/out
+```
+
+The model weights aren't shared, so this demo plays a synthetic flight built into the image, with the cars' true positions known. The node writes `tracks.csv` and a map to `out/`. On every push, CI plays the same recording into the node under `launch_testing`, with the camera mount passed through tf2, and checks that the node's output matches the Python pipeline to within 1e-6.
+
+```mermaid
+flowchart LR
+    P[ros2 bag play<br/>or the drone's drivers] -- "image, camera_info,<br/>odometry, fix" --> N[drone_ranger]
+    M[camera mount<br/>tf2 static transforms] -- "/tf_static" --> N
+    N -- "tracked_objects,<br/>markers, detections" --> R[RViz and<br/>other nodes]
+```
+
+The [ROS 2 page](docs/ros2.md) has the full node graph, the frame tree (`map → base_link → camera_link → camera_optical_frame`), the launch arguments and the test results.
 
 ## Four findings
 
@@ -156,7 +181,7 @@ I wanted results an engineer could check, so the project follows a few rules.
 - Each test set was used once, after every setting was frozen and recorded. The test scripts refuse to run a second time.
 - Each [hypothesis](docs/hypotheses.md) was written down before its test, and is reported whether it held or not.
 - Every decision is logged with the options, the choice and the evidence ([decision log](docs/decisions.md)).
-- Every change runs the automated tests on two Python versions, and builds and runs the whole program for the Raspberry Pi's ARM processor.
+- Every change runs the automated tests on two Python versions, builds and runs the whole program for the Raspberry Pi's ARM processor, and checks the ROS 2 node against the Python pipeline.
 - The code is Apache-2.0, with no copyleft code in the detector, the tracker or the pipeline, so it can go into a product. The trained weights keep their training data's research-only terms.
 - People are boxes and positions only. There is no face analysis, and nothing that identifies an individual.
 

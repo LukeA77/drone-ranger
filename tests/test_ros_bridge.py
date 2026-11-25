@@ -43,6 +43,50 @@ def test_odometry_round_trip(mount: float) -> None:
             assert np.angle(np.exp(1j * (pose.yaw_rad - yaw))) == pytest.approx(0.0, abs=1e-9)
 
 
+def test_optical_frame_rotation_is_the_standard_static_transform() -> None:
+    # static_transform_publisher --roll -pi/2 --yaw -pi/2 gives exactly R_LINK_OPTICAL: the
+    # optical z is camera_link forward, x is right (-left) and y is down (-up)
+    np.testing.assert_allclose(rb.R_from_rpy(*rb.OPTICAL_RPY), rb.R_LINK_OPTICAL, atol=1e-15)
+    np.testing.assert_allclose(rb.R_LINK_OPTICAL[:, 2], [1, 0, 0])
+    np.testing.assert_allclose(rb.R_LINK_OPTICAL[:, 0], [0, -1, 0])
+    np.testing.assert_allclose(rb.R_LINK_OPTICAL[:, 1], [0, 0, -1])
+
+
+@pytest.mark.parametrize("mount", [0.0, 30.0, 50.0, 90.0])
+def test_mount_rotation_points_the_optical_axis_down_the_mount(mount: float) -> None:
+    np.testing.assert_allclose(
+        rb.mount_rotation(mount)[:, 2], rb.camera_axis_flu(mount), atol=1e-15
+    )
+
+
+def test_frame_tree_pose_equals_the_mount_angle_pose() -> None:
+    # the tf2 route (body pose and base_link -> optical transform) gives the same pose as the
+    # fixed mount angle, for random attitudes: the node's two ways in agree
+    rng = np.random.default_rng(11)
+    for _ in range(200):
+        p, q = rng.uniform(-300, 300, 3), rng.normal(size=4)
+        mount = rng.uniform(0, 90)
+        q_mount = rb.R_to_quat(rb.mount_rotation(mount), order="xyzw")
+        a = rb.camera_pose_from_frames(p, q, np.zeros(3), q_mount, 2.0)
+        b = rb.camera_pose_from_odometry(p, q, mount, 2.0)
+        assert (a.n_m, a.e_m, a.h_m, a.tilt_deg) == pytest.approx(
+            (b.n_m, b.e_m, b.h_m, b.tilt_deg), abs=1e-9
+        )
+        if abs(a.tilt_deg) < 89.9:
+            assert np.angle(np.exp(1j * (a.yaw_rad - b.yaw_rad))) == pytest.approx(0, abs=1e-9)
+
+
+def test_camera_offset_on_the_body_moves_the_camera() -> None:
+    # body yawed to face north (+90 deg about up), camera 0.2 m forward and 0.1 m below:
+    # the camera sits 0.2 m north of the body and 0.1 m lower
+    q = [0.0, 0.0, np.sin(np.pi / 4), np.cos(np.pi / 4)]
+    q_mount = rb.R_to_quat(rb.mount_rotation(30.0), order="xyzw")
+    pose = rb.camera_pose_from_frames([5.0, 7.0, 40.0], q, [0.2, 0.0, -0.1], q_mount)
+    assert (pose.n_m, pose.e_m, pose.h_m) == pytest.approx((7.2, 5.0, 39.9))
+    assert pose.yaw_rad == pytest.approx(0.0, abs=1e-12)
+    assert pose.tilt_deg == pytest.approx(30.0)
+
+
 def test_attitude_conversions_are_inverse_and_proper() -> None:
     rng = np.random.default_rng(5)
     q = rng.normal(size=4)

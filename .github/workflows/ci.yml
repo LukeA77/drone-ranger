@@ -44,3 +44,18 @@ jobs:
         run: docker buildx build --platform linux/arm64 -f docker/Dockerfile -t aerialrange:arm64 --load .
       - name: Demo in the ARM64 image
         run: docker run --rm --platform linux/arm64 aerialrange:arm64 aerialrange demo --out /tmp/demo
+
+  ros2:
+    # The ROS 2 node in its image (ROS 2 Jazzy): the synthetic demo recording is played into the
+    # node under launch_testing, with the camera mount through tf2, and the node's output must
+    # equal `aerialrange run` on the same frames; then demo.launch.py must run to the end by
+    # itself. No datasets or weights (scripts/ros2_demo_check.sh).
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build (ROS 2 Jazzy, linux/amd64)
+        run: docker buildx build -f docker/ros2.Dockerfile -t drone-ranger-ros:amd64 --load .
+      - name: Integration test and demo launch
+        run: docker run --rm drone-ranger-ros:amd64 bash scripts/ros2_demo_check.sh

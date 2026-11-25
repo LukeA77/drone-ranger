@@ -1,0 +1,25 @@
+# QoS for playing a recording into the node (`ros2 bag play --qos-profile-overrides-path`),
+# matched by the node's image_qos:=recording. Transient local: each publisher keeps its last
+# 10 messages and delivers them to a subscriber that connects late, so the first frames are not
+# lost if discovery finishes after playback has started (without it, about one run in three of
+# the CI check lost the first frame).
+/image:
+  history: keep_last
+  depth: 10
+  reliability: reliable
+  durability: transient_local
+/camera_info:
+  history: keep_last
+  depth: 10
+  reliability: reliable
+  durability: transient_local
+/odometry:
+  history: keep_last
+  depth: 10
+  reliability: reliable
+  durability: transient_local
+/fix:
+  history: keep_last
+  depth: 10
+  reliability: reliable
+  durability: transient_local

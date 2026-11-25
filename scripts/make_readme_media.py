@@ -41,6 +41,24 @@ FIELD_CLIPS = {
     "field_team": (FIELD, 30.2, 30.4, 900, 10, 1.6, 62),  # the team search, side by side
 }
 
+# RViz while the ROS 2 node runs on real footage (AU-AIR clip 35, recorded by
+# `RATE=0.35 bash scripts/record_rviz.sh cache/video/rviz_auair35.mp4
+# cache/ros2/auair_clip35_demo/bag 0`), played back at real time (speed 1 / 0.35).
+# The window is flight frames 181 to 260 (59.2 to 85.8 s), the 80 frames with the most tracked
+# objects: playback starts 81.7 s into the video, so 81.7 + 59.2 / 0.35 = 250.8 s, for 26.6 / 0.35
+# = 76 s of video.
+# name: (source, start s, duration s, width px, fps, speed, quality)
+RVIZ = REPO_ROOT / "cache/video/rviz_auair35.mp4"
+RVIZ_CLIPS = {"rviz_auair": (RVIZ, 250.5, 76.0, 900, 10, 1 / 0.35, 62)}
+# The capture is 1280 x 626; the camera image fills x 0-615, y 152-499 of RViz's left dock.
+# The dock's empty space around it, the splitter and the empty right dock's handle are filled
+# with RViz's background colour.
+_BG = "0x22242a"
+RVIZ_FILL = ",".join(
+    f"drawbox=x={x}:y={y}:w={w}:h={h}:color={_BG}@1:t=fill"
+    for x, y, w, h in ((0, 0, 638, 152), (0, 500, 638, 126), (616, 0, 22, 626), (1262, 0, 18, 626))
+)
+
 
 def make(
     name: str,
@@ -51,11 +69,14 @@ def make(
     fps: int,
     speed: float = 1.0,
     quality: int = 72,
+    pre: str = "",
 ) -> float:
     out = OUT / f"{name}.webp"
     vf = f"fps={fps},scale={width}:-1:flags=lanczos"
     if speed != 1.0:
         vf = f"fps={fps},setpts=PTS/{speed},scale={width}:-2:flags=lanczos"
+    if pre:  # filters applied to the source frames first (e.g. drawbox)
+        vf = f"{pre},{vf}"
     cmd = [ffmpeg(), "-y", "-loglevel", "error", "-ss", str(start), "-t", str(dur)]
     cmd += ["-i", str(SRC / src), "-vf", vf]
     cmd += ["-c:v", "libwebp_anim", "-quality", str(quality), "-compression_level", "4"]
@@ -66,7 +87,8 @@ def make(
 
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
-    only = set(sys.argv[1:]) or set(CLIPS) | set(FIELD_CLIPS)  # optional: rebuild only those
+    # optional: rebuild only those
+    only = set(sys.argv[1:]) or set(CLIPS) | set(FIELD_CLIPS) | set(RVIZ_CLIPS)
     path = OUT / "media.json"
     rec, ok = (json.loads(path.read_text()) if path.exists() else {}), True
     for name, spec in CLIPS.items():
@@ -98,6 +120,26 @@ def main() -> int:
             "width": spec[3],
             "fps": spec[4],
             "speed": spec[5],
+            "size_mb": round(mb, 2),
+        }
+        ok &= mb <= MAX_MB
+        print(f"{name}: {mb:.1f} MB")
+    for name, spec in RVIZ_CLIPS.items():
+        if name not in only:
+            continue
+        src, start, dur, width, fps, speed, quality = spec
+        if not src.exists():
+            print(f"{name}: {src} missing: run scripts/record_rviz.sh first")
+            ok = False
+            continue
+        mb = make(name, src, start, dur, width, fps, speed, quality, pre=RVIZ_FILL)
+        rec[name] = {
+            "source": src.relative_to(REPO_ROOT).as_posix(),
+            "start_s": start,
+            "seconds": dur,
+            "width": width,
+            "fps": fps,
+            "speed": speed,
             "size_mb": round(mb, 2),
         }
         ok &= mb <= MAX_MB

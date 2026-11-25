@@ -123,7 +123,9 @@ All on development and calibration towns; none reads the test towns.
 1. Runtime images for x86-64 and ARM64: `make containers`; same outputs on both: `make platform-check FRAMES=<folder of JPEG frames>` (`scripts/platform_check.py`).
 2. Pi 5 speed, estimated: `python scripts/estimate_pi.py --model <name> weights/<model>.onnx`; measured, on a Pi 5: `make pi-benchmark`.
 3. ROS 2 integration test in Docker: `bash scripts/ros2_integration.sh <name> <frames dir> <flight CSV> <origin> [frames]` (inputs from `python scripts/ros2_inputs.py`; docs/ros2.md).
-4. Search map: `python scripts/make_search_map.py auair --clip 35 --source cache/runs/v2_clip35` or `python scripts/make_search_map.py syndrone --town Town07 --height 50 --source v2_dfine` (docs/map.md).
+4. ROS 2 demo and the CI check, no datasets or weights (D-778): `make ros2-demo` (outputs in `cache/ros2_demo`); `make ros2-check` (`scripts/ros2_demo_check.sh`: launch_testing against `aerialrange run`, then `demo.launch.py` without a display).
+5. README RViz clip (D-778): the recording, `ros2 run drone_ranger_ros make_bag --frames cache/auair/flights/clip_35/frames --flight cache/auair/flights/clip_35/metadata.csv --origin <python scripts/ros2_inputs.py auair-origin --clip 35> --camera 1259,960,540 --mount-tilt-deg 0 --out cache/ros2/auair_clip35_demo/bag` inside the ROS 2 image; then `RATE=0.35 bash scripts/record_rviz.sh cache/video/rviz_auair35.mp4 cache/ros2/auair_clip35_demo/bag 0`, then `python scripts/make_readme_media.py rviz_auair` (check the start time in `RVIZ_CLIPS` against the new recording).
+6. Search map: `python scripts/make_search_map.py auair --clip 35 --source cache/runs/v2_clip35` or `python scripts/make_search_map.py syndrone --town Town07 --height 50 --source v2_dfine` (docs/map.md).
 
 ## Thermal detection and tracking (Phase 13, D-751, D-754, D-757)
 

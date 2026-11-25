@@ -12,6 +12,8 @@ setup(
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
         ("share/" + package_name, ["package.xml"]),
         ("share/" + package_name + "/launch", glob("launch/*.launch.py")),
+        ("share/" + package_name + "/rviz", glob("rviz/*.rviz")),
+        ("share/" + package_name + "/config", glob("config/*.yaml")),
     ],
     install_requires=["setuptools"],
     zip_safe=True,
@@ -23,6 +25,7 @@ setup(
         "console_scripts": [
             "drone_ranger_node = drone_ranger_ros.node:main",
             "make_bag = drone_ranger_ros.make_bag:main",
+            "odometry_tf = drone_ranger_ros.odometry_tf:main",
         ],
     },
 )

@@ -81,5 +81,14 @@
   "fps": 10,
   "speed": 1.6,
   "size_mb": 2.3
+ },
+ "rviz_auair": {
+  "source": "cache/video/rviz_auair35.mp4",
+  "start_s": 250.5,
+  "seconds": 76.0,
+  "width": 900,
+  "fps": 10,
+  "speed": 2.857142857142857,
+  "size_mb": 1.55
  }
 }
